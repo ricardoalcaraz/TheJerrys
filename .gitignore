@@ -1,0 +1,4 @@
+#Ignore eagle backup files
+BlazeIt.*
+!BlazeIt.sch
+!BlazeIt.brd
