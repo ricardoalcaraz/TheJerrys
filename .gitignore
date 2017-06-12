@@ -1,4 +1,7 @@
 #Ignore eagle backup files
 BlazeIt.*
+micromouse_v35.*
 !BlazeIt.sch
 !BlazeIt.brd
+!micromouse_v35.sch
+!micromouse_v35.brd
