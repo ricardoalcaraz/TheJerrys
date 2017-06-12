@@ -5,3 +5,5 @@ micromouse_v35.*
 !BlazeIt.brd
 !micromouse_v35.sch
 !micromouse_v35.brd
+*.pro
+*.job
