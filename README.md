@@ -1,6 +1,7 @@
 *******************************************
-************The Jerrys*********************
+The Jerrys
 *******************************************
-*Micromouse Schematic + Board Files********
-*Micromouse Code + Code Documentation******
+Micromouse Schematic + Board Files
+*******************************************
+Micromouse Code + Code Documentation
 *******************************************
