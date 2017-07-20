@@ -8,3 +8,4 @@ micromouse_v35.*
 #Ignore any job files
 *.pro
 *.job
+BlazeItPCB.*
