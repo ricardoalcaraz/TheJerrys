@@ -8,7 +8,6 @@ const int pulse_timeout_duration = 3000;
 double duration;
 int distance;
 void setup() {
-  // put your setup code here, to run once:
 pinMode(trigger1, OUTPUT);
 pinMode(echo1, INPUT);
 pinMode(trigger2, OUTPUT);
@@ -19,16 +18,19 @@ Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  pulseRight();
-  pulseLeft();
+  if (pulseRight() > 20){
+    Serial.println("Can turn RIGHT and engage BOTH or ONE motor.");
+  }
+  if (pulseLeft() > 20){
+    Serial.println("Can turn LEFT and engage BOTH or ONE motor.");
+  }
   if (pulseMiddle() > 20){
-    Serial.println("Right turn available. Can engage motors.");
+    Serial.println("Can move FORWARD and engage BOTH motors.");
   }
   delay(100);
 }
 
-void pulseRight() {
+int pulseRight() {
   digitalWrite(trigger1, LOW);
   delayMicroseconds(2);
   digitalWrite(trigger1, HIGH);
@@ -42,9 +44,10 @@ void pulseRight() {
   distance = duration*0.034/2;
 
   Serial.print("Right distance: "); Serial.println(distance);
+  return distance;
 }
 
-void pulseLeft() {
+int pulseLeft() {
   digitalWrite(trigger2, LOW);
   delayMicroseconds(2);
   digitalWrite(trigger2, HIGH);
@@ -58,10 +61,10 @@ void pulseLeft() {
   distance = duration*0.034/2;
 
   Serial.print("Left distance: "); Serial.println(distance);
+  return distance;
 }
 
 int pulseMiddle() {
-  //Send ultrsonic sound wave
   digitalWrite(trigger3, LOW);
   delayMicroseconds(2);
   digitalWrite(trigger3, HIGH);
