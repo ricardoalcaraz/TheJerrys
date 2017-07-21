@@ -1,4 +1,4 @@
-#include <NewPing.h>
+//#include <NewPing.h>
 #include <Stepper.h>
 
 // Constant Variables
