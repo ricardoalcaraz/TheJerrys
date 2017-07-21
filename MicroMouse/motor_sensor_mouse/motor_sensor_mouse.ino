@@ -6,7 +6,7 @@ const int trigger2 = 2;
 const int echo2 = 3;
 const int trigger3 = 4;
 const int echo3 = 5;
-const int pulse_timeout_duration = 3000;
+const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
 double duration;
 int distance;
 
@@ -58,7 +58,7 @@ int pulseRight() {
   digitalWrite(trigger1, LOW);
 
   //Read the echo pin
-  duration = pulseIn(echo1, HIGH);
+  duration = pulseIn(echo1, HIGH, max_distance);
 
   //Calculate distance
   distance = duration*0.034/2;
@@ -75,7 +75,7 @@ int pulseLeft() {
   digitalWrite(trigger2, LOW);
 
   //Read the echo pin
-  duration = pulseIn(echo2, HIGH, pulse_timeout_duration);
+  duration = pulseIn(echo2, HIGH, max_distance);
 
   //Calculate distance
   distance = duration*0.034/2;
@@ -92,7 +92,7 @@ int pulseMiddle() {
   digitalWrite(trigger3, LOW);
 
   //Read the echo pin
-  duration = pulseIn(echo3, HIGH);
+  duration = pulseIn(echo3, HIGH, max_distance);
 
   //Calculate distance
   distance = duration*0.034/2;
