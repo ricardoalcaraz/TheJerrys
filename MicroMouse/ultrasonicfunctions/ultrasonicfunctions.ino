@@ -15,14 +15,15 @@ pinMode(trigger2, OUTPUT);
 pinMode(echo2, INPUT);
 pinMode(trigger3, OUTPUT);
 pinMode(echo3, INPUT);
+Serial.begin(9600);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   pulseRight();
-  delay(1000);
   pulseLeft();
   pulseMiddle();
+  delay(100);
 }
 
 void pulseRight() {
