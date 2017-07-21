@@ -22,7 +22,9 @@ void loop() {
   // put your main code here, to run repeatedly:
   pulseRight();
   pulseLeft();
-  pulseMiddle();
+  if (pulseMiddle() > 20){
+    Serial.println("Right turn available. Can engage motors.");
+  }
   delay(100);
 }
 
@@ -58,7 +60,7 @@ void pulseLeft() {
   Serial.print("Left distance: "); Serial.println(distance);
 }
 
-void pulseMiddle() {
+int pulseMiddle() {
   //Send ultrsonic sound wave
   digitalWrite(trigger3, LOW);
   delayMicroseconds(2);
@@ -73,4 +75,5 @@ void pulseMiddle() {
   distance = duration*0.034/2;
 
   Serial.print("Middle distance: "); Serial.println(distance);
+  return distance;
 }
