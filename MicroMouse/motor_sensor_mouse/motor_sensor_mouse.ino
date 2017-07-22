@@ -9,15 +9,23 @@ const int echo3 = 5;
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
 double duration;
 int distance;
+int stepIncrementation = 100;
 
-int in1Pin = 12;
-int in2Pin = 11;
-int in3Pin = 10;
-int in4Pin = 9;
+//Pin assignment for first motor
+int in1PinMotor1 = 9;
+int in2PinMotor1 = 10;
+int in3PinMotor1 = 11;
+int in4PinMotor1 = 12;
+//Pin assignment for second motor
+int in1PinMotor2 = 13;
+int in2PinMotor2 = 14;
+int in3PinMotor2 = 15;
+int in4PinMotor2 = 16;
 
 #define STEPS 200 //must be define, not int. Number based on how many increments per single revolution
  
-Stepper motor(STEPS, in1Pin, in2Pin, in3Pin, in4Pin); 
+Stepper motor1(STEPS, in1PinMotor1, in2PinMotor1, in3PinMotor1, in4PinMotor1); 
+Stepper motor2(STEPS, in1PinMotor2, in2PinMotor2, in3PinMotor2, in4PinMotor2); 
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,16 +35,21 @@ void setup() {
   pinMode(echo2, INPUT);
   pinMode(trigger3, OUTPUT);
   pinMode(echo3, INPUT);
-  pinMode(in1Pin, OUTPUT);
-  pinMode(in2Pin, OUTPUT);
-  pinMode(in3Pin, OUTPUT);
-  pinMode(in4Pin, OUTPUT);
-  motor.setSpeed(20);
+  pinMode(in1PinMotor1, OUTPUT);
+  pinMode(in2PinMotor1, OUTPUT);
+  pinMode(in3PinMotor1, OUTPUT);
+  pinMode(in4PinMotor1, OUTPUT);
+  pinMode(in1PinMotor2, OUTPUT);
+  pinMode(in2PinMotor2, OUTPUT);
+  pinMode(in3PinMotor2, OUTPUT);
+  pinMode(in4PinMotor2, OUTPUT);
+  motor1.setSpeed(20);
+  motor2.setSpeed(20);
 Serial.begin(9600);
 }
 
 void loop() {
-  motorOff();
+  motorsOff();
   if (pulseRight() > 20){
     Serial.println("Can turn RIGHT and engage BOTH or ONE motor.");
   }
@@ -45,11 +58,14 @@ void loop() {
   }
   if (pulseMiddle() > 20){
     Serial.println("Can move FORWARD and engage BOTH motors.");
-    motorOn();
+    motorsOn();
     turnRight();
   }
   delay(100);
 }
+
+
+//Sensor functions
 int pulseRight() {
   digitalWrite(trigger1, LOW);
   delayMicroseconds(2);
@@ -101,25 +117,45 @@ int pulseMiddle() {
   return distance;
 }
 
-
+//Motor functions
 void turnLeft(){
-  motor.step(-100);
+  motor1.step(-stepIncrementation);
+  motor2.step(stepIncrementation);
 }
 void turnRight(){
-  motor.step(100);
+  motor1.step(stepIncrementation);
+  motor2.step(-stepIncrementation);
+}
+void forward(){
+  motor1.step(stepIncrementation);
+  motor2.step(stepIncrementation);
 }
 
-void motorOn(){
-    digitalWrite(in1Pin, HIGH);
-    digitalWrite(in2Pin, HIGH);
-    digitalWrite(in3Pin, HIGH);
-    digitalWrite(in4Pin, HIGH);  
+//Turning on an off motors to not expend current when not in use as we have no need to stabilize motors
+//Both motors turn on and off at the same time as there is never a time when only one motor works. To turn, micromouse will spin on axis instead of pivoting
+void motorsOn(){
+    //Turning on motor 1 by setting all of its coiled pins to HIGH
+    digitalWrite(in1PinMotor1, HIGH);
+    digitalWrite(in2PinMotor1, HIGH);
+    digitalWrite(in3PinMotor1, HIGH);
+    digitalWrite(in4PinMotor1, HIGH); 
+    //Turning on motor 2 by setting all of its coiled pins to HIGH
+    digitalWrite(in1PinMotor2, HIGH);
+    digitalWrite(in2PinMotor2, HIGH);
+    digitalWrite(in3PinMotor2, HIGH);
+    digitalWrite(in4PinMotor2, HIGH);
 }
 
-void motorOff(){
-    digitalWrite(in1Pin, LOW);
-    digitalWrite(in2Pin, LOW);
-    digitalWrite(in3Pin, LOW);
-    digitalWrite(in4Pin, LOW);    
+void motorsOff(){
+    //Turning on motor 1 by setting all of its coiled pins to HIGH
+    digitalWrite(in1PinMotor1, LOW);
+    digitalWrite(in2PinMotor1, LOW);
+    digitalWrite(in3PinMotor1, LOW);
+    digitalWrite(in4PinMotor1, LOW);  
+    //Turning on motor 2 by setting all of its coiled pins to HIGH
+    digitalWrite(in1PinMotor2, LOW);
+    digitalWrite(in2PinMotor2, LOW);
+    digitalWrite(in3PinMotor2, LOW);
+    digitalWrite(in4PinMotor2, LOW);
 }
 
