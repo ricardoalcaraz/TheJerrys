@@ -49,12 +49,17 @@ Serial.begin(9600);
 }
 
 void loop() {
+  //AWAITING algorithm. Turning functions subject to change depending on which method to solve
   motorsOff();
   if (pulseRight() > 20){
     Serial.println("Can turn RIGHT and engage BOTH or ONE motor.");
+    motorsOn();
+    turnRight();
   }
   if (pulseLeft() > 20){
     Serial.println("Can turn LEFT and engage BOTH or ONE motor.");
+    motorsOn();
+    turnLeft();
   }
   if (pulseMiddle() > 20){
     Serial.println("Can move FORWARD and engage BOTH motors.");
