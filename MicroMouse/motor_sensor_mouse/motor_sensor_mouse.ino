@@ -11,16 +11,33 @@ double duration;
 int distance;
 int stepIncrementation = 100;
 
-//Pin assignment for first motor
-int in1PinMotor1 = 9;
-int in2PinMotor1 = 10;
-int in3PinMotor1 = 11;
-int in4PinMotor1 = 12;
+////Protoboard pin assignment
+////Pin assignment for first motor\
+////IC 1 (Left motor)
+//int in1PinMotor1 = 9;
+//int in2PinMotor1 = 10;
+//int in3PinMotor1 = 11;
+//int in4PinMotor1 = 12;
+////Pin assignment for second motor
+////IC 2 (Right motor)
+//int in1PinMotor2 = 13;
+//int in2PinMotor2 = 14;
+//int in3PinMotor2 = 15;
+//int in4PinMotor2 = 16;
+
+//Protoboard pin assignment
+//Pin assignment for first motor\
+//IC 1 (Left motor)
+int in1PinMotor1 = 15;
+int in2PinMotor1 = 21;
+int in3PinMotor1 = 14;
+int in4PinMotor1 = 10;
 //Pin assignment for second motor
-int in1PinMotor2 = 13;
-int in2PinMotor2 = 14;
-int in3PinMotor2 = 15;
-int in4PinMotor2 = 16;
+//IC 2 (Right motor)
+int in1PinMotor2 = 17;
+int in2PinMotor2 = 20;
+int in3PinMotor2 = 16;
+int in4PinMotor2 = 11;
 
 #define STEPS 200 //must be define, not int. Number based on how many increments per single revolution
  
