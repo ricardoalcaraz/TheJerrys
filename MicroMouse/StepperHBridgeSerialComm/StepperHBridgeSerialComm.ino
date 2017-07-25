@@ -1,10 +1,10 @@
 //Controlled via inputting steps into serial
 #include <Stepper.h> //gets library
 //declaring pints
-int in1Pin = 12;
-int in2Pin = 11;
-int in3Pin = 10;
-int in4Pin = 9;
+int in1Pin = 21;
+int in2Pin = 14;
+int in3Pin = 15;
+int in4Pin = 10;
 
 #define STEPS 200 //must be define, not int. Number based on how many increments per single revolution
  
