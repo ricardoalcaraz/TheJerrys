@@ -1,5 +1,6 @@
-#include <Stepper.h>
+#include <Stepper.h> //Using built in library for stepper motors
 
+//Letting program know where pins are located
 const int trigger1 = 0;
 const int echo1 = 1;
 const int trigger2 = 2;
@@ -10,42 +11,27 @@ const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the 
 double duration;
 int distance;
 int stepIncrementation = 100;
+#define STEPS 200 //must be define, not int. Number based on how many increments per single revolution
 
-////Protoboard pin assignment
-////Pin assignment for first motor\
-////IC 1 (Left motor)
-//int in1PinMotor1 = 9;
-//int in2PinMotor1 = 10;
-//int in3PinMotor1 = 11;
-//int in4PinMotor1 = 12;
-////Pin assignment for second motor
-////IC 2 (Right motor)
-//int in1PinMotor2 = 13;
-//int in2PinMotor2 = 14;
-//int in3PinMotor2 = 15;
-//int in4PinMotor2 = 16;
-
-//Protoboard pin assignment
-//Pin assignment for first motor\
+//Pin assignment for first motor
 //IC 1 (Left motor)
-int in1PinMotor1 = 15;
-int in2PinMotor1 = 21;
-int in3PinMotor1 = 14;
-int in4PinMotor1 = 10;
+int LMotor1 = 15;
+int LMotor2 = 21;
+int LMotor3 = 14;
+int LMotor4 = 10;
+
 //Pin assignment for second motor
 //IC 2 (Right motor)
-int in1PinMotor2 = 17;
-int in2PinMotor2 = 20;
-int in3PinMotor2 = 16;
-int in4PinMotor2 = 11;
+int RMotor1 = 17;
+int RMotor2 = 20;
+int RMotor3 = 16;
+int RMotor4 = 11;
 
-#define STEPS 200 //must be define, not int. Number based on how many increments per single revolution
- 
-Stepper motor1(STEPS, in1PinMotor1, in2PinMotor1, in3PinMotor1, in4PinMotor1); 
-Stepper motor2(STEPS, in1PinMotor2, in2PinMotor2, in3PinMotor2, in4PinMotor2); 
+//Creating instances of a motor
+Stepper LMotor(STEPS, LMotor1, LMotor2, LMotor3, LMotor4); 
+Stepper RMotor(STEPS, RMotor1, RMotor2, RMotor3, RMotor4); 
 
 void setup() {
-  // put your setup code here, to run once:
   pinMode(trigger1, OUTPUT);
   pinMode(echo1, INPUT);
   pinMode(trigger2, OUTPUT);
@@ -60,14 +46,13 @@ void setup() {
   pinMode(in2PinMotor2, OUTPUT);
   pinMode(in3PinMotor2, OUTPUT);
   pinMode(in4PinMotor2, OUTPUT);
-  motor1.setSpeed(20);
-  motor2.setSpeed(20);
-Serial.begin(9600);
+  LMotor.setSpeed(20);
+  RMotor.setSpeed(20);
+  Serial.begin(9600);
 }
 
 void loop() {
-  //AWAITING algorithm. Turning functions subject to change depending on which method to solve
-  motorsOff();
+  motorsOff(); //Has motor always turned off at start
   if (pulseRight() > 20){
     Serial.println("Can turn RIGHT and engage BOTH or ONE motor.");
     motorsOn();
@@ -141,43 +126,43 @@ int pulseMiddle() {
 
 //Motor functions
 void turnLeft(){
-  motor1.step(-stepIncrementation);
-  motor2.step(stepIncrementation);
+  LMotor.step(-stepIncrementation);
+  RMotor.step(stepIncrementation);
 }
 void turnRight(){
-  motor1.step(stepIncrementation);
-  motor2.step(-stepIncrementation);
+  LMotor.step(stepIncrementation);
+  RMotor.step(-stepIncrementation);
 }
 void forward(){
-  motor1.step(stepIncrementation);
-  motor2.step(stepIncrementation);
+  LMotor.step(stepIncrementation);
+  RMotor.step(stepIncrementation);
 }
 
 //Turning on an off motors to not expend current when not in use as we have no need to stabilize motors
 //Both motors turn on and off at the same time as there is never a time when only one motor works. To turn, micromouse will spin on axis instead of pivoting
 void motorsOn(){
     //Turning on motor 1 by setting all of its coiled pins to HIGH
-    digitalWrite(in1PinMotor1, HIGH);
-    digitalWrite(in2PinMotor1, HIGH);
-    digitalWrite(in3PinMotor1, HIGH);
-    digitalWrite(in4PinMotor1, HIGH); 
+    digitalWrite(LMotor1, HIGH);
+    digitalWrite(LMotor2, HIGH);
+    digitalWrite(LMotor3, HIGH);
+    digitalWrite(LMotor4, HIGH); 
     //Turning on motor 2 by setting all of its coiled pins to HIGH
-    digitalWrite(in1PinMotor2, HIGH);
-    digitalWrite(in2PinMotor2, HIGH);
-    digitalWrite(in3PinMotor2, HIGH);
-    digitalWrite(in4PinMotor2, HIGH);
+    digitalWrite(RMotor1, HIGH);
+    digitalWrite(RMotor2, HIGH);
+    digitalWrite(RMotor3, HIGH);
+    digitalWrite(RMotor4, HIGH);
 }
 
 void motorsOff(){
-    //Turning on motor 1 by setting all of its coiled pins to HIGH
-    digitalWrite(in1PinMotor1, LOW);
-    digitalWrite(in2PinMotor1, LOW);
-    digitalWrite(in3PinMotor1, LOW);
-    digitalWrite(in4PinMotor1, LOW);  
-    //Turning on motor 2 by setting all of its coiled pins to HIGH
-    digitalWrite(in1PinMotor2, LOW);
-    digitalWrite(in2PinMotor2, LOW);
-    digitalWrite(in3PinMotor2, LOW);
-    digitalWrite(in4PinMotor2, LOW);
+    //Turning on motor 1 by setting all of its coiled pins to LOW
+    digitalWrite(LMotor1, LOW);
+    digitalWrite(LMotor2, LOW);
+    digitalWrite(LMotor3, LOW);
+    digitalWrite(LMotor4, LOW); 
+    //Turning on motor 2 by setting all of its coiled pins to LOW
+    digitalWrite(RMotor1, LOW);
+    digitalWrite(RMotor2, LOW);
+    digitalWrite(RMotor3, LOW);
+    digitalWrite(RMotor4, LOW);
 }
 
