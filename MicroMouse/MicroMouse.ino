@@ -23,75 +23,119 @@
 #define ECHO_3 2
 #define TRIGGER_3 3
 
-//Initializing Sonar Pins
-NewPing sonar[SONAR_NUM]{
-  NewPing(ECHO_1, TRIGGER_1, MAX_DISTANCE),
-  NewPing(ECHO_2, TRIGGER_2, MAX_DISTANCE),
-  NewPing(ECHO_3, TRIGGER_3, MAX_DISTANCE),
-};
 
-unsigned long pingTimer[SONAR_NUM]; //When each sensor pings
-unsigned int cm[SONAR_NUM]; //Store ping distances
-int currentSensor = 0; //Which Sensor is active
 
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  //Initializing motor output pins
-  pinMode(stepperRight, OUTPUT);
-  pinMode(stepperLeft, OUTPUT);
-  //Initialize Timers for Sensors
-  pingTimer[0] = millis() + 75; //First ping start in ms
-  for( int i = 1; i < SONAR_NUM; i++){
-    pingTimer[i] = pingTimer[i-1] + PING_INTERVAL;
-  }
+
   
 }
 
 void loop() {
-  for(int i = 0; i < SONAR_NUM; i++){
-    if(millis() >=pingTimer[i]){
-      pingTimer[i] += PING_INTERVAL * SONAR_NUM;
-      if(i == 0 && currentSensor == SONAR_NUM - 1){
-       oneSensorCycle(); // Do something with results.
-      }
-      sonar[currentSensor].timer_stop();
-      currentSensor = i;
-      cm[currentSensor] = 0;
-      sonar[currentSensor].ping_timer(echoCheck);
-    }
-  }
-  // Rest of code goes here
-
   
-  moveForward();
   
 }
 
-void moveForward(){
-  //digitalWrite(stepperRightDir, HIGH);
-  digitalWrite(stepperLeftDir, HIGH);
-  for(int i = 0; i < STEPS; i++){
-      digitalWrite(stepperRight, HIGH);
-      digitalWrite(stepperLeft, HIGH);
-      digitalWrite(stepperRight, LOW);
-      digitalWrite(stepperLeft, LOW);
-  }
-  
+
+
+//-------------Sensor Functions----------------------------
+
+//pulseRight
+//Pulse right wall
+//Inputs: None
+//Outputs: Integer - wall distance
+int pulseRight() {
+  digitalWrite(trigger1, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigger1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger1, LOW);
+
+  //Read the echo pin
+  duration = pulseIn(echo1, HIGH, max_distance);
+
+  //Calculate distance
+  distance = duration*0.034/2;
+
+  Serial.print("Right distance: "); Serial.println(distance);
+  return distance;
 }
 
-void echoCheck() { // If ping echo, set distance to array.
-  if (sonar[currentSensor].check_timer())
-    cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
+
+//pulseLeft
+//Pulse left wall
+//Inputs: None
+//Outputs: Integer - wall distance
+int pulseLeft() {
+  digitalWrite(trigger2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigger2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger2, LOW);
+
+  //Read the echo pin
+  duration = pulseIn(echo2, HIGH, max_distance);
+
+  //Calculate distance
+  distance = duration*0.034/2;
+  
+  Serial.print("Left distance: "); Serial.println(distance);
+  return distance;
 }
- 
-void oneSensorCycle() { // Do something with the results.
-  for (uint8_t i = 0; i < SONAR_NUM; i++) {
-    Serial.print(i);
-    Serial.print("=");
-    Serial.print(cm[i]);
-    Serial.print("cm ");
+
+//pulseMiddle
+//Pulse middle wall
+//Inputs: None
+//Outputs: Integer - wall distance
+int pulseMiddle() {
+  digitalWrite(trigger3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigger3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger3, LOW);
+
+  //Read the echo pin
+  duration = pulseIn(echo3, HIGH, max_distance);
+
+  //Calculate distance
+  distance = duration*0.034/2;
+
+  Serial.print("Middle distance: "); Serial.println(distance);
+  return distance;
+}
+
+//---------------------Motor Functions----------------------------
+
+//Turn right Motor Off
+//Inputs: None
+//Outputs: None
+void rightMotorOff(){
+    digitalWrite(motor2_1, LOW);
+    digitalWrite(motor2_2, HIGH);
+    digitalWrite(motor2_3, LOW);
+    digitalWrite(motor2_4, HIGH);
+}
+
+//Turn left Motor Off
+//Inputs: None
+//Outputs: None
+void leftMotorOff(){
+    digitalWrite(motor1_1, LOW);
+    digitalWrite(motor1_2, HIGH);
+    digitalWrite(motor1_3, LOW);
+    digitalWrite(motor1_4, HIGH);
+}
+
+//Move the robot forward
+//Inputs: int - Number of steps
+//Outputs: None
+void moveForward(int steps){
+  for(int i = 0; i < steps; i++){
+    stepperRight.step(1);
+    stepperLeft.step(1);
   }
-  Serial.println();
+  leftMotorOff();
+  rightMotorOff();
 }
+
+
