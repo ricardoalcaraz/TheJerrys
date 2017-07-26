@@ -1,34 +1,53 @@
-//#include <NewPing.h>
 #include <Stepper.h>
 
 // Constant Variables
 #define STEPS 200 //Steps per revolution
-#define SONAR_NUM 3 //Number of sensors
-#define MAX_DISTANCE 200 //Max Distance we want to measure
-#define PING_INTERVAL 33//Milliseconds between pings
+const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
+double duration;
+int distance;
 
-
-//Green black red blue from left to right
+//From left to right: Green black red blue 
 //Stepper Pins
-#define stepperRight 11
-#define stepperRightDir 12
-#define stepperLeft 21
-#define stepperLeftDir 20
+int motor1_1 = 15;
+int motor1_2 = 21;
+int motor1_3 = 14;
+int motor1_4 = 10;
+int motor2_1 = 17;
+int motor2_2 = 20;
+int motor2_3 = 16;
+int motor2_4 = 11;
 
 //UltraSonic Sensor Pins
-#define ECHO_1 5
-#define TRIGGER_1 6
-#define ECHO_2 17
-#define TRIGGER_2 16
-#define ECHO_3 2
-#define TRIGGER_3 3
+const int trigger1 = 0;
+const int echo1 = 1;
+const int trigger2 = 2;
+const int echo2 = 3;
+const int trigger3 = 4;
+const int echo3 = 5;
+const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
+double duration;
+int distance;
 
-
-
+//Instantiating motors
+Stepper motor1(STEPS, motor1_1, motor1_2, motor1_3, motor1_4);
+Stepper motor2(STEPS, motor2_1, motor2_2, motor2_3, motor2_4);
 
 void setup() {
-
-  
+	pinMode(trigger1, OUTPUT);
+	pinMode(echo1, INPUT);
+	pinMode(trigger2, OUTPUT);
+	pinMode(echo2, INPUT);
+	pinMode(trigger3, OUTPUT);
+	pinMode(echo3, INPUT);
+	pinMode(motor1_1, OUTPUT);
+	pinMode(motor1_2, OUTPUT);
+	pinMode(motor1_3, OUTPUT);
+	pinMode(motor1_4, OUTPUT);
+	pinMode(motor2_1, OUTPUT);
+	pinMode(motor2_2, OUTPUT);
+	pinMode(motor2_3, OUTPUT);
+	pinMode(motor2_4, OUTPUT);	
+	Serial.begin(9600);
 }
 
 void loop() {
@@ -43,7 +62,7 @@ void loop() {
 //pulseRight
 //Pulse right wall
 //Inputs: None
-//Outputs: Integer - wall distance
+//Outputs: Integer - wall distance in cm
 int pulseRight() {
   digitalWrite(trigger1, LOW);
   delayMicroseconds(2);
@@ -65,7 +84,7 @@ int pulseRight() {
 //pulseLeft
 //Pulse left wall
 //Inputs: None
-//Outputs: Integer - wall distance
+//Outputs: Integer - wall distance in cm
 int pulseLeft() {
   digitalWrite(trigger2, LOW);
   delayMicroseconds(2);
@@ -86,7 +105,7 @@ int pulseLeft() {
 //pulseMiddle
 //Pulse middle wall
 //Inputs: None
-//Outputs: Integer - wall distance
+//Outputs: Integer - wall distance in cm
 int pulseMiddle() {
   digitalWrite(trigger3, LOW);
   delayMicroseconds(2);
@@ -105,6 +124,25 @@ int pulseMiddle() {
 }
 
 //---------------------Motor Functions----------------------------
+//Turn right Motor On
+//Inputs: None
+//Outputs: None
+void rightMotorOn(){
+    digitalWrite(motor2_1, HIGH);
+    digitalWrite(motor2_2, LOW);
+    digitalWrite(motor2_3, HIGH);
+    digitalWrite(motor2_4, LOW);
+}
+
+//Turn left Motor On
+//Inputs: None
+//Outputs: None
+void leftMotorOn(){
+    digitalWrite(motor1_1, HIGH);
+    digitalWrite(motor1_2, LOW);
+    digitalWrite(motor1_3, HIGH);
+    digitalWrite(motor1_4, LOW);
+}
 
 //Turn right Motor Off
 //Inputs: None
@@ -131,11 +169,32 @@ void leftMotorOff(){
 //Outputs: None
 void moveForward(int steps){
   for(int i = 0; i < steps; i++){
-    stepperRight.step(1);
-    stepperLeft.step(1);
+    motor1.step(1);
+    motor2.step(1);
   }
   leftMotorOff();
   rightMotorOff();
 }
 
+//Move the robot left and goes forward
+//Inputs: int - Number of steps
+//Outputs: None
+void moveLeft(int steps){
+  for(int i = 0; i < steps; i++){
+    motor1.step(1);
+    motor2.step(1);
+  }
+	moveForward(steps);
+}
+
+//Move the robot right and goes forward
+//Inputs: int - Number of steps
+//Outputs: None
+void moveRight(int steps){
+  for(int i = 0; i < steps; i++){
+    motor1.step(1);
+    motor2.step(1);
+  }
+  moveForward(steps);
+}
 
