@@ -43,8 +43,8 @@ void setup() {
   for(int i = 6; i < 10; i++){
     pinMode(i, INPUT);
   }
-  stepperRight.setSpeed(150);
-  stepperLeft.setSpeed(150);
+  stepperRight.setSpeed(200);
+  stepperLeft.setSpeed(200);
   Serial.begin(9600);
 }
 
@@ -53,12 +53,9 @@ void loop() {
   // put your main code here, to run repeatedly:
 
     
+  moveForward(200);
     
-    moveForward(200);
-    for(int i = 6; i < 10; i++){
-      Serial.print("Pin ");Serial.print(i);Serial.print(" : ");Serial.println(digitalRead(i));
-    }
-    delay(1000);
+    
     
 }
 
@@ -79,7 +76,7 @@ void leftMotorOff(){
 void moveForward(int steps){
   for(int i = 0; i < steps; i++){
     stepperRight.step(1);
-    stepperLeft.step(1);
+    stepperLeft.step(-1);
   }
   leftMotorOff();
   rightMotorOff();

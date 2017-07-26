@@ -187,6 +187,14 @@ void moveLeft(int steps){
 	moveForward(steps);
 }
 
+//---------------------Movement Functions-------------------------------------------------
+//Care has to be taken with the speed
+//Motors use approximately 1A each at 100 rpm and .5A at 200 rpm
+//150rpm is a good balance of speed and torque
+
+
+
+
 //Move the robot right and goes forward
 //Inputs: int - Number of steps
 //Outputs: None
