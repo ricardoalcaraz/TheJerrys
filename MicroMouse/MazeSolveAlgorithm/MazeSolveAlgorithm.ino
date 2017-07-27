@@ -5,7 +5,12 @@ int stepCount = 0; //Record number of steps taken to determine if goal is reache
 int wallDistance = 5; //Setting threshold to determine if there is a wall or opening
 
 String directions;
+
+
 void setup() {
+  for(int i = 0; i < 4; i++) {
+    pinMode(switchPins[i], INPUT);
+  }
   Serial.begin(9600); //Initialize serial communication
 }
 
@@ -22,8 +27,8 @@ void loop() {
 void readSwitches() {
   switches = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers
   for (int i = 0; i < 4; i++) {
-    pinMode(switchPins[i], INPUT);
-    switches += (int) digitalRead(switchPins[i]) * (int) pow(2, i) ;
+    //move to setup
+    switches += (int) digitalRead(switchPins[i]) * (int) pow(2, i); //converting to integer for ez read
   }
   switch (switches) {
     case B0000: //Machine will not do anything

@@ -197,7 +197,19 @@ void turnLeft(int steps){
   }
 }
 
+<<<<<<< HEAD
 //Pivot robot right
+=======
+//---------------------Movement Functions-------------------------------------------------
+//Care has to be taken with the speed
+//Motors use approximately 1A each at 100 rpm and .5A at 200 rpm
+//150rpm is a good balance of speed and torque
+
+
+
+
+//Move the robot right and goes forward
+>>>>>>> 2ecad0e8a469cd68e0c2d67039137b5cb7c1ce3d
 //Inputs: int - Number of steps
 //Outputs: None
 void turnRight(int steps){
