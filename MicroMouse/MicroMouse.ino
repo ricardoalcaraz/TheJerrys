@@ -5,17 +5,18 @@
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
 double duration;
 int distance;
+int steps = 50; //number of steps per incrementation
 
 //From left to right: Green black red blue 
 //Stepper Pins
-int motor1_1 = 15;
-int motor1_2 = 21;
-int motor1_3 = 14;
-int motor1_4 = 10;
-int motor2_1 = 17;
-int motor2_2 = 20;
-int motor2_3 = 16;
-int motor2_4 = 11;
+int motorLeft_1 = 15;
+int motorLeft_2 = 21;
+int motorLeft_3 = 14;
+int motorLeft_4 = 10;
+int motorRight_1 = 17;
+int motorRight_2 = 20;
+int motorRight_3 = 16;
+int motorRight_4 = 11;
 
 //UltraSonic Sensor Pins
 const int trigger1 = 0;
@@ -29,8 +30,8 @@ double duration;
 int distance;
 
 //Instantiating motors
-Stepper motor1(STEPS, motor1_1, motor1_2, motor1_3, motor1_4);
-Stepper motor2(STEPS, motor2_1, motor2_2, motor2_3, motor2_4);
+Stepper motorLeft(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4);
+Stepper motorRight(STEPS, motorRight_1, motorRight_2, motorRight_3, motorRight_4);
 
 void setup() {
 	pinMode(trigger1, OUTPUT);
@@ -39,14 +40,14 @@ void setup() {
 	pinMode(echo2, INPUT);
 	pinMode(trigger3, OUTPUT);
 	pinMode(echo3, INPUT);
-	pinMode(motor1_1, OUTPUT);
-	pinMode(motor1_2, OUTPUT);
-	pinMode(motor1_3, OUTPUT);
-	pinMode(motor1_4, OUTPUT);
-	pinMode(motor2_1, OUTPUT);
-	pinMode(motor2_2, OUTPUT);
-	pinMode(motor2_3, OUTPUT);
-	pinMode(motor2_4, OUTPUT);	
+	pinMode(motorLeft_1, OUTPUT);
+	pinMode(motorLeft_2, OUTPUT);
+	pinMode(motorLeft_3, OUTPUT);
+	pinMode(motorLeft_4, OUTPUT);
+	pinMode(motorRight_1, OUTPUT);
+	pinMode(motorRight_1, OUTPUT);
+	pinMode(motorRight_1, OUTPUT);
+	pinMode(motorRight_1, OUTPUT);	
 	Serial.begin(9600);
 }
 
@@ -128,40 +129,40 @@ int pulseMiddle() {
 //Inputs: None
 //Outputs: None
 void rightMotorOn(){
-    digitalWrite(motor2_1, HIGH);
-    digitalWrite(motor2_2, LOW);
-    digitalWrite(motor2_3, HIGH);
-    digitalWrite(motor2_4, LOW);
+    digitalWrite(motorRight_1, HIGH);
+    digitalWrite(motorRight_2, LOW);
+    digitalWrite(motorRight_3, HIGH);
+    digitalWrite(motorRight_4, LOW);
 }
 
 //Turn left Motor On
 //Inputs: None
 //Outputs: None
 void leftMotorOn(){
-    digitalWrite(motor1_1, HIGH);
-    digitalWrite(motor1_2, LOW);
-    digitalWrite(motor1_3, HIGH);
-    digitalWrite(motor1_4, LOW);
+    digitalWrite(motorLeft_1, HIGH);
+    digitalWrite(motorLeft_1, LOW);
+    digitalWrite(motorLeft_1, HIGH);
+    digitalWrite(motorLeft_1, LOW);
 }
 
 //Turn right Motor Off
 //Inputs: None
 //Outputs: None
 void rightMotorOff(){
-    digitalWrite(motor2_1, LOW);
-    digitalWrite(motor2_2, HIGH);
-    digitalWrite(motor2_3, LOW);
-    digitalWrite(motor2_4, HIGH);
+    digitalWrite(motorRight_1, LOW);
+    digitalWrite(motorRight_2, HIGH);
+    digitalWrite(motorRight_3, LOW);
+    digitalWrite(motorRight_4, HIGH);
 }
 
 //Turn left Motor Off
 //Inputs: None
 //Outputs: None
 void leftMotorOff(){
-    digitalWrite(motor1_1, LOW);
-    digitalWrite(motor1_2, HIGH);
-    digitalWrite(motor1_3, LOW);
-    digitalWrite(motor1_4, HIGH);
+    digitalWrite(motorLeft_1, LOW);
+    digitalWrite(motorLeft_2, HIGH);
+    digitalWrite(motorLeft_3, LOW);
+    digitalWrite(motorLeft_4, HIGH);
 }
 
 //Move the robot forward
@@ -169,8 +170,8 @@ void leftMotorOff(){
 //Outputs: None
 void moveForward(int steps){
   for(int i = 0; i < steps; i++){
-    motor1.step(1);
-    motor2.step(1);
+    motorLeft.step(1);
+    motorRight.step(1);
   }
   leftMotorOff();
   rightMotorOff();
@@ -181,8 +182,7 @@ void moveForward(int steps){
 //Outputs: None
 void moveLeft(int steps){
   for(int i = 0; i < steps; i++){
-    motor1.step(1);
-    motor2.step(1);
+    motorRight.step(1);
   }
 	moveForward(steps);
 }
@@ -192,8 +192,7 @@ void moveLeft(int steps){
 //Outputs: None
 void moveRight(int steps){
   for(int i = 0; i < steps; i++){
-    motor1.step(1);
-    motor2.step(1);
+    motorLeft.step(1);
   }
   moveForward(steps);
 }
