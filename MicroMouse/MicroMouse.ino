@@ -90,7 +90,7 @@ void loop() {
         Serial.println("Optimized solving maze at double speed");
         //	  motorLeft.speed(300);
         //	  motorRight.speed(300);
-        //	  solveOptimized();
+        //	  solveOptimized(); //FIXME: Compilation error; was not declared in ths scope
         //	  //return motors to normal speed.
         //	  motorLeft.speed(150);
         //	  motorRight.speed(150);
@@ -230,7 +230,7 @@ void turnRight(int steps){
 //INPUTS: NONE
 //OUTPUT: Returns the value of switches from 0-15
 int readSwitches() {
-  switches = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers
+  switches = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers //FIXME: Compilation error: 'switches' was not declared in this scope
   for (int i = 0; i < 4; i++) {
     pinMode(switchPins[i], INPUT);
     switches += (int) digitalRead(switchPins[i]) * (int) pow(2, i) ;
@@ -285,7 +285,7 @@ void solveMaze() {
 void checkDistance(){
   int middle_distance = pingMiddle();
   int move = middle_distance/.108;
-
+}
 //INPUT: array of characters
 //OUTPUT: None
 //Solves maze given the optimized code
@@ -326,14 +326,30 @@ void optimizePath(directions) {
       //SBS = B
     }
   }
-
+  int count = 0;
+  for(int j = 0; j < directions.size(); j += 3){
+    for(int k = j; k < (j+2); k++){
+    	if(directions[k] == shortcuts
+    }
+  }
   for(int j = 0; j < directions.size(); j += 3){
     if(!((j + 2) > directions.size())){
       if(directions[j] == 'L'){
         if(directions[j +2] == 'R'){
-        	
+        	opt_directions[initializer] = 'B';
+        }
+        else if(directions[j +2] == 'S'){
+        	opt_directions[initializer] = 'R';
+        }
+        else if(directions[j +2] == 'L'){
+        	opt_directions[initializer] = 'S';
         }
     	}
+      else if(directions[j] == 'R'){
+        if(directions[j+2] == 'L'){
+        	opt_directionsp[initializer] = 'B'
+        }
+      }
     }
   }
 }
