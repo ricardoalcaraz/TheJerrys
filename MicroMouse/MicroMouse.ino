@@ -177,23 +177,21 @@ void moveForward(int steps){
   rightMotorOff();
 }
 
-//Move the robot left and goes forward
+//Pivot robot left
 //Inputs: int - Number of steps
 //Outputs: None
-void moveLeft(int steps){
+void turnLeft(int steps){
   for(int i = 0; i < steps; i++){
     motorRight.step(1);
   }
-	moveForward(steps);
 }
 
-//Move the robot right and goes forward
+//Pivot robot right
 //Inputs: int - Number of steps
 //Outputs: None
-void moveRight(int steps){
+void turnRight(int steps){
   for(int i = 0; i < steps; i++){
     motorLeft.step(1);
   }
-  moveForward(steps);
 }
 
