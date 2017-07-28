@@ -1,20 +1,22 @@
-//FIXME GLOBAL: Should we loop pulse functions and set to a variable and just pass them into a function? Otherwise program might have a hard time as sensors might not be able to keep up. Unsure.
-//Biggest reason: maintain consistency in times, also, might send script to a function that keeps it in a loop
+////////////////////////////////////////
+///////// Jerry the Micromouse /////////
+////////////////////////////////////////
 
+// Calling libraries
 #include <Stepper.h>
 #include <elapsedMillis.h>
+
 // Constant Variables
 #define STEPS 200 //Steps per revolution
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
 double duration;
 int distance;
 const int turn_angle = 50;
-int stepCount = 0; //Record number of steps taken to determine if goal is reached
 int wallDistance = 5; //Threshold to determine if there is a wall or opening
 String directions; //Stores directions
 
-//From left to right: Green black red blue 
-//Stepper Pins
+// From left to right: Green black red blue 
+// Stepper Pins
 const int motorLeft_1 = 15;
 const int motorLeft_2 = 21;
 const int motorLeft_3 = 14;
@@ -24,10 +26,10 @@ const int motorRight_2 = 20;
 const int motorRight_3 = 16;
 const int motorRight_4 = 11;
 
-//Switch pins
+// Switch pins
 int switchPins[4] = {6, 7, 8 , 9}; //Declaring pins for the switches
 
-//UltraSonic Sensor Pins
+// UltraSonic Sensor Pins
 const int trigger1 = 0;
 const int echo1 = 1;
 const int trigger2 = 2;
@@ -35,12 +37,12 @@ const int echo2 = 3;
 const int trigger3 = 4;
 const int echo3 = 5;
 
-//Instantiating motors and switches
+// Instantiating motors and switches
 Stepper motorLeft(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4);
 Stepper motorRight(STEPS, motorRight_1, motorRight_2, motorRight_3, motorRight_4);
 int switch_value;  //Initializing switches 
 
-//Timer Initialization and associated variables
+// Timer Initialization and associated variables
 IntervalTimer checkDistances;
 volatile int volatile_left_distance;
 volatile int volatile_right_distance;
@@ -75,6 +77,11 @@ void setup() {
     }
     //Begin serial communication
   Serial.begin(9600);
+    // Default speed
+    motorLeft.setSpeed(150);
+    motorRight.setSpeed(150);
+    leftMotorOff();
+    rightMotorOff();
 }
 
 void loop() {
@@ -86,6 +93,9 @@ void loop() {
     right_distance = volatile_right_distance;
     left_distance = volatile_left_distance;
     interrupts();
+    Serial.println(left_distance);
+    Serial.println(middle_distance);
+    Serial.println(right_distance);
     //Switch case statements
     switch (switch_value) {
       case B0000: //Machine will not do anything
@@ -260,6 +270,19 @@ void turnRight(){
   }
 }
 
+//Turns robot around
+//Inputs: int - Number of steps
+//Outputs: None
+void uTurn(){
+  for(int i = 0; i < turn_angle; i++){
+    motorLeft.step(-100);
+    motorRight.step(100);
+  }
+}
+
+
+
+
 //------------Switch function--------------//
 //Constantly reading value of switches
 //INPUTS: NONE
@@ -306,8 +329,8 @@ char intersectionDecision() {
   else if (right_distance > wallDistance) {
     return 'R';
   }
-  else if ( (left_distance > wallDistance) and (middle_distance > wallDistance) and (right_distance > wallDistance) ) {
-    return 'B';
+  else  {
+    return 'U';
   }
 }
 
@@ -327,45 +350,38 @@ bool isIntersection(){
 }
 
 
-//INPUT: None
+//INPUT: String directions - so that it can modify the directions as it goes
 //OUTPUT: None
 //Purpose: Function solves the maze using left hand rule
 void solveMaze() {
-  int counter = 0;
   //TODO need to check if we are in an intersection before making decision
   char next_direction = intersectionDecision();
-  bool solved = isGoal();
-  while ( !solved ){ //Keep trying to solve the maze until we have found the goal
+  while ( !isGoal() ){ //Keep trying to solve the maze until we have found the goal
     
     //If sensors say it can turn left, turn left and add "L" to the directions
     if (next_direction == 'L') {
-      counter++;
       turnLeft();
-      directions[counter] = 'L';
+      directions.concat('L');
     }
     //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
     else if (next_direction == 'S') {
-      counter++;
       moveForward(200);
-      directions[counter] = 'S';
+      directions.concat('S');
     }
     //If motor can only turn right, then turn right and record it.
     else if (next_direction == 'R') {
-      counter++;
       turnRight();
-      directions[counter] = 'R';
+      directions.concat('R');
     }
     //If motor can only make a u-turn, do so and record it.
-    else if (next_direction == 'B') {
-      counter++;
-      //turn around
-      directions[counter] =  'B';
+    else if (next_direction == 'U') {
+      uTurn();
+      directions.concat('U');
     }
     //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
     else{
-      moveForward(200);
+      moveForward(100);
     }
-    moveForward(200);  //FIXME: Why should it be moving forward 
     optimizePath(directions); //Constantly optimize path after ever intersection
   }
 }
@@ -375,18 +391,18 @@ void solveMaze() {
 //OUTPUT: None
 //Solves maze given the optimized code
 void solveOptimized(String directions) {
-  int directionsCounter;
+  int directionsCounter = 0;
   char turn;
   if (isIntersection()){
     turn = directions[directionsCounter];
     //Note: don't need to make a function to go back
-    if (turn = 'L'){
+    if (turn == 'L'){
       turnLeft();
     }
-    else if (turn = 'S'){
+    else if (turn == 'S'){
       moveForward(200);
     }
-    else if (turn = 'R'){
+    else if (turn == 'R'){
       turnRight();
     }
     directionsCounter++;
@@ -398,7 +414,7 @@ void solveOptimized(String directions) {
 
 //INPUT: Accepts a string of directions
 //OUTPUT: String directions
-//Updates directions with shortcuts
+//Updates directions with shortcutstodo
 String optimizePath(String directions) {
     String longer[10] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
     String shorter[10] = {"U","R","S","U","R","U"};
@@ -409,5 +425,4 @@ String optimizePath(String directions) {
     }
   return directions;
 }
-
 
