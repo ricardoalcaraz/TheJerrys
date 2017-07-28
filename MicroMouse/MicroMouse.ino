@@ -2,7 +2,7 @@
 //Biggest reason: maintain consistency in times, also, might send script to a function that keeps it in a loop
 
 #include <Stepper.h>
-
+#include <elapsedMillis.h>
 // Constant Variables
 #define STEPS 200 //Steps per revolution
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
@@ -11,18 +11,18 @@ int distance;
 const int turn_angle = 50;
 int stepCount = 0; //Record number of steps taken to determine if goal is reached
 int wallDistance = 5; //Threshold to determine if there is a wall or opening
-char directions[200]; //Store directions
+String directions; //Stores directions
 
 //From left to right: Green black red blue 
 //Stepper Pins
-int motorLeft_1 = 15;
-int motorLeft_2 = 21;
-int motorLeft_3 = 14;
-int motorLeft_4 = 10;
-int motorRight_1 = 17;
-int motorRight_2 = 20;
-int motorRight_3 = 16;
-int motorRight_4 = 11;
+const int motorLeft_1 = 15;
+const int motorLeft_2 = 21;
+const int motorLeft_3 = 14;
+const int motorLeft_4 = 10;
+const int motorRight_1 = 17;
+const int motorRight_2 = 20;
+const int motorRight_3 = 16;
+const int motorRight_4 = 11;
 
 //Switch pins
 int switchPins[4] = {6, 7, 8 , 9}; //Declaring pins for the switches
@@ -40,8 +40,19 @@ Stepper motorLeft(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4);
 Stepper motorRight(STEPS, motorRight_1, motorRight_2, motorRight_3, motorRight_4);
 int switch_value;  //Initializing switches 
 
-//Assigning inputs and outputs
+//Timer Initialization and associated variables
+IntervalTimer checkDistances;
+volatile int volatile_left_distance;
+volatile int volatile_right_distance;
+volatile int volatile_middle_distance;
+int left_distance;
+int right_distance;
+int middle_distance;
+volatile int current_sensor;
+
 void setup() {
+    //Initialize timer interrupts to run every .1 seconds
+    checkDistances.begin(pingDistances, 100000);
     //3 sensors' pin assignment
   pinMode(trigger1, OUTPUT);
   pinMode(echo1, INPUT);
@@ -55,9 +66,9 @@ void setup() {
   pinMode(motorLeft_3, OUTPUT);
   pinMode(motorLeft_4, OUTPUT);
   pinMode(motorRight_1, OUTPUT);
-  pinMode(motorRight_1, OUTPUT);
-  pinMode(motorRight_1, OUTPUT);
-  pinMode(motorRight_1, OUTPUT);
+  pinMode(motorRight_2, OUTPUT);
+  pinMode(motorRight_3, OUTPUT);
+  pinMode(motorRight_4, OUTPUT);
     //Four switches' pin assignment
     for(int i = 6; i < 10; i++){
       pinMode(i, INPUT);
@@ -69,6 +80,12 @@ void setup() {
 void loop() {
     //Constantly reading switch values
     switch_value = readSwitches();
+    //Constantly read and save distances
+    noInterrupts();
+    middle_distance = volatile_middle_distance;
+    right_distance = volatile_right_distance;
+    left_distance = volatile_left_distance;
+    interrupts();
     //Switch case statements
     switch (switch_value) {
       case B0000: //Machine will not do anything
@@ -84,7 +101,7 @@ void loop() {
       case B0010: //Machine will solve maze with the optimized path
         delay(1000);
         Serial.println("Optimized solving maze");
-        solveOptimized();
+        solveOptimized(directions);
         break;
       case B0100:
         Serial.println("Optimized solving maze at double speed");
@@ -104,6 +121,24 @@ void loop() {
 
 
 //-------------Sensor Functions----------------------------
+
+//
+void pingDistances(void) {
+  if( current_sensor == 0){
+    volatile_right_distance = pulseRight();
+    current_sensor++;
+  }
+  else if(current_sensor == 1){
+    volatile_middle_distance = pulseMiddle();
+    current_sensor++;
+  }
+  else if(current_sensor == 2){
+    volatile_left_distance = pulseLeft();
+    current_sensor = 0;
+  }
+}
+
+
 
 //pulseRight
 //Pulse right wall
@@ -210,7 +245,7 @@ void moveForward(int steps){
 //Pivot robot left
 //Inputs: int - Number of steps
 //Outputs: None
-void turnLeft(int turn_angle){
+void turnLeft(){
   for(int i = 0; i < turn_angle; i++){
     motorRight.step(1);
   }
@@ -219,8 +254,8 @@ void turnLeft(int turn_angle){
 //Move the robot right and goes forward
 //Inputs: int - Number of steps
 //Outputs: None
-void turnRight(int steps){
-  for(int i = 0; i < steps; i++){
+void turnRight(){
+  for(int i = 0; i < turn_angle; i++){
     motorLeft.step(1);
   }
 }
@@ -230,7 +265,7 @@ void turnRight(int steps){
 //INPUTS: NONE
 //OUTPUT: Returns the value of switches from 0-15
 int readSwitches() {
-  switches = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers //FIXME: Compilation error: 'switches' was not declared in this scope
+  int switches = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers //FIXED
   for (int i = 0; i < 4; i++) {
     pinMode(switchPins[i], INPUT);
     switches += (int) digitalRead(switchPins[i]) * (int) pow(2, i) ;
@@ -238,157 +273,141 @@ int readSwitches() {
   return switches;
   }
   
+//------Debug functions---------------------//
+void recall(String directions) {
+  for (int i = 0; i <= (int) directions.length(); i++) {
+    Serial.println(directions[i]);
+  }
+}
+
 //-------Algorithm Functions----------------//
+//INPUT: None
+//OUTPUT: Returns boolean value if mouse is at the endpoint
+//FIXME: NOTE: By request, random end goal peg can be removed. Therefore we can do the technique where if it detects a larger than normal opening for an extended period of time, return true. Also please check logic
+bool isGoal() {
+    int milli = elapsedMillis();
+    //If there is a larger than normal distance, return true
+    if ( ((left_distance > wallDistance) or (right_distance > wallDistance)) and milli > 3000 ){
+      return true;
+    }
+  return false;
+}
+
+//Input: None
+//Output: Returns a char based on sensors
+//NOTE: DOES NOT append paths to array, just check and turn. We don't want it to append anything otherwise solveOptimized() would constantly add letters
+char intersectionDecision() {
+  if (left_distance > wallDistance) {
+    return 'L';
+  }
+  else if (middle_distance > wallDistance) {
+    return 'S';
+  }
+  else if (right_distance > wallDistance) {
+    return 'R';
+  }
+  else if ( (left_distance > wallDistance) and (middle_distance > wallDistance) and (right_distance > wallDistance) ) {
+    return 'B';
+  }
+}
+
+//INPUT: None
+//Output: Boolean - Lets mouse know when there is an intersection
+//Use: When solving maze with optimized path, mouse can just turn based on directions whenever there is an intersection
+bool isIntersection(){
+    if( right_distance > wallDistance and (left_distance > wallDistance or middle_distance > wallDistance) ) {
+        return true;
+    }
+    else if( left_distance > wallDistance and (right_distance > wallDistance or middle_distance > wallDistance) ) {
+        return true;
+    }
+    else{
+      return false;
+    }
+}
+
 
 //INPUT: None
 //OUTPUT: None
 //Purpose: Function solves the maze using left hand rule
 void solveMaze() {
   int counter = 0;
-  char next_direction = checkIntersection();
-  while ( !foundGoal() ){ //Keep trying to solve the maze until we have found the goal
+  //TODO need to check if we are in an intersection before making decision
+  char next_direction = intersectionDecision();
+  bool solved = isGoal();
+  while ( !solved ){ //Keep trying to solve the maze until we have found the goal
     
     //If sensors say it can turn left, turn left and add "L" to the directions
-    if (next_direction = 'L') {
+    if (next_direction == 'L') {
       counter++;
       turnLeft();
       directions[counter] = 'L';
     }
     //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
-    else if (next_direction = 'S') {
+    else if (next_direction == 'S') {
       counter++;
-      moveforward();
+      moveForward(200);
       directions[counter] = 'S';
     }
     //If motor can only turn right, then turn right and record it.
-    else if (next_direction = 'R') {
+    else if (next_direction == 'R') {
       counter++;
       turnRight();
       directions[counter] = 'R';
     }
     //If motor can only make a u-turn, do so and record it.
-    else if (next_direction = 'B') {
+    else if (next_direction == 'B') {
       counter++;
-      backward();
+      //turn around
       directions[counter] =  'B';
     }
     //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
     else{
-      moveForward();
+      moveForward(200);
     }
-    moveForward();  //FIXME: Why should it be moving forward 
-    optimizePath() //Constantly optimize path after ever intersection
+    moveForward(200);  //FIXME: Why should it be moving forward 
+    optimizePath(directions); //Constantly optimize path after ever intersection
   }
 }
 
-//FIXME: Ricardo please add explanation amd move under sensor functions if necessary
-void checkDistance(){
-  int middle_distance = pingMiddle();
-  int move = middle_distance/.108;
-}
+
 //INPUT: array of characters
 //OUTPUT: None
 //Solves maze given the optimized code
-void solveOptimized(directions) {
-    //If mouse can move left, turn left
-    if (checkIntersection() = 'L') {
+void solveOptimized(String directions) {
+  int directionsCounter;
+  char turn;
+  if (isIntersection()){
+    turn = directions[directionsCounter];
+    //Note: don't need to make a function to go back
+    if (turn = 'L'){
       turnLeft();
     }
-    //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
-    else if (checkIntersection() = 'S') {
-      forward();
+    else if (turn = 'S'){
+      moveForward(200);
     }
-    //If motor can only turn right, then turn right and record it.
-    else if (checkIntersection() = 'R') {
+    else if (turn = 'R'){
       turnRight();
     }
-    //If motor can only make a u-turn, do so and record it.
-    else if (checkIntersection() = 'B') {
-      backward();
-    }
-    //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
-    else{
-      forward();
+    directionsCounter++;
+  }
+  else{
+    moveForward(200);
+  }
 }
 
-void optimizePath(directions) {
-  char opt_directions[100];
-  int initializer = 0;
-  String shortcuts[10] = {"LBR", "LBS", "RBL", "SBL", "SBS", "LBL"}; //Notice how all the optimizations have "B" in the middle
-  for (shortcuts[i]; shortcuts[i] <= 11; i++) {
-    if (i in directions) {
-      //FIXME: replace these shortcuts
-      //LBR = B
-      //LBS = R
-      //LBL = S
-      //RBL = B
-      //SBL = R
-      //SBS = B
-    }
-  }
-  int count = 0;
-  for(int j = 0; j < directions.size(); j += 3){
-    for(int k = j; k < (j+2); k++){
-      if(directions[k] == shortcuts
-    }
-  }
-  for(int j = 0; j < directions.size(); j += 3){
-    if(!((j + 2) > directions.size())){
-      if(directions[j] == 'L'){
-        if(directions[j +2] == 'R'){
-          opt_directions[initializer] = 'B';
-        }
-        else if(directions[j +2] == 'S'){
-          opt_directions[initializer] = 'R';
-        }
-        else if(directions[j +2] == 'L'){
-          opt_directions[initializer] = 'S';
-        }
-      }
-      else if(directions[j] == 'R'){
-        if(directions[j+2] == 'L'){
-          opt_directionsp[initializer] = 'B'
-        }
+//INPUT: Accepts a string of directions
+//OUTPUT: String directions
+//Updates directions with shortcuts
+String optimizePath(String directions) {
+    String longer[10] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
+    String shorter[10] = {"U","R","S","U","R","U"};
+    for (int count = 0; count <= (int) sizeof(longer); count++){
+      if (directions.endsWith(longer[count])){
+        directions.replace(longer[count], shorter[count]);
       }
     }
-  }
+  return directions;
 }
 
-//INPUT: None
-//OUTPUT: Returns boolean value if mouse is at the endpoint
-//FIXME: NOTE: By request, random end goal peg can be removed. Therefore we can do the technique where if it detects a larger than normal opening for an extended period of time, return true. Also please check logic
-bool foundGoal() {}
-  int timeCounter = 0; //FIXME: should this be global?
-    //If there is a larger than normal distance, increase time counter
-    if (pulseLeft() > wallDistance) or (pulseRight() > wallDistance){
-      timeCounter++;
-    }
-    //If there is no longer a larger than normal distance, reset counter to 0
-    else{
-      timeCounter = 0;
-    }   
-    //if L, L, L, or {R, R, R in directions, AND within a certain timeframe //FIXME: For now, keeping this option in case of rejection, would have to create 9+ case statements
-    //If timeCounter reaches a certain threshold, then return true as it found the goal
-    if (timeCounter >100){ //FIXME: Subject to change
-      return true;
-    }
 
-}
-
-//Input: None
-//Output: Returns a char based on sensors
-//NOTE: DOES NOT append paths to array, just check and turn. We don't want it to append anything otherwise solveOptimized() would constantly add letters
-char checkIntersection() {
-  if (pulseLeft() > wallDistance) {
-    return 'L';
-  }
-  else if (pulseMiddle() > wallDistance) {
-    return 'S';
-  }
-  else if (pulseRight() > wallDistance) {
-    return 'R';
-  }
-  else if (pulseLeft() > wallDistance) and (pulseMiddle() > wallDistance) and (pulseRight() > wallDistance) {
-    return 'B';
-  }
-}
