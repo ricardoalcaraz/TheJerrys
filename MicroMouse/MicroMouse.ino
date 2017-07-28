@@ -42,38 +42,38 @@ int switch_value;  //Initializing switches
 
 //Assigning inputs and outputs
 void setup() {
-  	//3 sensors' pin assignment
-	pinMode(trigger1, OUTPUT);
-	pinMode(echo1, INPUT);
-	pinMode(trigger2, OUTPUT);
-	pinMode(echo2, INPUT);
-	pinMode(trigger3, OUTPUT);
-	pinMode(echo3, INPUT);
-  	//2 motors' pin assignment
-	pinMode(motorLeft_1, OUTPUT);
-	pinMode(motorLeft_2, OUTPUT);
-	pinMode(motorLeft_3, OUTPUT);
-	pinMode(motorLeft_4, OUTPUT);
-	pinMode(motorRight_1, OUTPUT);
-	pinMode(motorRight_1, OUTPUT);
-	pinMode(motorRight_1, OUTPUT);
-	pinMode(motorRight_1, OUTPUT);
-  	//Four switches' pin assignment
+    //3 sensors' pin assignment
+  pinMode(trigger1, OUTPUT);
+  pinMode(echo1, INPUT);
+  pinMode(trigger2, OUTPUT);
+  pinMode(echo2, INPUT);
+  pinMode(trigger3, OUTPUT);
+  pinMode(echo3, INPUT);
+    //2 motors' pin assignment
+  pinMode(motorLeft_1, OUTPUT);
+  pinMode(motorLeft_2, OUTPUT);
+  pinMode(motorLeft_3, OUTPUT);
+  pinMode(motorLeft_4, OUTPUT);
+  pinMode(motorRight_1, OUTPUT);
+  pinMode(motorRight_1, OUTPUT);
+  pinMode(motorRight_1, OUTPUT);
+  pinMode(motorRight_1, OUTPUT);
+    //Four switches' pin assignment
     for(int i = 6; i < 10; i++){
       pinMode(i, INPUT);
     }
-  	//Begin serial communication
-	Serial.begin(9600);
+    //Begin serial communication
+  Serial.begin(9600);
 }
 
 void loop() {
-  	//Constantly reading switch values
+    //Constantly reading switch values
     switch_value = readSwitches();
-  	//Switch case statements
+    //Switch case statements
     switch (switch_value) {
       case B0000: //Machine will not do anything
-      	leftMotorOff();
-      	rightMotorOff();
+        leftMotorOff();
+        rightMotorOff();
         Serial.println("Awaiting instruction");
         break;
       case B0001: //Machine will start solving maze
@@ -88,12 +88,12 @@ void loop() {
         break;
       case B0100:
         Serial.println("Optimized solving maze at double speed");
-        //	  motorLeft.speed(300);
-        //	  motorRight.speed(300);
-        //	  solveOptimized(); //FIXME: Compilation error; was not declared in ths scope
-        //	  //return motors to normal speed.
-        //	  motorLeft.speed(150);
-        //	  motorRight.speed(150);
+        //    motorLeft.speed(300);
+        //    motorRight.speed(300);
+        //    solveOptimized(); //FIXME: Compilation error; was not declared in ths scope
+        //    //return motors to normal speed.
+        //    motorLeft.speed(150);
+        //    motorRight.speed(150);
         break;
     }
 }
@@ -290,7 +290,7 @@ void checkDistance(){
 //OUTPUT: None
 //Solves maze given the optimized code
 void solveOptimized(directions) {
-  	//If mouse can move left, turn left
+    //If mouse can move left, turn left
     if (checkIntersection() = 'L') {
       turnLeft();
     }
@@ -329,25 +329,25 @@ void optimizePath(directions) {
   int count = 0;
   for(int j = 0; j < directions.size(); j += 3){
     for(int k = j; k < (j+2); k++){
-    	if(directions[k] == shortcuts
+      if(directions[k] == shortcuts
     }
   }
   for(int j = 0; j < directions.size(); j += 3){
     if(!((j + 2) > directions.size())){
       if(directions[j] == 'L'){
         if(directions[j +2] == 'R'){
-        	opt_directions[initializer] = 'B';
+          opt_directions[initializer] = 'B';
         }
         else if(directions[j +2] == 'S'){
-        	opt_directions[initializer] = 'R';
+          opt_directions[initializer] = 'R';
         }
         else if(directions[j +2] == 'L'){
-        	opt_directions[initializer] = 'S';
+          opt_directions[initializer] = 'S';
         }
-    	}
+      }
       else if(directions[j] == 'R'){
         if(directions[j+2] == 'L'){
-        	opt_directionsp[initializer] = 'B'
+          opt_directionsp[initializer] = 'B'
         }
       }
     }
@@ -358,19 +358,19 @@ void optimizePath(directions) {
 //OUTPUT: Returns boolean value if mouse is at the endpoint
 //FIXME: NOTE: By request, random end goal peg can be removed. Therefore we can do the technique where if it detects a larger than normal opening for an extended period of time, return true. Also please check logic
 bool foundGoal() {}
-	int timeCounter = 0; //FIXME: should this be global?
+  int timeCounter = 0; //FIXME: should this be global?
     //If there is a larger than normal distance, increase time counter
     if (pulseLeft() > wallDistance) or (pulseRight() > wallDistance){
-  		timeCounter++;
+      timeCounter++;
     }
     //If there is no longer a larger than normal distance, reset counter to 0
     else{
-    	timeCounter = 0;
-    }  	
+      timeCounter = 0;
+    }   
     //if L, L, L, or {R, R, R in directions, AND within a certain timeframe //FIXME: For now, keeping this option in case of rejection, would have to create 9+ case statements
     //If timeCounter reaches a certain threshold, then return true as it found the goal
-  	if (timeCounter >100){ //FIXME: Subject to change
-    	return true;
+    if (timeCounter >100){ //FIXME: Subject to change
+      return true;
     }
 
 }
