@@ -45,15 +45,21 @@ class Jerry {
 		void setTurnSpeed(int turn_speed);
 		void initializeSwitches(int switch1, int switch2, int switch3, int switch4);
 		int readSwitches();
-		void initializeSensors();
+		void initializeSensors(int pingRate, int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3);
+		int* getDistances();
+		void setMaxDistance(int user_distance);
+
 
 
 
 	private:
+		//Motors
 		Stepper _motorLeft;
 		Stepper _motorRight;
+		int _steps_per_revolution;
 		int _speed;
 		int _turnAngle;
+		int _turnSpeed;
 		int _motor1_1;
 		int _motor1_2;
 		int _motor1_3;
@@ -62,23 +68,35 @@ class Jerry {
 		int _motor2_2;
 		int _motor2_3;
 		int _motor2_4;
+		void motorsOff();
+		void leftMotorOff();
+		void rightMotorOff();
+		//Sensors
+		int _pingRate;
+		int _current_sensor;
+		int _distance;
+		int _duration;
+		int _max_distance;
+		void pingDistances();
+		int pulseRight();
+		int pulseLeft();
+		int pulseMiddle();
 		int _trigger1;
 		int _echo1;
 		int _trigger2;
 		int _echo2;
 		int _trigger3;
 		int _echo3;
-		int _middle_distance;
-		int _right_distance;
-		int _left_distance;
-		int _turnSpeed;
+		int _sensor_distances[4];
+		volatile int _volatile_left_distance;
+		volatile int _volatile_right_distance;
+		volatile int _volatile_middle_distance;
+		//Switches
 		int _switches[4];
 		int _switch_value;
-		void motorsOff();
-		void leftMotorOff();
-		void rightMotorOff();
+		//Debug Mode
 		bool _debug;
-		int _steps_per_revolution;
+		
 };
 
 

@@ -8,5 +8,6 @@ micromouse_v35.*
 #Ignore any job files
 *.pro
 *.job
+Jerry.ino
 BlazeItPCB.*
 #4 pm

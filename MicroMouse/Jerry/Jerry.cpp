@@ -47,24 +47,130 @@ Jerry::Jerry(int steps_per_revolution, int motor1_1, int motor1_2, int motor1_3,
 		this->_turnSpeed = 95;
 		this->_turnAngle = 140;
 		this->_debug = false;
+		this->_pingRate = 100000;
+		this->_max_distance = 6000;
 		motorsOff();
 }
 
+int* Jerry::getDistances(){
+	_sensor_distances[0] = _volatile_left_distance;
+	_sensor_distances[1] = _volatile_middle_distance;
+	_sensor_distances[2] = _volatile_right_distance;
+	return _sensor_distances;
+}
 
-void Jerry::initializeSensors(int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3){
+void Jerry::setMaxDistance(int user_distance){
+	_max_distance = user_distance;
+}
+
+
+
+//pulseRight
+//Pulse right wall
+//Inputs: None
+//Outputs: Integer - wall distance in cm
+int Jerry::pulseRight() {
+	digitalWrite(_trigger1, LOW);
+	delayMicroseconds(2);
+	digitalWrite(_trigger1, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(_trigger1, LOW);
+
+	//Read the echo pin
+	_duration = pulseIn(_echo1, HIGH, _max_distance);
+
+	//Calculate distance
+	_distance = _duration*0.034/2;
+	if(_debug){
+		Serial.print("Right distance: "); Serial.println(_distance);
+	}
+	return _distance;
+}
+
+
+//pulseLeft
+//Pulse left wall
+//Inputs: None
+//Outputs: Integer - wall distance in cm
+int Jerry::pulseLeft() {
+	digitalWrite(_trigger2, LOW);
+	delayMicroseconds(2);
+	digitalWrite(_trigger2, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(_trigger2, LOW);
+
+	//Read the echo pin
+	_duration = pulseIn(_echo2, HIGH, _max_distance);
+
+	//Calculate distance
+	_distance = _duration*0.034/2;
+	if(_debug){
+		Serial.print("Left distance: "); Serial.println(_distance);
+	}
+	return _distance;
+}
+
+//pulseMiddle
+//Pulse middle wall
+//Inputs: None
+//Outputs: Integer - wall distance in cm
+int Jerry::pulseMiddle() {
+	digitalWrite(_trigger3, LOW);
+	delayMicroseconds(2);
+	digitalWrite(_trigger3, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(_trigger3, LOW);
+
+	//Read the echo pin
+	_duration = pulseIn(_echo3, HIGH, _max_distance);
+
+	//Calculate distance
+	_distance = _duration*0.034/2;
+	if(_debug){
+		Serial.print("Middle distance: "); Serial.println(_distance);
+	}
+	return _distance;
+}
+
+void Jerry::pingDistances() {
+	if( _current_sensor == 0){
+	_volatile_right_distance = pulseRight();
+	_current_sensor++;
+	}
+	else if(_current_sensor == 1){
+	_volatile_middle_distance = pulseMiddle();
+	_current_sensor++;
+	}
+	else if(_current_sensor == 2){
+	_volatile_left_distance = pulseLeft();
+	_current_sensor = 0;
+	}
+}
+
+/*
+	Initialize sensors
+	Inputs: 6 Ints - echo and trigger pins
+	Outputs: None
+*/
+IntervalTimer distanceChecker;
+void Jerry::initializeSensors(int pingRate, int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3){
+	_current_sensor = 0;
+	_pingRate = pingRate;
 	_trigger1 = trigger1;
-	_echo_1 = echo_1;
+	_echo1 = echo1;
 	_trigger2 = trigger2;
-	_echo_2 = echo_2;
+	_echo2 = echo2;
 	_trigger3 = trigger3;
-	_echo_3 = echo_3;
+	_echo3 = echo3;
 	pinMode(_trigger1, OUTPUT);
   	pinMode(_echo1, INPUT);
   	pinMode(_trigger2, OUTPUT);
   	pinMode(_echo2, INPUT);
   	pinMode(_trigger3, OUTPUT);
   	pinMode(_echo3, INPUT);
+  	//distanceChecker.begin(&Jerry::pingDistances, 10000);
 }
+
 
 
 /*
