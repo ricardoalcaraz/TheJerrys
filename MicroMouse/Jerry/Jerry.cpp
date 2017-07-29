@@ -5,6 +5,19 @@
 	Care has to be taken with the speed
 	Motors use approximately 1A each at 100 rpm and .5A at 200 rpm
 	150rpm is a good balance of speed and torque
+	
+	Functions available:
+		moveForward(int number_of_steps);
+		turnRight();
+		turnLeft();
+		turnAround();
+		setSpeed(int speed);
+		setTurnAngle(int angle_in_steps);
+		setDebug(bool choice);
+		setTurnSpeed(int turn_speed);
+		initializeSwitches(int switch1, int switch2, int switch3, int switch4);
+		readSwitches();
+
 
 */
 #include "Jerry.h"
