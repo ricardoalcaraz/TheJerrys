@@ -44,6 +44,8 @@ Jerry::Jerry(int steps_per_revolution, int motor1_1, int motor1_2, int motor1_3,
 		_steps_per_revolution = steps_per_revolution;
 		//Initialize data members to a default value
 		this->_speed = 150;
+		_motorRight.setSpeed(_speed);
+		_motorLeft.setSpeed(_speed);
 		this->_turnSpeed = 95;
 		this->_turnAngle = 140;
 		this->_debug = false;
@@ -229,8 +231,8 @@ void Jerry::setTurnSpeed(int turn_speed){
 	Inputs: Int- speed
 	Outputs: None
 */
-void Jerry::setSpeed(int speed){
-	this->_speed = speed;
+void Jerry::setSpeed(int user_speed){
+	this->_speed = user_speed;
 	_motorLeft.setSpeed(_speed);
 	_motorRight.setSpeed(_speed);
 	if(_debug){
