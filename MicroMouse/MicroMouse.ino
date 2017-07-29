@@ -12,7 +12,9 @@ const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the 
 double duration;
 int distance;
 const int turn_angle = 50;
-int wallDistance = 10; //Threshold to determine if there is a wall or openingS
+int wallDistance = 10; //Threshold to determine if there is a wall or openings
+int middleWallDi
+stance = 12; //Threshold for middle sensor as it eats the wall, preventing a clean turn
 String directions; //Stores directions
 int goal_step_counter = 0; //Should be constantly at zero
 char intersectionChoice;
@@ -70,7 +72,8 @@ void setup() {
     // Default speed
     jerryBot.setSpeed(100);
   	//start debug mode 
-	jerryBot.setDebug(true);
+	  jerryBot.setDebug(true);
+    int quit = Serial.parseInt();
 }
 
 void loop() {
@@ -232,13 +235,13 @@ char intersectionDecision() {
   if (left_distance > wallDistance) {
     return 'L';
   }
-  else if (middle_distance > wallDistance) {
+  else if (middle_distance > middleWallDistance) {
     return 'S';
   }
   else if (right_distance > wallDistance) {
     return 'R';
   }
-  else  {
+  else if  ((left_distance < wallDistance) and (middle_distance < middleWallDistance) and (right_distance < wallDistance)) {
     return 'U';
   }
 }
@@ -250,11 +253,11 @@ bool isIntersection(){
   Serial.println(left_distance);
   Serial.println(right_distance);
   Serial.println(middle_distance);
-    if ( ( (middle_distance > wallDistance) and (left_distance > wallDistance) ) or ( (middle_distance > wallDistance) and (right_distance > wallDistance) ) ){
+    if ( ( (middle_distance > middleWallDistance) and (left_distance > wallDistance) ) or ( (middle_distance > middleWallDistance) and (right_distance > wallDistance) ) ){
       return true;
     }
 
-    if( left_distance < wallDistance and right_distance < wallDistance and middle_distance < wallDistance ){
+    if( left_distance < wallDistance and right_distance < wallDistance and middle_distance < middleWallDistance ){
       return true;
     }
     if( left_distance > wallDistance ) {
@@ -282,11 +285,11 @@ void solveMaze() {
     interrupts();
     isIntersectionBoolean = isIntersection();
     Serial.println(isIntersectionBoolean);
-    if(isIntersectionBoolean){
-      intersectionChoice = intersectionDecision();
+    if(isIntersectionBoolean){ //If we are at an intersection
+      intersectionChoice = intersectionDecision(); //Get decision to turn
       Serial.println(intersectionChoice);
       if (intersectionChoice == 'L') {
-        jerryBot.moveForward(105);
+        jerryBot.moveForward(100); //Was 105
         jerryBot.turnLeft();
         directions.concat('L');
 
@@ -294,7 +297,7 @@ void solveMaze() {
       }
       //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
       else if (intersectionChoice == 'S') {
-        jerryBot.moveForward(170);
+        jerryBot.moveForward(200);
         directions.concat('S');
 
       }
@@ -308,28 +311,26 @@ void solveMaze() {
       //If motor can only make a u-turn, do so and record it.
       else if (intersectionChoice == 'U') {
       jerryBot.turnAround();
-      delay(200);
       directions.concat('U');
-
       }
-      //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
-      else{
-        //jerryBot.moveForward(5); //Will step regardless if sensor is tripped or not
-        Serial.println("ElSE continue straight");
-        if ( (left_distance > wallDistance) or (right_distance > wallDistance) ){
-          goal_step_counter++;
-          Serial.println("Opening in left or right");
-        } 
-        else{
-          goal_step_counter = 0;
-          Serial.println("No right or left opening");
-        }
-      }
+      
+//      //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
+//      else{
+//        jerryBot.moveForward(5); //Will step regardless if sensor is tripped or not
+//        Serial.println("CONTINUE");
+//        if ( (left_distance > wallDistance) or (right_distance > wallDistance) ){
+//          goal_step_counter++;
+//          Serial.println("Opening in left or right");
+//        } 
+//        else{
+//          goal_step_counter = 0;
+//          Serial.println("No right or left opening");
+//        }
+//      }
       optimizePath(directions); //Constantly optimize path after ever intersection
       }
-      isIntersectionBoolean = false;
-      jerryBot.moveForward(10);
-      delay(200);
+//      isIntersectionBoolean = false;
+      jerryBot.moveForward(5);
       
     }
     
@@ -355,6 +356,7 @@ void solveOptimized(String directions) {
       jerryBot.turnRight();
     }
     directionsCounter++;
+    
   }
   else{
     jerryBot.moveForward(5); //Shouldn't it be 100 so it doesn't jump mpast a potential intersection?
