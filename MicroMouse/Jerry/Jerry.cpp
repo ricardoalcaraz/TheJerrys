@@ -1,12 +1,11 @@
 /*
+---------------------------Jerry the Micromouse------------------------------
 	
-	//Care has to be taken with the speed
-	//Motors use approximately 1A each at 100 rpm and .5A at 200 rpm
-	//150rpm is a good balance of speed and torque
+	NOTES:
+	Care has to be taken with the speed
+	Motors use approximately 1A each at 100 rpm and .5A at 200 rpm
+	150rpm is a good balance of speed and torque
 
-	//Move the robot forward
-	//Inputs: int - Number of steps
-	//Outputs: None
 */
 #include "Jerry.h"
 #include "Arduino.h"
@@ -38,6 +37,11 @@ Jerry::Jerry(int steps_per_revolution, int motor1_1, int motor1_2, int motor1_3,
 		motorsOff();
 }
 
+/*
+	Initialize switches into inputs
+	Inputs: Int- 4 switch positions
+	Outputs: None
+*/
 void Jerry::initializeSwitches(int switch1, int switch2, int switch3, int switch4){
 	if(_debug){
 		Serial.println("Initializing switches");
@@ -51,6 +55,11 @@ void Jerry::initializeSwitches(int switch1, int switch2, int switch3, int switch
 	}
 }
 
+/*
+	Read and output integer value of 4 switches
+	Input: None
+	Output: Int- switch value
+*/
 int Jerry::readSwitches(){
 	_switch_value = 0; //Must constantly reset switch count, otherwise it reaches rediculously large numbers //FIXED
 	for (int i = 0; i < 4; i++) {
@@ -141,6 +150,11 @@ void Jerry::turnLeft(){
 	motorsOff();
 }
 
+/*
+	Turn bot around
+	Inputs: None
+	Outputs: None
+*/
 void Jerry::turnAround(){
 	if(this->_debug){
 		Serial.println("Turning Around");
