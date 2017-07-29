@@ -45,6 +45,7 @@ class Jerry {
 		void setTurnSpeed(int turn_speed);
 		void initializeSwitches(int switch1, int switch2, int switch3, int switch4);
 		int readSwitches();
+		void initializeSensors();
 
 
 
@@ -61,6 +62,15 @@ class Jerry {
 		int _motor2_2;
 		int _motor2_3;
 		int _motor2_4;
+		int _trigger1;
+		int _echo1;
+		int _trigger2;
+		int _echo2;
+		int _trigger3;
+		int _echo3;
+		int _middle_distance;
+		int _right_distance;
+		int _left_distance;
 		int _turnSpeed;
 		int _switches[4];
 		int _switch_value;

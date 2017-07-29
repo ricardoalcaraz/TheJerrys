@@ -50,6 +50,23 @@ Jerry::Jerry(int steps_per_revolution, int motor1_1, int motor1_2, int motor1_3,
 		motorsOff();
 }
 
+
+void Jerry::initializeSensors(int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3){
+	_trigger1 = trigger1;
+	_echo_1 = echo_1;
+	_trigger2 = trigger2;
+	_echo_2 = echo_2;
+	_trigger3 = trigger3;
+	_echo_3 = echo_3;
+	pinMode(_trigger1, OUTPUT);
+  	pinMode(_echo1, INPUT);
+  	pinMode(_trigger2, OUTPUT);
+  	pinMode(_echo2, INPUT);
+  	pinMode(_trigger3, OUTPUT);
+  	pinMode(_echo3, INPUT);
+}
+
+
 /*
 	Initialize switches into inputs
 	Inputs: Int- 4 switch positions
