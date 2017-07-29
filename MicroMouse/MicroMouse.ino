@@ -11,8 +11,7 @@
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
 const int turn_angle = 50;
 int wallDistance = 10; //Threshold to determine if there is a wall or openings
-int middleWallDi
-stance = 12; //Threshold for middle sensor as it eats the wall, preventing a clean turn
+int middleWallDistance = wallDistance + 2; //Threshold for middle sensor as it eats the wall, preventing a clean turn
 String directions; //Stores directions
 int goal_step_counter = 0; //Should be constantly at zero
 char intersectionChoice;
@@ -187,26 +186,27 @@ void solveMaze() {
         jerryBot.moveForward(100); //Was 105
         jerryBot.turnLeft();
         directions.concat('L');
-
-      
+        delay(1000);
       }
       //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
       else if (intersectionChoice == 'S') {
         jerryBot.moveForward(200);
         directions.concat('S');
-
+        delay(1000);
       }
       //If motor can only turn right, then turn right and record it.
       else if (intersectionChoice == 'R') {
         jerryBot.turnRight();
         jerryBot.moveForward(105);
         directions.concat('R');
+        delay(1000);
 
       }
       //If motor can only make a u-turn, do so and record it.
       else if (intersectionChoice == 'U') {
       jerryBot.turnAround();
       directions.concat('U');
+      delay(1000);
       }
       
 //      //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
