@@ -46,9 +46,11 @@ class Jerry {
 		void initializeSwitches(int switch1, int switch2, int switch3, int switch4);
 		int readSwitches();
 		void initializeSensors(int pingRate, int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3);
-		int* getDistances();
+		int getRightDistance();
+		int getLeftDistance();
+		int getMiddleDistance();
 		void setMaxDistance(int user_distance);
-
+		void setWallDistance(int user_wall_distance);
 
 
 
@@ -56,6 +58,7 @@ class Jerry {
 		//Motors
 		Stepper _motorLeft;
 		Stepper _motorRight;
+		int _wallDistance;
 		int _steps_per_revolution;
 		int _speed;
 		int _turnAngle;
@@ -71,26 +74,28 @@ class Jerry {
 		void motorsOff();
 		void leftMotorOff();
 		void rightMotorOff();
+		void errorCorrection();
 		//Sensors
-		int _pingRate;
-		int _current_sensor;
-		int _distance;
-		int _duration;
-		int _max_distance;
-		void pingDistances();
-		int pulseRight();
-		int pulseLeft();
-		int pulseMiddle();
-		int _trigger1;
-		int _echo1;
-		int _trigger2;
-		int _echo2;
-		int _trigger3;
-		int _echo3;
-		int _sensor_distances[4];
-		volatile int _volatile_left_distance;
-		volatile int _volatile_right_distance;
-		volatile int _volatile_middle_distance;
+		IntervalTimer distanceChecker;
+		static int _pingRate;
+		static int _current_sensor;
+		static int _distance;
+		static int _duration;
+		static int _max_distance;
+		static void pingDistances();
+		static int pulseRight();
+		static int pulseLeft();
+		static int pulseMiddle();
+		static int _trigger1;
+		static int _echo1;
+		static int _trigger2;
+		static int _echo2;
+		static int _trigger3;
+		static int _echo3;
+		static int _sensor_distances[3];
+		static volatile int _volatile_left_distance;
+		static volatile int _volatile_right_distance;
+		static volatile int _volatile_middle_distance;
 		//Switches
 		int _switches[4];
 		int _switch_value;

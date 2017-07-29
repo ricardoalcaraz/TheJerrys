@@ -3,7 +3,7 @@
 ////////////////////////////////////////
 
 // Calling libraries
-#include "Jerry.h"
+#include "Jerry/Jerry.h"
 #include <elapsedMillis.h>
 
 // Constant Variables
@@ -55,8 +55,7 @@ int middle_distance;
 volatile int current_sensor;
 
 void setup() {
-    //Initialize timer interrupts to run every .1 seconds
-    checkDistances.begin(pingDistances, 100000);
+    jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
     //3 sensors' pin assignment
     pinMode(trigger1, OUTPUT);
     pinMode(echo1, INPUT);

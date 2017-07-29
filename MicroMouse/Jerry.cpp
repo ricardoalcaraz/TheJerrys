@@ -49,16 +49,45 @@ Jerry::Jerry(int steps_per_revolution, int motor1_1, int motor1_2, int motor1_3,
 		this->_turnSpeed = 95;
 		this->_turnAngle = 140;
 		this->_debug = false;
-		this->_pingRate = 100000;
-		this->_max_distance = 6000;
 		motorsOff();
+		this->_wallDistance = 7;
+}
+//initialize static variables
+int Jerry::_pingRate = 100000;
+int Jerry::_max_distance = 6000;
+int Jerry::_current_sensor = 0;
+int Jerry::_distance = 0;
+int Jerry::_duration = 0;
+int Jerry::_trigger1 = 0;
+int Jerry::_echo1 = 0;
+int Jerry::_trigger2 = 0;
+int Jerry::_echo2 = 0;
+int Jerry::_trigger3 = 0;
+int Jerry::_echo3 = 0;
+int Jerry::_sensor_distances[3] = {0, 0, 0};
+volatile int Jerry::_volatile_left_distance = 0;
+volatile int Jerry::_volatile_right_distance = 0;
+volatile int Jerry::_volatile_middle_distance = 0;
+
+int Jerry::getLeftDistance(){
+	noInterrupts();
+	_sensor_distances[0] = _volatile_left_distance;
+	interrupts();
+	return _sensor_distances[0];
 }
 
-int* Jerry::getDistances(){
-	_sensor_distances[0] = _volatile_left_distance;
-	_sensor_distances[1] = _volatile_middle_distance;
-	_sensor_distances[2] = _volatile_right_distance;
-	return _sensor_distances;
+int Jerry::getRightDistance(){
+	noInterrupts();
+	_sensor_distances[1] = _volatile_right_distance;
+	interrupts();
+	return _sensor_distances[1];
+}
+
+int Jerry::getMiddleDistance(){
+	noInterrupts();
+	_sensor_distances[2] = _volatile_middle_distance;
+	interrupts();
+	return _sensor_distances[2];
 }
 
 void Jerry::setMaxDistance(int user_distance){
@@ -83,9 +112,7 @@ int Jerry::pulseRight() {
 
 	//Calculate distance
 	_distance = _duration*0.034/2;
-	if(_debug){
-		Serial.print("Right distance: "); Serial.println(_distance);
-	}
+
 	return _distance;
 }
 
@@ -106,9 +133,7 @@ int Jerry::pulseLeft() {
 
 	//Calculate distance
 	_distance = _duration*0.034/2;
-	if(_debug){
-		Serial.print("Left distance: "); Serial.println(_distance);
-	}
+
 	return _distance;
 }
 
@@ -128,9 +153,7 @@ int Jerry::pulseMiddle() {
 
 	//Calculate distance
 	_distance = _duration*0.034/2;
-	if(_debug){
-		Serial.print("Middle distance: "); Serial.println(_distance);
-	}
+
 	return _distance;
 }
 
@@ -154,7 +177,7 @@ void Jerry::pingDistances() {
 	Inputs: 6 Ints - echo and trigger pins
 	Outputs: None
 */
-IntervalTimer distanceChecker;
+
 void Jerry::initializeSensors(int pingRate, int echo1, int trigger1, int echo2, int trigger2, int echo3, int trigger3){
 	_current_sensor = 0;
 	_pingRate = pingRate;
@@ -170,7 +193,7 @@ void Jerry::initializeSensors(int pingRate, int echo1, int trigger1, int echo2, 
   	pinMode(_echo2, INPUT);
   	pinMode(_trigger3, OUTPUT);
   	pinMode(_echo3, INPUT);
-  	//distanceChecker.begin(&Jerry::pingDistances, 10000);
+  	distanceChecker.begin(Jerry::pingDistances, _pingRate);
 }
 
 
@@ -354,7 +377,37 @@ void Jerry::moveForward(int steps){
 	for(int i = 0; i < steps; i++){
     	_motorLeft.step(1);
     	_motorRight.step(-1);
+    	if(i%5 == 0){
+    		errorCorrection();
+    	}
   	}
   	motorsOff();
+}
+
+void Jerry::setWallDistance(int user_wall_distance){
+	_wallDistance = user_wall_distance;
+}
+
+void Jerry::errorCorrection(){
+	int right_distance = getRightDistance();
+	int left_distance = getLeftDistance();
+	if( (right_distance < _wallDistance) and (left_distance < _wallDistance) ){
+		if(left_distance == right_distance){
+		Serial.println("Doing Nothing");
+		}
+		else if( getRightDistance() > getLeftDistance() ){
+			setTurnAngle(2);
+			turnRight();
+			setTurnAngle(_turnAngle);
+		}
+		else if( getLeftDistance() > getRightDistance() ){
+			setTurnAngle(2);
+			turnLeft();
+			setTurnAngle(_turnAngle);
+		}
+	}
+	
+
+
 }
 
