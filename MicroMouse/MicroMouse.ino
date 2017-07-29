@@ -3,14 +3,12 @@
 ////////////////////////////////////////
 
 // Calling libraries
-#include "Jerry/Jerry.h"
+#include "Jerry.h"
 #include <elapsedMillis.h>
 
 // Constant Variables
 #define STEPS 200 //Steps per revolution
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
-double duration;
-int distance;
 const int turn_angle = 50;
 int wallDistance = 10; //Threshold to determine if there is a wall or openingS
 String directions; //Stores directions
@@ -46,42 +44,28 @@ int switch_value;  //Initializing switches
 
 // Timer Initialization and associated variables
 IntervalTimer checkDistances;
-volatile int volatile_left_distance;
-volatile int volatile_right_distance;
-volatile int volatile_middle_distance;
 int left_distance;
 int right_distance;
 int middle_distance;
-volatile int current_sensor;
 
 void setup() {
     jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
     //3 sensors' pin assignment
-    pinMode(trigger1, OUTPUT);
-    pinMode(echo1, INPUT);
-    pinMode(trigger2, OUTPUT);
-    pinMode(echo2, INPUT);
-    pinMode(trigger3, OUTPUT);
-    pinMode(echo3, INPUT);
-  	//Initialize switches
-	jerryBot.initializeSwitches(6, 7, 8, 9);
-
+    jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
+    //Initialize switches
+  jerryBot.initializeSwitches(6, 7, 8, 9);
     // Default speed
     jerryBot.setSpeed(100);
-  	//start debug mode 
-	jerryBot.setDebug(true);
+    //start debug mode 
+  jerryBot.setDebug(true);
 }
 
 void loop() {
     //Constantly reading switch values
     switch_value = jerryBot.readSwitches();
     //Constantly read and save distances
-    noInterrupts();
-    middle_distance = volatile_middle_distance;
+    middle_distance = jerryBot.getMiddleDistance();
     Serial.println(middle_distance);
-    right_distance = volatile_right_distance;
-    left_distance = volatile_left_distance;
-    interrupts();
     //Switch case statements
     switch (switch_value) {
       case B0000: //Machine will not do anything
@@ -116,91 +100,6 @@ void loop() {
 //----------------------------------------------------------//
 //------------------FUNCTIONS-------------------------------//
 //----------------------------------------------------------//
-
-
-//-------------Sensor Functions----------------------------
-
-//
-void pingDistances(void) {
-  if( current_sensor == 0){
-    volatile_right_distance = pulseRight();
-    current_sensor++;
-  }
-  else if(current_sensor == 1){
-    volatile_middle_distance = pulseMiddle();
-    current_sensor++;
-  }
-  else if(current_sensor == 2){
-    volatile_left_distance = pulseLeft();
-    current_sensor = 0;
-  }
-}
-
-
-
-//pulseRight
-//Pulse right wall
-//Inputs: None
-//Outputs: Integer - wall distance in cm
-int pulseRight() {
-  digitalWrite(trigger1, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigger1, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigger1, LOW);
-
-  //Read the echo pin
-  duration = pulseIn(echo1, HIGH, max_distance);
-
-  //Calculate distance
-  distance = duration*0.034/2;
-
-  //Serial.print("Right distance: "); Serial.println(distance);
-  return distance;
-}
-
-
-//pulseLeft
-//Pulse left wall
-//Inputs: None
-//Outputs: Integer - wall distance in cm
-int pulseLeft() {
-  digitalWrite(trigger2, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigger2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigger2, LOW);
-
-  //Read the echo pin
-  duration = pulseIn(echo2, HIGH, max_distance);
-
-  //Calculate distance
-  distance = duration*0.034/2;
-  
-  ///Serial.print("Left distance: "); Serial.println(distance);
-  return distance;
-}
-
-//pulseMiddle
-//Pulse middle wall
-//Inputs: None
-//Outputs: Integer - wall distance in cm
-int pulseMiddle() {
-  digitalWrite(trigger3, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigger3, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigger3, LOW);
-
-  //Read the echo pin
-  duration = pulseIn(echo3, HIGH, max_distance);
-
-  //Calculate distance
-  distance = duration*0.034/2;
-
-  //Serial.print("Middle distance: "); Serial.println(distance);
-  return distance;
-}
 
 
 
@@ -274,11 +173,9 @@ bool isIntersection(){
 void solveMaze() {
   while (goal_step_counter < 150){ //Keep solving maze until we have found the goal
     //Update Distance Values
-    noInterrupts();
-    middle_distance = volatile_middle_distance;
-    right_distance = volatile_right_distance;
-    left_distance = volatile_left_distance;
-    interrupts();
+    middle_distance = jerryBot.getMiddleDistance();
+    right_distance = jerryBot.getRightDistance();
+    left_distance = jerryBot.getLeftDistance();
     isIntersectionBoolean = isIntersection();
     Serial.println(isIntersectionBoolean);
     if(isIntersectionBoolean){
@@ -327,8 +224,7 @@ void solveMaze() {
       optimizePath(directions); //Constantly optimize path after ever intersection
       }
       isIntersectionBoolean = false;
-      jerryBot.moveForward(10);
-      delay(200);
+      jerryBot.moveForward(50);
       
     }
     
