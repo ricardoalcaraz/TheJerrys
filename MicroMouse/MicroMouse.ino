@@ -12,7 +12,7 @@ const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the 
 double duration;
 int distance;
 const int turn_angle = 50;
-int wallDistance = 10; //Threshold to determine if there is a wall or opening
+int wallDistance = 10; //Threshold to determine if there is a wall or openingS
 String directions; //Stores directions
 int goal_step_counter = 0; //Should be constantly at zero
 char intersectionChoice;
@@ -274,7 +274,6 @@ bool isIntersection(){
 //Purpose: Function solves the maze using left hand rule
 void solveMaze() {
   while (goal_step_counter < 150){ //Keep solving maze until we have found the goal
-<<<<<<< HEAD
     //Update Distance Values
     noInterrupts();
     middle_distance = volatile_middle_distance;
@@ -334,53 +333,6 @@ void solveMaze() {
       
     }
     
-=======
-  //TODO need to check if we are in an intersection before making decision
-//   char next_direction = intersectionDecision();
-    //NOTE: Changed all instances of next_direcetion to intersectionDecision()
-//   while ( !isGoal() ){ //Keep trying to solve the maze until we have found the goal
-    
-    //If sensors say it can turn left, turn left and add "L" to the directions
-    if (intersectionDecision() == 'L') {
-      jerryBot.turnLeft();
-      directions.concat('L');
-      Serial.println("Turned left");
-      
-    }
-    //If sensors  can move forward, but cannot move left, continue going forward and add "S" to directions. It is important to add "S" here.
-    else if (intersectionDecision() == 'S') {
-      jerryBot.moveForward(200);
-      directions.concat('S');
-      Serial.println("Went straight");
-    }
-    //If motor can only turn right, then turn right and record it.
-    else if (intersectionDecision() == 'R') {
-      jerryBot.turnRight();
-      directions.concat('R');
-      Serial.println("Turned right");
-    }
-    //If motor can only make a u-turn, do so and record it.
-    else if (intersectionDecision() == 'U') {
-      jerryBot.turnAround();
-      directions.concat('U');
-      Serial.println("Turned around");
-    }
-    //Mouse should constantly be going forward unless sensors let mouse know it can turn. It is important to never add a direction unless at an intersection
-    else{
-      jerryBot.moveForward(1); //Will step regardless if sensor is tripped or not
-      Serial.println("ElSE continue straight");
-      if ( (left_distance > wallDistance) or (right_distance > wallDistance) ){
-      	goal_step_counter++;
-        Serial.println("Opening in left or right");
-      } 
-      else{
-        goal_step_counter = 0;
-        Serial.println("No right or left opening");
-      }
-    }
-    optimizePath(directions); //Constantly optimize path after ever intersection
-  }
->>>>>>> 4d88cc6bd676b8759932fa52334b8bcaa5edb085
 }
 
 
@@ -405,39 +357,23 @@ void solveOptimized(String directions) {
     directionsCounter++;
   }
   else{
-<<<<<<< HEAD
-    jerryBot.moveForward(1); //Shouldn't it be 100 so it doesn't jump mpast a potential intersection?
-=======
-    jerryBot.moveForward(200); //Shouldn't it be 100 so it doesn't jump mpast a potential intersection?
->>>>>>> 4d88cc6bd676b8759932fa52334b8bcaa5edb085
+    jerryBot.moveForward(5); //Shouldn't it be 100 so it doesn't jump mpast a potential intersection?
   }
 }
 
 //INPUT: Accepts a string of directions
 //OUTPUT: String directions
-<<<<<<< HEAD
 //Updates directions with shortcutstodo1
 String optimizePath(String directions) {
     String longer[6] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
     String shorter[6] = {"U","R","S","U","R","U"};
     for (int count = 0; count < 6; count++){
-=======
-//Updates directions with shortcutstodo
-String optimizePath(String directions) {
-    String longer[10] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
-    String shorter[10] = {"U","R","S","U","R","U"};
-    for (int count = 0; count <= (int) sizeof(longer); count++){
->>>>>>> 4d88cc6bd676b8759932fa52334b8bcaa5edb085
       if (directions.endsWith(longer[count])){
         directions.replace(longer[count], shorter[count]);
       }
     }
-<<<<<<< HEAD
   Serial.println(directions);
   return directions;
 }
 
-=======
-  return directions;
-}
->>>>>>> 4d88cc6bd676b8759932fa52334b8bcaa5edb085
+
