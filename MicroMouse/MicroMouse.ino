@@ -35,8 +35,8 @@ const int trigger1 = 0;
 const int echo1 = 1;
 const int trigger2 = 2;
 const int echo2 = 3;
-const int trigger3 = 4;
-const int echo3 = 5;
+const int trigger3 = 18;
+const int echo3 = 19;
 
 // Instantiating bot motors
 Jerry jerryBot(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4, motorRight_1, motorRight_2, motorRight_3, motorRight_4);
@@ -44,21 +44,17 @@ Jerry jerryBot(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4, motorR
 int switch_value;  //Initializing switches 
 
 // Timer Initialization and associated variables
-IntervalTimer checkDistances;
 int left_distance;
 int right_distance;
 int middle_distance;
 
-void setup() {
-    jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
-    //3 sensors' pin assignment
     jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
     //Initialize switches
-  jerryBot.initializeSwitches(6, 7, 8, 9);
+    jerryBot.initializeSwitches(6, 7, 8, 9);
     // Default speed
     jerryBot.setSpeed(100);
     //start debug mode 
-  jerryBot.setDebug(true);
+    jerryBot.setDebug(true);
 }
 
 void loop() {
