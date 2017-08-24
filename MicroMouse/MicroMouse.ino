@@ -48,6 +48,7 @@ int left_distance;
 int right_distance;
 int middle_distance;
 
+void setup(){
     jerryBot.initializeSensors( 10000, echo1, trigger1, echo2, trigger2, echo3, trigger3);
     //Initialize switches
     jerryBot.initializeSwitches(6, 7, 8, 9);

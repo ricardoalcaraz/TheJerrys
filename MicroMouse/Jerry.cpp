@@ -65,9 +65,9 @@ int Jerry::_echo2 = 0;
 int Jerry::_trigger3 = 0;
 int Jerry::_echo3 = 0;
 int Jerry::_sensor_distances[3] = {0, 0, 0};
-volatile int Jerry::_volatile_left_distance = {0,0,0};
-volatile int Jerry::_volatile_right_distance = {0,0,0};
-volatile int Jerry::_volatile_middle_distance = {0,0,0};
+volatile int Jerry::_volatile_left_distance[3] = {0,0,0};
+volatile int Jerry::_volatile_right_distance[3] = {0,0,0};
+volatile int Jerry::_volatile_middle_distance[3] = {0,0,0};
 volatile int Jerry::_value = 0;
 
 int Jerry::getLeftDistance(){
@@ -88,7 +88,7 @@ int Jerry::getRightDistance(){
 
 int Jerry::getMiddleDistance(){
 	noInterrupts();
-	sort(_volatile_middle_distance;
+	sort(_volatile_middle_distance, 3);
 	_sensor_distances[2] = _volatile_middle_distance[1];
 	interrupts();
 	return _sensor_distances[2];
@@ -103,9 +103,9 @@ void Jerry::setMaxDistance(int user_distance){
  * INPUT: array pointer, Int - size
  * OUTPUT: None
  */
-void sort(int *arr,int size){
+void sort(int *arr,int sort_size){
 	int temp = 0;
-	for(int i = 0; i < size-1; i++){
+	for(int i = 0; i < sort_size-1; i++){
 		if(arr[i] > arr[i+1]){
 			temp = arr[i];
 			arr[i] = arr[i+1];
