@@ -93,9 +93,11 @@ class Jerry {
 		static int _trigger3;
 		static int _echo3;
 		static int _sensor_distances[3];
-		static volatile int _volatile_left_distance;
-		static volatile int _volatile_right_distance;
-		static volatile int _volatile_middle_distance;
+		static volatile int _volatile_left_distance[3];
+		static volatile int _volatile_right_distance[3];
+		static volatile int _volatile_middle_distance[3];
+		static volatile int _value;
+		static void sort(int *distance);
 		//Switches
 		int _switches[4];
 		int _switch_value;
