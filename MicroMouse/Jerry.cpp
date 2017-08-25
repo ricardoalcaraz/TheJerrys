@@ -103,7 +103,6 @@ void Jerry::setMaxDistance(int user_distance){
  * INPUT: array pointer, Int - size
  * OUTPUT: None
  */
-<<<<<<< HEAD
 void Jerry::sort(volatile int *distance, int sort_size){
 	int temp = 0;
 	for(int i = 0; i < sort_size-1; i++){
@@ -111,15 +110,6 @@ void Jerry::sort(volatile int *distance, int sort_size){
 			temp = distance[i];
 			distance[i] = distance[i+1];
 			distance[i+1] = temp;
-=======
-void sort(int *arr,int sort_size){
-	int temp = 0;
-	for(int i = 0; i < sort_size-1; i++){
-		if(arr[i] > arr[i+1]){
-			temp = arr[i];
-			arr[i] = arr[i+1];
-			arr[i+1] = temp;
->>>>>>> c77b0e5835c2ef1dfb6b9da98fc9d4a0f5e3b9a8
 		}
 	}
 		
