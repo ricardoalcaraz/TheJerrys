@@ -65,31 +65,27 @@ int Jerry::_echo2 = 0;
 int Jerry::_trigger3 = 0;
 int Jerry::_echo3 = 0;
 int Jerry::_sensor_distances[3] = {0, 0, 0};
-volatile int Jerry::_volatile_left_distance[3] = {0,0,0};
-volatile int Jerry::_volatile_right_distance[3] = {0,0,0};
-volatile int Jerry::_volatile_middle_distance[3] = {0,0,0};
-volatile int Jerry::_value = 0;
+volatile int Jerry::_volatile_left_distance = 0;
+volatile int Jerry::_volatile_right_distance = 0;
+volatile int Jerry::_volatile_middle_distance = 0;
 
 int Jerry::getLeftDistance(){
 	noInterrupts();
-	sort(_volatile_left_distance, 3);
-	_sensor_distances[0] = _volatile_left_distance[1];
+	_sensor_distances[0] = _volatile_left_distance;
 	interrupts();
 	return _sensor_distances[0];
 }
 
 int Jerry::getRightDistance(){
 	noInterrupts();
-	sort(_volatile_right_distance, 3);
-	_sensor_distances[1] = _volatile_right_distance[1];
+	_sensor_distances[1] = _volatile_right_distance;
 	interrupts();
 	return _sensor_distances[1];
 }
 
 int Jerry::getMiddleDistance(){
 	noInterrupts();
-	sort(_volatile_middle_distance, 3);
-	_sensor_distances[2] = _volatile_middle_distance[1];
+	_sensor_distances[2] = _volatile_middle_distance;
 	interrupts();
 	return _sensor_distances[2];
 }
@@ -98,32 +94,6 @@ void Jerry::setMaxDistance(int user_distance){
 	_max_distance = user_distance;
 }
 
-/*
- * Simple bubble sort algorithm
- * INPUT: array pointer, Int - size
- * OUTPUT: None
- */
-<<<<<<< HEAD
-void Jerry::sort(volatile int *distance, int sort_size){
-	int temp = 0;
-	for(int i = 0; i < sort_size-1; i++){
-		if(distance[i] > distance[i+1]){
-			temp = distance[i];
-			distance[i] = distance[i+1];
-			distance[i+1] = temp;
-=======
-void sort(int *arr,int sort_size){
-	int temp = 0;
-	for(int i = 0; i < sort_size-1; i++){
-		if(arr[i] > arr[i+1]){
-			temp = arr[i];
-			arr[i] = arr[i+1];
-			arr[i+1] = temp;
->>>>>>> c77b0e5835c2ef1dfb6b9da98fc9d4a0f5e3b9a8
-		}
-	}
-		
-}
 
 
 //pulseRight
@@ -189,22 +159,19 @@ int Jerry::pulseMiddle() {
 
 void Jerry::pingDistances() {
 	if( _current_sensor == 0){
-		_volatile_right_distance[_value] = pulseRight();
-		_current_sensor++;
+	_volatile_right_distance = pulseRight();
+	_current_sensor++;
 	}
 	else if(_current_sensor == 1){
-		_volatile_middle_distance[_value] = pulseMiddle();
-		_current_sensor++;
+	_volatile_middle_distance = pulseMiddle();
+	_current_sensor++;
 	}
 	else if(_current_sensor == 2){
-		_volatile_left_distance[_value] = pulseLeft();
-		_current_sensor = 0;
-		if(_value == 3){
-			_value = 0;
-		}
+	_volatile_left_distance = pulseLeft();
+	_current_sensor = 0;
 	}
-	_value++;
 }
+
 /*
 	Initialize sensors
 	Inputs: 6 Ints - echo and trigger pins
