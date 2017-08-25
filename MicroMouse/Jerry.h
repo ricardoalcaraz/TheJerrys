@@ -97,7 +97,7 @@ class Jerry {
 		static volatile int _volatile_right_distance[3];
 		static volatile int _volatile_middle_distance[3];
 		static volatile int _value;
-		static void sort(int *distance);
+		static void sort(volatile int *distance, int sort_size);
 		//Switches
 		int _switches[4];
 		int _switch_value;
