@@ -9,15 +9,16 @@
 // Constant Variables
 #define STEPS 200 //Steps per revolution
 const int max_distance = 6000; //Goes out to about 80cm. Since this reduces the amount of time spent until a pulse is recorded, it can essentially limit the distance it records
-const int turn_angle = 50;
+const int turn_angle = 50;  //Holds number or steps to swivel
 int wallDistance = 10; //Threshold to determine if there is a wall or openings
-int middleWallDistance = wallDistance + 2; //Threshold for middle sensor as it eats the wall, preventing a clean turn
+int middleWallDistance = wallDistance + 2; //Threshold for middle sensor as it eats the wall, preventing a clean turn by allowing for extra clearance
 String directions; //Stores directions
 int goal_step_counter = 0; //Should be constantly at zero
-char intersectionChoice;
-bool isIntersectionBoolean;
-// From left to right: Green black red blue 
+char intersectionChoice; //Can either be (L)eft, (R)ight, (S)traight, or (U)turn
+bool isIntersectionBoolean; //True if there is an intersection. If mouse can only turn left, right, or go back this counts as an intersection
+
 // Stepper Pins
+// From left to right: Green black red blue 
 const int motorLeft_1 = 15;
 const int motorLeft_2 = 21;
 const int motorLeft_3 = 14;
@@ -29,6 +30,7 @@ const int motorRight_4 = 11;
 
 // Switch pins
 int switchPins[4] = {6, 7, 8 , 9}; //Declaring pins for the switches
+int switch_value;  //Initializing switches 
 
 // UltraSonic Sensor Pins
 const int trigger1 = 0;
@@ -41,7 +43,6 @@ const int echo3 = 19;
 // Instantiating bot motors
 Jerry jerryBot(STEPS, motorLeft_1, motorLeft_2, motorLeft_3, motorLeft_4, motorRight_1, motorRight_2, motorRight_3, motorRight_4);
   
-int switch_value;  //Initializing switches 
 
 // Timer Initialization and associated variables
 int left_distance;
@@ -70,7 +71,7 @@ void loop() {
         Serial.println("Awaiting instruction");
         break;
       case B0001: //Machine will start solving maze
-        if(middle_distance < 10){
+        if(middle_distance < 10){ //Begins to solve by waving hand in front
           delay(1500);
           Serial.println("Solving maze");
           solveMaze();
@@ -108,10 +109,13 @@ void recall(String directions) {
   }
 }
 
+
 //-------Algorithm Functions----------------//
 //INPUT: None
 //OUTPUT: Returns boolean value if mouse is at the endpoint
 //FIXME: NOTE: By request, random end goal peg can be removed. Therefore we can do the technique where if it detects a larger than normal opening for an extended period of time, return true. Also please check logic
+//FIXME: Does entering this loop "take over" the program? Once it enters does it mess up with everything else or does can this happen simultaneously or extremely quickly where it doesn't matter?
+//FIXME: Should probably implement step system for accuracy instead of time
 bool isGoal() {
     int milli = elapsedMillis();
     //If there is a larger than normal distance, return true
@@ -121,10 +125,39 @@ bool isGoal() {
   return false;
 }
 
+
+//INPUT: None
+//Output: Boolean - Lets mouse know when there is an intersection
+//Use: When solving maze with optimized path, mouse can just turn based on directions whenever there is an intersection
+bool isIntersection(){
+  //Printing distances for debugging purposes
+  Serial.println(left_distance);
+  Serial.println(right_distance);
+  Serial.println(middle_distance);
+    if ( ( (middle_distance > middleWallDistance) and (left_distance > wallDistance) ) or ( (middle_distance > middleWallDistance) and (right_distance > wallDistance) ) ){ //If opening left and forward or right and forward
+      //FIXME: IS this one even necessary since it will turn left regardless of if there is an opening in front? I forgot, it seemed like a good idea at the time. Probably best to keep it just because
+      return true;
+    }
+
+    if( left_distance < wallDistance and right_distance < wallDistance and middle_distance < middleWallDistance ){ //If at a dead end
+      return true;
+    }
+    if( left_distance > wallDistance ) { //Opening to the left
+      return true;
+    }
+    if( right_distance > wallDistance ) { //Opening to the right
+      return true;
+    }
+    
+    return false; //Automatically assumes there is no intersection and will travel in a straight line
+    
+}
+
 //Input: None
 //Output: Returns a char based on sensors
 //NOTE: DOES NOT append paths to array, just check and turn. We don't want it to append anything otherwise solveOptimized() would constantly add letters
 char intersectionDecision() {
+  //Using waterfall princniple of control flow statements. Priority: Left, straight, right, turn around
   if (left_distance > wallDistance) {
     return 'L';
   }
@@ -139,30 +172,6 @@ char intersectionDecision() {
   }
 }
 
-//INPUT: None
-//Output: Boolean - Lets mouse know when there is an intersection
-//Use: When solving maze with optimized path, mouse can just turn based on directions whenever there is an intersection
-bool isIntersection(){
-  Serial.println(left_distance);
-  Serial.println(right_distance);
-  Serial.println(middle_distance);
-    if ( ( (middle_distance > middleWallDistance) and (left_distance > wallDistance) ) or ( (middle_distance > middleWallDistance) and (right_distance > wallDistance) ) ){
-      return true;
-    }
-
-    if( left_distance < wallDistance and right_distance < wallDistance and middle_distance < middleWallDistance ){
-      return true;
-    }
-    if( left_distance > wallDistance ) {
-      return true;
-    }
-    if( right_distance > wallDistance ) {
-      return true;
-    }
-    
-    return false;
-    
-}
 
 
 //INPUT: String directions - so that it can modify the directions as it goes
@@ -175,6 +184,7 @@ void solveMaze() {
     right_distance = jerryBot.getRightDistance();
     left_distance = jerryBot.getLeftDistance();
     isIntersectionBoolean = isIntersection();
+    Serial.println("At intersection: ");
     Serial.println(isIntersectionBoolean);
     if(isIntersectionBoolean){ //If we are at an intersection
       intersectionChoice = intersectionDecision(); //Get decision to turn
@@ -237,7 +247,7 @@ void solveOptimized(String directions) {
   char turn;
   if (isIntersection()){
     turn = directions[directionsCounter];
-    //Note: don't need to make a function to go back
+    //Note: don't need to make a function to go back as u-turns will be cut out
     if (turn == 'L'){
       jerryBot.turnLeft();
     }
