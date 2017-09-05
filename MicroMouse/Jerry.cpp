@@ -69,7 +69,11 @@ volatile int Jerry::_volatile_left_distance[3] = {0,0,0};
 volatile int Jerry::_volatile_right_distance[3] = {0,0,0};
 volatile int Jerry::_volatile_middle_distance[3] = {0,0,0};
 volatile int Jerry::_value = 0;
-
+/*
+ *Get Left Sensor Distance
+ *Input: None
+ *Outputs: int - distance
+ */
 int Jerry::getLeftDistance(){
 	noInterrupts();
 	sort(_volatile_left_distance, 3);
@@ -77,7 +81,11 @@ int Jerry::getLeftDistance(){
 	interrupts();
 	return _sensor_distances[0];
 }
-
+/*
+ *Get Right Sensor Distance
+ *Input: None
+ *Outputs: int - distance
+ */
 int Jerry::getRightDistance(){
 	noInterrupts();
 	sort(_volatile_right_distance, 3);
@@ -85,7 +93,11 @@ int Jerry::getRightDistance(){
 	interrupts();
 	return _sensor_distances[1];
 }
-
+/*
+ *Get Middle Sensor Distance
+ *Input: None
+ *Outputs: int - distance
+ */
 int Jerry::getMiddleDistance(){
 	noInterrupts();
 	sort(_volatile_middle_distance, 3);
@@ -176,7 +188,12 @@ int Jerry::pulseMiddle() {
 
 	return _distance;
 }
-
+/*
+ *Interrupt based routine to ping each sensor and grab a distance.
+ Updates at whatever interval this routine is set to run
+ *Inputs: None
+ *Output: None - writes to a static variable in the class. To grab an output you must call the getter function
+ */
 void Jerry::pingDistances() {
 	if( _current_sensor == 0){
 		_volatile_right_distance[_value] = pulseRight();
@@ -406,11 +423,17 @@ void Jerry::moveForward(int steps){
   	}
   	motorsOff();
 }
-
+/* Setter function
+ * Set a distance to stop taking measurements after
+ */
 void Jerry::setWallDistance(int user_wall_distance){
 	_wallDistance = user_wall_distance;
 }
 
+/*Error Correction - constantly reads the distance it has traveled and makes sure the left and right distances are similar. If not then it turns toward whichever direction is greater.
+ *Inputs: None
+ *Outputs: None
+ */
 void Jerry::errorCorrection(){
 	int right_distance = getRightDistance();
 	int left_distance = getLeftDistance();
