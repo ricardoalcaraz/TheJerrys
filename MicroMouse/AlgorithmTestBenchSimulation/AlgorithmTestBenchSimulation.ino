@@ -6,52 +6,64 @@ void setup() {
   Serial.println("-----SOLVING FIRST TIME-------");
   Serial.println("turn L");
   directions.concat('L');
+  stepCounter+=50;
+  clearCounter(directions, stepCounter);
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);
   isGoal(directions,stepCounter);
 
   Serial.println("turn U");
   directions.concat('U');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);
   directions = optimize(directions);
   Serial.println(directions);
   
   Serial.println("turn L");
   directions.concat('L');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
   
   Serial.println("turn U");
   directions.concat('U');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
   
   Serial.println("turn L");
   directions.concat('L');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
   
   Serial.println("Turn R");
   directions.concat('R');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
 
   Serial.println("Turn R");
   directions.concat('R');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
   directions = optimize(directions);
   Serial.println(directions);
+  Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
-
-
-  Serial.println("Turn R");
-  directions.concat('R');
-  directions = optimize(directions);
-  Serial.println(directions);
-  isGoal(directions,stepCounter);
-
 
 
   Serial.println("-------OPTIMIZED SOLVE------");
@@ -79,14 +91,19 @@ void recall(String directions) {
 }
 
 bool isGoal(String directions, int stepCount){
-  if (directions.endsWith("RRR") & stepCount < 150){
+  if ( directions.endsWith("RRR") & (stepCount < 150) ){
     Serial.println("Found Goal");
     return true;
   }
   else{
-    Serial.println("No Goal");
     return false;
   }
+}
 
+
+void clearCounter(String &directions, int &stepCounter){
+  if ( ! directions.endsWith("R")){
+    stepCounter = 0;
+  }
 }
 
