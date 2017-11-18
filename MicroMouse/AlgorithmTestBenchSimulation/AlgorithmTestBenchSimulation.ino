@@ -8,7 +8,6 @@ void setup() {
   directions.concat('L');
   stepCounter+=50;
   clearCounter(directions, stepCounter);
-  directions = optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);
   isGoal(directions,stepCounter);
@@ -17,14 +16,14 @@ void setup() {
   directions.concat('U');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);
-  directions = optimize(directions);
+  optimize(directions);
   Serial.println(directions);
   
   Serial.println("turn L");
   directions.concat('L');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);
-  directions = optimize(directions);
+  optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
@@ -33,7 +32,7 @@ void setup() {
   directions.concat('U');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);  
-  directions = optimize(directions);
+  optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
@@ -42,7 +41,7 @@ void setup() {
   directions.concat('L');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);  
-  directions = optimize(directions);
+  optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
@@ -51,7 +50,16 @@ void setup() {
   directions.concat('R');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);  
-  directions = optimize(directions);
+  optimize(directions);
+  Serial.println(directions);
+  Serial.println(stepCounter);  
+  isGoal(directions,stepCounter);
+
+  Serial.println("Turn U");
+  directions.concat('U');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
+  optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
@@ -60,20 +68,39 @@ void setup() {
   directions.concat('R');
   stepCounter+=50;  
   clearCounter(directions, stepCounter);  
-  directions = optimize(directions);
+  optimize(directions);
   Serial.println(directions);
   Serial.println(stepCounter);  
   isGoal(directions,stepCounter);
 
 
+  Serial.println("Turn R");
+  directions.concat('R');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
+  optimize(directions);
+  Serial.println(directions);
+  Serial.println(stepCounter);  
+  isGoal(directions,stepCounter);
+
+  Serial.println("Turn R");
+  directions.concat('R');
+  stepCounter+=50;  
+  clearCounter(directions, stepCounter);  
+  optimize(directions);
+  Serial.println(directions);
+  Serial.println(stepCounter);  
+  isGoal(directions,stepCounter);
   Serial.println("-------OPTIMIZED SOLVE------");
+
+  
   recall(directions);
 }
 
 void loop() {
 }
 
-String optimize(String directions) {
+void optimize(String &directions) {
     String longer[10] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
     String shorter[10] = {"U","R","S","U","R","U"};
     for (int count = 0; count <= sizeof(longer); count++){
@@ -81,16 +108,15 @@ String optimize(String directions) {
         directions.replace(longer[count],shorter[count]);
       }
     }
-  return directions;
 }
 
-void recall(String directions) {
+void recall(String &directions) {
   for (int i = 0; i <= directions.length(); i++) {
     Serial.println(directions[i]);
   }
 }
 
-bool isGoal(String directions, int stepCount){
+bool isGoal(String &directions, int &stepCount){
   if ( directions.endsWith("RRR") & (stepCount < 150) ){
     Serial.println("Found Goal");
     return true;
