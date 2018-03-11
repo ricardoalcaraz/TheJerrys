@@ -405,11 +405,11 @@ void Jerry::motorsOff(){
 	rightMotorOff();
 }
 
-/*
-	Move the robot forward
-	Inputs: int - number of steps
-	Outputs: None
-*/
+
+//Move the robot forward
+//Inputs: int - number of steps
+//Outputs: None
+
 void Jerry::moveForward(int steps){
 	if(this->_debug){
 		Serial.println("Moving Forward");
@@ -430,16 +430,16 @@ void Jerry::setWallDistance(int user_wall_distance){
 	_wallDistance = user_wall_distance;
 }
 
-/*Error Correction - constantly reads the distance it has traveled and makes sure the left and right distances are similar. If not then it turns toward whichever direction is greater.
- *Inputs: None
- *Outputs: None
- */
+//Error Correction - constantly reads the distance it has traveled and makes sure the left and right distances are similar. If not then it turns toward whichever direction is greater.
+//Inputs: None
+//Outputs: None
+
 void Jerry::errorCorrection(){
 	int right_distance = getRightDistance();
 	int left_distance = getLeftDistance();
 	if( (right_distance < _wallDistance) and (left_distance < _wallDistance) ){
 		if(left_distance == right_distance){
-		Serial.println("Doing Nothing");
+			Serial.println("Doing Nothing");
 		}
 		else if( getRightDistance() > getLeftDistance() ){
 			setTurnAngle(2);

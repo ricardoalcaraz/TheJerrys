@@ -4,7 +4,6 @@
 
 // Calling libraries
 #include "Jerry.h"
-#include <elapsedMillis.h>
 
 // Constant Variables
 #define STEPS 200 //Steps per revolution
