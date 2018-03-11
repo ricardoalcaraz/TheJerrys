@@ -2,102 +2,51 @@ String directions;
 int stepCounter;
 void setup() {
   Serial.begin(9600);
-
-  Serial.println("-----SOLVING FIRST TIME-------");
-  Serial.println("turn L");
-  directions.concat('L');
-  stepCounter+=50;
-  clearCounter(directions, stepCounter);
-  Serial.println(directions);
-  Serial.println(stepCounter);
-  isGoal(directions,stepCounter);
-
-  Serial.println("turn U");
-  directions.concat('U');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);
-  optimize(directions);
-  Serial.println(directions);
-  
-  Serial.println("turn L");
-  directions.concat('L');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-  
-  Serial.println("turn U");
-  directions.concat('U');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-  
-  Serial.println("turn L");
-  directions.concat('L');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-  
-  Serial.println("Turn R");
-  directions.concat('R');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-
-  Serial.println("Turn U");
-  directions.concat('U');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-
-  Serial.println("Turn R");
-  directions.concat('R');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-
-
-  Serial.println("Turn R");
-  directions.concat('R');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-
-  Serial.println("Turn R");
-  directions.concat('R');
-  stepCounter+=50;  
-  clearCounter(directions, stepCounter);  
-  optimize(directions);
-  Serial.println(directions);
-  Serial.println(stepCounter);  
-  isGoal(directions,stepCounter);
-  Serial.println("-------OPTIMIZED SOLVE------");
-
-  
-  recall(directions);
+  solvePath1();
 }
 
 void loop() {
+}
+
+void solvePath1(){
+  //Simulation path: LULULRRR
+  //Expected optimized path: RRRR
+
+  Serial.println("-----SOLVING FIRST TIME-------");
+  makeTurn("L");
+  makeTurn("U");
+  makeTurn("L");
+  makeTurn("U");
+  makeTurn("L");
+  makeTurn("R");
+  makeTurn("R");
+  makeTurn("R");
+  makeTurn("R");
+  
+  Serial.println("-----Optimized SOLVE-------");
+  recall(directions);
+}
+
+void solvePath2(){
+  //Simulation path: LLURLLULRLRRRRULLLLRRR
+  //Expected optimized path: 
+}
+
+
+void makeTurn(String turn){
+  Serial.println("Turned: " + turn);
+  directions.concat(turn);
+  optimize(directions);
+  
+  stepCounter+=50;
+  if ( ! directions.endsWith("R")){
+    stepCounter = 0;
+  }
+  
+  Serial.println("Optimized Directions: " + directions);
+  Serial.println(stepCounter);
+  isGoal(directions,stepCounter);
+  Serial.println();
 }
 
 void optimize(String &directions) {
@@ -112,24 +61,17 @@ void optimize(String &directions) {
 
 void recall(String &directions) {
   for (int i = 0; i <= directions.length(); i++) {
-    Serial.println(directions[i]);
+    Serial.print(directions[i]);
   }
 }
 
 bool isGoal(String &directions, int &stepCount){
-  if ( directions.endsWith("RRR") & (stepCount < 150) ){
+  if ( directions.endsWith("RRR") & (stepCount <= 150) ){
     Serial.println("Found Goal");
     return true;
   }
-  else{
-    return false;
-  }
+  return false;
 }
 
 
-void clearCounter(String &directions, int &stepCounter){
-  if ( ! directions.endsWith("R")){
-    stepCounter = 0;
-  }
-}
 
