@@ -12,9 +12,14 @@ const int turn_angle = 50;  //Holds number or steps to swivel
 int wallDistance = 10; //Threshold to determine if there is a wall or openings
 int middleWallDistance = wallDistance + 2; //Threshold for middle sensor as it eats the wall, preventing a clean turn by allowing for extra clearance
 String directions; //Stores directions
+int stepCounter; //Tracks for the final goal
 int goal_step_counter = 0; //Should be constantly at zero
 char intersectionChoice; //Can either be (L)eft, (R)ight, (S)traight, or (U)turn
 bool isIntersectionBoolean; //True if there is an intersection. If mouse can only turn left, right, or go back this counts as an intersection
+
+//----------------------------------------------------------//
+//------------------PIN INITIALIZATION----------------------//
+//----------------------------------------------------------//
 
 // Stepper Pins
 // From left to right: Green black red blue 
@@ -58,6 +63,9 @@ void setup(){
     jerryBot.setDebug(true);
 }
 
+//----------------------------------------------------------//
+//------------------MAIN------------------------------------//
+//----------------------------------------------------------//
 void loop() {
     //Constantly reading switch values
     switch_value = jerryBot.readSwitches();
@@ -99,28 +107,43 @@ void loop() {
 //------------------FUNCTIONS-------------------------------//
 //----------------------------------------------------------//
 
-
+//INPUT: Turn
+//OUTPUT: None
+//
+void makeTurn(String turn){
+  Serial.println("Turned: " + turn);
+  directions.concat(turn);
+  optimize(directions);
+  
+  stepCounter+=50;
+  if ( ! directions.endsWith("R")){
+    stepCounter = 0;
+  }
+  
+  Serial.println("Optimized Directions: " + directions);
+  Serial.println(stepCounter);
+//  isGoal(directions,stepCounter); //FIXME: Should probably go outside of scope
+  Serial.println();
+}
 
 //------Debug functions---------------------//
-void recall(String directions) {
-  for (int i = 0; i <= (int) directions.length(); i++) {
-    Serial.println(directions[i]);
+void recall(String &directions) {
+  for (int i = 0; i <= directions.length(); i++) {
+    Serial.print(directions[i]);
   }
 }
 
 
 //-------Algorithm Functions----------------//
-//INPUT: None
+//INPUT: Directions and stepper count by reference
 //OUTPUT: Returns boolean value if mouse is at the endpoint
-//FIXME: NOTE: By request, random end goal peg can be removed. Therefore we can do the technique where if it detects a larger than normal opening for an extended period of time, return true. Also please check logic
-//FIXME: Does entering this loop "take over" the program? Once it enters does it mess up with everything else or does can this happen simultaneously or extremely quickly where it doesn't matter?
-//FIXME: Should probably implement step system for accuracy instead of time
-bool isGoal() {
-    int milli = elapsedMillis();
-    //If there is a larger than normal distance, return true
-    if ( ((left_distance > wallDistance) or (right_distance > wallDistance)) and milli > 3000 ){
-      return true;
-    }
+//Notes: Tracks by steps instead of time for consistency regardless of speed. This also prevents 
+//       the program from being "taken over"
+bool isGoal(String &directions, int &stepCount){
+  if ( directions.endsWith("RRR") & (stepCount <= 150) ){
+    Serial.println("Found Goal");
+    return true;
+  }
   return false;
 }
 
@@ -264,19 +287,17 @@ void solveOptimized(String directions) {
   }
 }
 
-//INPUT: Accepts a string of directions
-//OUTPUT: String directions
-//Updates directions with shortcutstodo1
-String optimizePath(String directions) {
-    String longer[6] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
-    String shorter[6] = {"U","R","S","U","R","U"};
-    for (int count = 0; count < 6; count++){
+//INPUT: Accepts a string of directions by reference
+//OUTPUT: None
+//Updates directions with shortcuts
+void optimize(String &directions) {
+    String longer[10] = {"LUR","LUS","LUL","RUL","SUL","SUS"};
+    String shorter[10] = {"U","R","S","U","R","U"};
+    for (int count = 0; count <= sizeof(longer); count++){
       if (directions.endsWith(longer[count])){
-        directions.replace(longer[count], shorter[count]);
+        directions.replace(longer[count],shorter[count]);
       }
     }
-  Serial.println(directions);
-  return directions;
 }
 
 
