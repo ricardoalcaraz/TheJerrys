@@ -2,15 +2,16 @@ String directions;
 int stepCounter;
 void setup() {
   Serial.begin(9600);
-  solvePath1();
+//  solveMaze1();
+  solveMaze2();
 }
 
 void loop() {
 }
 
-void solvePath1(){
-  //Simulation path: LULULRRR
-  //Expected optimized path: RRRR
+void solveMaze1(){
+  //Simulation path: LUL UL RRR
+  //Expected optimized path: R RRR
 
   Serial.println("-----SOLVING FIRST TIME-------");
   makeTurn("L");
@@ -27,9 +28,33 @@ void solvePath1(){
   recall(directions);
 }
 
-void solvePath2(){
-  //Simulation path: LLURLLULRLRRRRULLLLRRR
-  //Expected optimized path: 
+void solveMaze2(){
+  //Simulation path of maze: RSR LLR ULL RLL RRR
+  //Expected optimized path: RSR LSR LL RRR
+  Serial.println("-----SOLVING FIRST TIME-------");
+  makeTurn("R");
+  makeTurn("S");
+  makeTurn("R");
+  
+  makeTurn("L");
+  makeTurn("L");
+  makeTurn("R");
+  
+  makeTurn("U");
+  makeTurn("L");
+  makeTurn("L");
+  
+  makeTurn("R");
+  makeTurn("L");
+  makeTurn("L");
+  
+  makeTurn("R");
+  makeTurn("R");
+  makeTurn("R");
+  
+  Serial.println("-----Optimized SOLVE-------");
+  recall(directions);
+  
 }
 
 
