@@ -15204,73 +15204,6 @@ Source: AVX .. aphvc.pdf</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="Scraps">
-<description>&lt;b&gt;https://eagle.componentsearchengine.com&lt;/b&gt;&lt;p&gt;&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
-<packages>
-<package name="SODFL3617X108N">
-<description>&lt;b&gt;SOD-123F 2L&lt;/b&gt;&lt;br&gt;
-</description>
-<smd name="1" x="-1.65" y="0" dx="1.03" dy="1.17" layer="1"/>
-<smd name="2" x="1.65" y="0" dx="1.03" dy="1.17" layer="1"/>
-<text x="0" y="0" size="1.27" layer="25" align="center">&gt;NAME</text>
-<text x="0" y="0" size="1.27" layer="27" align="center">&gt;VALUE</text>
-<wire x1="-2.315" y1="1.125" x2="2.315" y2="1.125" width="0.05" layer="51"/>
-<wire x1="2.315" y1="1.125" x2="2.315" y2="-1.125" width="0.05" layer="51"/>
-<wire x1="2.315" y1="-1.125" x2="-2.315" y2="-1.125" width="0.05" layer="51"/>
-<wire x1="-2.315" y1="-1.125" x2="-2.315" y2="1.125" width="0.05" layer="51"/>
-<wire x1="-1.375" y1="0.862" x2="1.375" y2="0.862" width="0.1" layer="51"/>
-<wire x1="1.375" y1="0.862" x2="1.375" y2="-0.862" width="0.1" layer="51"/>
-<wire x1="1.375" y1="-0.862" x2="-1.375" y2="-0.862" width="0.1" layer="51"/>
-<wire x1="-1.375" y1="-0.862" x2="-1.375" y2="0.862" width="0.1" layer="51"/>
-<wire x1="-1.375" y1="0.348" x2="-0.86" y2="0.862" width="0.1" layer="51"/>
-<wire x1="-2.165" y1="0.862" x2="1.375" y2="0.862" width="0.2" layer="21"/>
-<wire x1="-1.375" y1="-0.862" x2="1.375" y2="-0.862" width="0.2" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="SS13FL">
-<text x="11.43" y="5.08" size="1.778" layer="95" align="center-left">&gt;NAME</text>
-<text x="11.43" y="2.54" size="1.778" layer="96" align="center-left">&gt;VALUE</text>
-<pin name="K" x="-3.302" y="0" visible="pad" length="short" direction="in"/>
-<pin name="A" x="4.318" y="0" visible="pad" length="short" direction="in" rot="R180"/>
-<wire x1="-0.762" y1="0" x2="1.778" y2="1.27" width="0.1524" layer="94"/>
-<wire x1="1.778" y1="1.27" x2="1.778" y2="-1.27" width="0.1524" layer="94"/>
-<wire x1="1.778" y1="-1.27" x2="-0.762" y2="0" width="0.1524" layer="94"/>
-<wire x1="-0.762" y1="1.27" x2="-0.762" y2="-1.27" width="0.1524" layer="94"/>
-<wire x1="-0.762" y1="1.27" x2="-1.016" y2="1.27" width="0.1524" layer="94"/>
-<wire x1="-0.762" y1="-1.27" x2="-0.508" y2="-1.27" width="0.1524" layer="94"/>
-<wire x1="-1.016" y1="1.27" x2="-1.016" y2="1.016" width="0.1524" layer="94"/>
-<wire x1="-0.508" y1="-1.27" x2="-0.508" y2="-1.016" width="0.1524" layer="94"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="SS13FL" prefix="D">
-<description>&lt;b&gt;Schottky Diodes &amp; Rectifiers 30V, 1A SCHOTTKY&lt;/b&gt;&lt;p&gt;
-Source: &lt;a href="https://www.fairchildsemi.com/datasheets/SS/SS13FL.pdf"&gt; Datasheet &lt;/a&gt;</description>
-<gates>
-<gate name="G$1" symbol="SS13FL" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SODFL3617X108N">
-<connects>
-<connect gate="G$1" pin="A" pad="2"/>
-<connect gate="G$1" pin="K" pad="1"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="DESCRIPTION" value="Schottky Diodes &amp; Rectifiers 30V, 1A SCHOTTKY" constant="no"/>
-<attribute name="HEIGHT" value="1.08mm" constant="no"/>
-<attribute name="MANUFACTURER_NAME" value="Fairchild Semiconductor" constant="no"/>
-<attribute name="MANUFACTURER_PART_NUMBER" value="SS13FL" constant="no"/>
-<attribute name="RS_PART_NUMBER" value="" constant="no"/>
-<attribute name="RS_PRICE/STOCK" value="" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="TPS562210DDFT">
 <description>&lt;Step-down DC-DC Conv 4.5-17V 2A TSOT23-8 Texas Instruments, TPS562210DDFT Step-Down Switching Regulator 2A Adjustable, 0.76  7 V, 8-Pin SOT-23&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
@@ -15350,6 +15283,64 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <attribute name="RS_PART_NUMBER" value="9009845" constant="no"/>
 <attribute name="RS_PRICE/STOCK" value="http://uk.rs-online.com/web/p/products/9009845" constant="no"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="Scraps">
+<description>&lt;b&gt;https://eagle.componentsearchengine.com&lt;/b&gt;&lt;p&gt;&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
+<packages>
+<package name="SODFL4724X108N">
+<description>&lt;b&gt;3-4E1A&lt;/b&gt;&lt;br&gt;
+</description>
+<smd name="1" x="-2.1" y="0" dx="1.14" dy="1.89" layer="1"/>
+<smd name="2" x="2.1" y="0" dx="1.14" dy="1.89" layer="1"/>
+<text x="0" y="0" size="1.27" layer="25" align="center">&gt;NAME</text>
+<text x="0" y="0" size="1.27" layer="27" align="center">&gt;VALUE</text>
+<wire x1="-2.82" y1="1.45" x2="2.82" y2="1.45" width="0.05" layer="51"/>
+<wire x1="2.82" y1="1.45" x2="2.82" y2="-1.45" width="0.05" layer="51"/>
+<wire x1="2.82" y1="-1.45" x2="-2.82" y2="-1.45" width="0.05" layer="51"/>
+<wire x1="-2.82" y1="-1.45" x2="-2.82" y2="1.45" width="0.05" layer="51"/>
+<wire x1="-1.9" y1="1.225" x2="1.9" y2="1.225" width="0.1" layer="51"/>
+<wire x1="1.9" y1="1.225" x2="1.9" y2="-1.225" width="0.1" layer="51"/>
+<wire x1="1.9" y1="-1.225" x2="-1.9" y2="-1.225" width="0.1" layer="51"/>
+<wire x1="-1.9" y1="-1.225" x2="-1.9" y2="1.225" width="0.1" layer="51"/>
+<wire x1="-1.9" y1="0.655" x2="-1.33" y2="1.225" width="0.1" layer="51"/>
+<wire x1="-2.67" y1="1.225" x2="1.9" y2="1.225" width="0.2" layer="21"/>
+<wire x1="-1.9" y1="-1.225" x2="1.9" y2="-1.225" width="0.2" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="SS13FL">
+<text x="11.43" y="5.08" size="1.778" layer="95" align="center-left">&gt;NAME</text>
+<text x="11.43" y="2.54" size="1.778" layer="96" align="center-left">&gt;VALUE</text>
+<pin name="K" x="-3.302" y="0" visible="pad" length="short" direction="in"/>
+<pin name="A" x="4.318" y="0" visible="pad" length="short" direction="in" rot="R180"/>
+<wire x1="-0.762" y1="0" x2="1.778" y2="1.27" width="0.1524" layer="94"/>
+<wire x1="1.778" y1="1.27" x2="1.778" y2="-1.27" width="0.1524" layer="94"/>
+<wire x1="1.778" y1="-1.27" x2="-0.762" y2="0" width="0.1524" layer="94"/>
+<wire x1="-0.762" y1="1.27" x2="-0.762" y2="-1.27" width="0.1524" layer="94"/>
+<wire x1="-0.762" y1="1.27" x2="-1.016" y2="1.27" width="0.1524" layer="94"/>
+<wire x1="-0.762" y1="-1.27" x2="-0.508" y2="-1.27" width="0.1524" layer="94"/>
+<wire x1="-1.016" y1="1.27" x2="-1.016" y2="1.016" width="0.1524" layer="94"/>
+<wire x1="-0.508" y1="-1.27" x2="-0.508" y2="-1.016" width="0.1524" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="CMS06">
+<gates>
+<gate name="G$1" symbol="SS13FL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SODFL4724X108N">
+<connects>
+<connect gate="G$1" pin="A" pad="1"/>
+<connect gate="G$1" pin="K" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -15447,7 +15438,6 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <part name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C1210" package3d_urn="urn:adsk.eagle:package:23619/2" value="22u"/>
 <part name="C9" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="0.1u"/>
 <part name="C10" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="15u"/>
-<part name="D5" library="Scraps" deviceset="SS13FL" device=""/>
 <part name="R14" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="10.2k"/>
 <part name="R15" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="732"/>
 <part name="U$7" library="AcceleratedDesigns_Lib" deviceset="SRN6045-4R7Y" device=""/>
@@ -15466,6 +15456,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <part name="SUPPLY25" library="SparkFun-PowerSymbols" deviceset="5V" device=""/>
 <part name="GND19" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
 <part name="GND20" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
+<part name="U$16" library="Scraps" deviceset="CMS06" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -15587,10 +15578,6 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <instance part="C8" gate="G$1" x="266.7" y="99.06"/>
 <instance part="C9" gate="G$1" x="345.44" y="109.22"/>
 <instance part="C10" gate="G$1" x="383.54" y="93.98"/>
-<instance part="D5" gate="G$1" x="350.52" y="99.06" smashed="yes" rot="R270">
-<attribute name="NAME" x="351.69" y="101.69" size="1.778" layer="95" align="center-left"/>
-<attribute name="VALUE" x="351.9" y="95.62" size="1.778" layer="96" align="center-left"/>
-</instance>
 <instance part="R14" gate="G$1" x="375.92" y="99.06" rot="R90"/>
 <instance part="R15" gate="G$1" x="375.92" y="83.82" rot="R90"/>
 <instance part="U$7" gate="A" x="363.22" y="104.14" smashed="yes">
@@ -15636,6 +15623,10 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <instance part="SUPPLY25" gate="G$1" x="309.88" y="55.88"/>
 <instance part="GND19" gate="1" x="256.54" y="10.16"/>
 <instance part="GND20" gate="1" x="251.46" y="104.14"/>
+<instance part="U$16" gate="G$1" x="350.52" y="99.06" smashed="yes" rot="R270">
+<attribute name="NAME" x="351.79" y="101.6" size="1.778" layer="95" align="center-left"/>
+<attribute name="VALUE" x="351.79" y="96.52" size="1.778" layer="96" align="center-left"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -16038,11 +16029,6 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <pinref part="J4" gate="J$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="D5" gate="G$1" pin="A"/>
-<pinref part="GND16" gate="1" pin="GND"/>
-<wire x1="350.52" y1="94.742" x2="350.52" y2="93.98" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="R15" gate="G$1" pin="1"/>
 <wire x1="375.92" y1="78.74" x2="337.82" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="GND"/>
@@ -16099,6 +16085,11 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <pinref part="S3" gate="1" pin="O"/>
 <wire x1="251.46" y1="109.22" x2="251.46" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="GND20" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="GND16" gate="1" pin="GND"/>
+<pinref part="U$16" gate="G$1" pin="A"/>
+<wire x1="350.52" y1="93.98" x2="350.52" y2="94.742" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ENABLE1" class="0">
@@ -16481,9 +16472,9 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <pinref part="U$5" gate="G$1" pin="PH"/>
 <wire x1="335.28" y1="104.14" x2="345.44" y2="104.14" width="0.1524" layer="91"/>
 <pinref part="U$7" gate="A" pin="1"/>
-<wire x1="345.44" y1="104.14" x2="350.52" y2="104.14" width="0.1524" layer="91"/>
 <junction x="345.44" y="104.14"/>
-<pinref part="D5" gate="G$1" pin="K"/>
+<wire x1="345.44" y1="104.14" x2="350.52" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="U$16" gate="G$1" pin="K"/>
 <wire x1="350.52" y1="104.14" x2="355.6" y2="104.14" width="0.1524" layer="91"/>
 <wire x1="350.52" y1="102.362" x2="350.52" y2="104.14" width="0.1524" layer="91"/>
 <junction x="350.52" y="104.14"/>
