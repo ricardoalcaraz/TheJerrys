@@ -16529,7 +16529,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <wire x1="284.48" y1="91.44" x2="284.48" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$8" class="0">
+<net name="BOOT" class="0">
 <segment>
 <pinref part="U$8" gate="A" pin="1"/>
 <pinref part="U$11" gate="A" pin="1"/>
@@ -16578,7 +16578,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <wire x1="218.44" y1="38.1" x2="218.44" y2="29.464" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$19" class="0">
+<net name="VIN" class="0">
 <segment>
 <pinref part="IC1" gate="G$1" pin="VIN"/>
 <pinref part="U$10" gate="A" pin="1"/>
