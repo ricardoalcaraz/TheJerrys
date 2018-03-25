@@ -15431,15 +15431,15 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <part name="SUPPLY23" library="SparkFun-PowerSymbols" deviceset="V_BATT" device=""/>
 <part name="S3" library="SparkFun-Switches" deviceset="SWITCH-SPDT" device="-PTH-11.6X4.0MM"/>
 <part name="U$5" library="TPS54332" deviceset="TPS54332" device=""/>
-<part name="U$6" library="AcceleratedDesigns_Lib" deviceset="12063A822JAT2A" device="" value="8.20n\"/>
-<part name="C6" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="680p"/>
-<part name="C7" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="15p"/>
-<part name="R13" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="39.2k"/>
-<part name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C1210" package3d_urn="urn:adsk.eagle:package:23619/2" value="22u"/>
-<part name="C9" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="0.1u"/>
-<part name="C10" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="15u"/>
-<part name="R14" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="10.2k"/>
-<part name="R15" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="732"/>
+<part name="CSS" library="AcceleratedDesigns_Lib" deviceset="12063A822JAT2A" device="" value="8.20n\"/>
+<part name="CCOMP" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="680p"/>
+<part name="CCOMP2" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="15p"/>
+<part name="RCOMP" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="39.2k"/>
+<part name="CIN" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C1210" package3d_urn="urn:adsk.eagle:package:23619/2" value="22u"/>
+<part name="CBOOT" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="0.1u"/>
+<part name="COUT" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:26137/1" value="15u"/>
+<part name="RFBT" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="10.2k"/>
+<part name="RFBB" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="732"/>
 <part name="U$7" library="AcceleratedDesigns_Lib" deviceset="SRN6045-4R7Y" device=""/>
 <part name="GND15" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
 <part name="GND16" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
@@ -15568,18 +15568,18 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <instance part="SUPPLY23" gate="G$1" x="241.3" y="119.38"/>
 <instance part="S3" gate="1" x="256.54" y="111.76" rot="R180"/>
 <instance part="U$5" gate="G$1" x="289.56" y="109.22"/>
-<instance part="U$6" gate="A" x="299.72" y="81.28" smashed="yes" rot="R270">
+<instance part="CSS" gate="A" x="299.72" y="81.28" smashed="yes" rot="R270">
 <attribute name="NAME" x="301.3356" y="84.6586" size="2.0828" layer="95" ratio="6" rot="SR0"/>
 <attribute name="VALUE" x="301.4706" y="79.6486" size="2.0828" layer="96" ratio="6" rot="SR0"/>
 </instance>
-<instance part="C6" gate="G$1" x="284.48" y="86.36"/>
-<instance part="C7" gate="G$1" x="274.32" y="91.44"/>
-<instance part="R13" gate="G$1" x="284.48" y="96.52" rot="R90"/>
-<instance part="C8" gate="G$1" x="266.7" y="99.06"/>
-<instance part="C9" gate="G$1" x="345.44" y="109.22"/>
-<instance part="C10" gate="G$1" x="383.54" y="93.98"/>
-<instance part="R14" gate="G$1" x="375.92" y="99.06" rot="R90"/>
-<instance part="R15" gate="G$1" x="375.92" y="83.82" rot="R90"/>
+<instance part="CCOMP" gate="G$1" x="284.48" y="86.36"/>
+<instance part="CCOMP2" gate="G$1" x="274.32" y="91.44"/>
+<instance part="RCOMP" gate="G$1" x="284.48" y="96.52" rot="R90"/>
+<instance part="CIN" gate="G$1" x="266.7" y="99.06"/>
+<instance part="CBOOT" gate="G$1" x="345.44" y="109.22"/>
+<instance part="COUT" gate="G$1" x="383.54" y="93.98"/>
+<instance part="RFBT" gate="G$1" x="375.92" y="99.06" rot="R90"/>
+<instance part="RFBB" gate="G$1" x="375.92" y="83.82" rot="R90"/>
 <instance part="U$7" gate="A" x="363.22" y="104.14" smashed="yes">
 <attribute name="NAME" x="358.4956" y="111.3536" size="2.0828" layer="95" ratio="6" rot="SR0"/>
 <attribute name="VALUE" x="355.3206" y="108.1786" size="2.0828" layer="96" ratio="6" rot="SR0"/>
@@ -15703,9 +15703,9 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 </segment>
 <segment>
 <pinref part="U$7" gate="A" pin="2"/>
-<pinref part="R14" gate="G$1" pin="2"/>
+<pinref part="RFBT" gate="G$1" pin="2"/>
 <wire x1="370.84" y1="104.14" x2="375.92" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="C10" gate="G$1" pin="1"/>
+<pinref part="COUT" gate="G$1" pin="1"/>
 <wire x1="375.92" y1="104.14" x2="383.54" y2="104.14" width="0.1524" layer="91"/>
 <wire x1="383.54" y1="104.14" x2="383.54" y2="96.52" width="0.1524" layer="91"/>
 <junction x="375.92" y="104.14"/>
@@ -16029,7 +16029,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <pinref part="J4" gate="J$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="R15" gate="G$1" pin="1"/>
+<pinref part="RFBB" gate="G$1" pin="1"/>
 <wire x1="375.92" y1="78.74" x2="337.82" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="GND"/>
 <wire x1="337.82" y1="78.74" x2="320.04" y2="78.74" width="0.1524" layer="91"/>
@@ -16040,21 +16040,21 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <junction x="320.04" y="78.74"/>
 <wire x1="337.82" y1="86.36" x2="337.82" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="320.04" y1="78.74" x2="299.72" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="U$6" gate="A" pin="1"/>
+<pinref part="CSS" gate="A" pin="1"/>
 <wire x1="299.72" y1="79.756" x2="299.72" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="C8" gate="G$1" pin="2"/>
+<pinref part="CIN" gate="G$1" pin="2"/>
 <wire x1="299.72" y1="78.74" x2="284.48" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="284.48" y1="78.74" x2="274.32" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="274.32" y1="78.74" x2="266.7" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="266.7" y1="78.74" x2="266.7" y2="93.98" width="0.1524" layer="91"/>
 <junction x="299.72" y="78.74"/>
-<pinref part="C7" gate="G$1" pin="2"/>
+<pinref part="CCOMP2" gate="G$1" pin="2"/>
 <wire x1="274.32" y1="86.36" x2="274.32" y2="78.74" width="0.1524" layer="91"/>
 <junction x="274.32" y="78.74"/>
-<pinref part="C6" gate="G$1" pin="2"/>
+<pinref part="CCOMP" gate="G$1" pin="2"/>
 <wire x1="284.48" y1="81.28" x2="284.48" y2="78.74" width="0.1524" layer="91"/>
 <junction x="284.48" y="78.74"/>
-<pinref part="C10" gate="G$1" pin="2"/>
+<pinref part="COUT" gate="G$1" pin="2"/>
 <wire x1="383.54" y1="88.9" x2="383.54" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="383.54" y1="78.74" x2="375.92" y2="78.74" width="0.1524" layer="91"/>
 <junction x="375.92" y="78.74"/>
@@ -16466,9 +16466,9 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <label x="33.02" y="71.12" size="0.8128" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="N$7" class="0">
+<net name="PH" class="0">
 <segment>
-<pinref part="C9" gate="G$1" pin="2"/>
+<pinref part="CBOOT" gate="G$1" pin="2"/>
 <pinref part="U$5" gate="G$1" pin="PH"/>
 <wire x1="335.28" y1="104.14" x2="345.44" y2="104.14" width="0.1524" layer="91"/>
 <pinref part="U$7" gate="A" pin="1"/>
@@ -16482,8 +16482,8 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 </net>
 <net name="N$9" class="0">
 <segment>
-<pinref part="R14" gate="G$1" pin="1"/>
-<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="RFBT" gate="G$1" pin="1"/>
+<pinref part="RFBB" gate="G$1" pin="2"/>
 <wire x1="375.92" y1="93.98" x2="375.92" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="VSENSE"/>
 <wire x1="335.28" y1="96.52" x2="342.9" y2="96.52" width="0.1524" layer="91"/>
@@ -16496,7 +16496,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <segment>
 <pinref part="U$5" gate="G$1" pin="BOOT"/>
 <wire x1="335.28" y1="111.76" x2="335.28" y2="116.84" width="0.1524" layer="91"/>
-<pinref part="C9" gate="G$1" pin="1"/>
+<pinref part="CBOOT" gate="G$1" pin="1"/>
 <wire x1="335.28" y1="116.84" x2="345.44" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="345.44" y1="116.84" x2="345.44" y2="111.76" width="0.1524" layer="91"/>
 </segment>
@@ -16504,16 +16504,16 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <net name="N$5" class="0">
 <segment>
 <pinref part="U$5" gate="G$1" pin="SS"/>
-<pinref part="U$6" gate="A" pin="2"/>
+<pinref part="CSS" gate="A" pin="2"/>
 <wire x1="302.26" y1="88.9" x2="299.72" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="299.72" y1="88.9" x2="299.72" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$11" class="0">
 <segment>
-<pinref part="C7" gate="G$1" pin="1"/>
+<pinref part="CCOMP2" gate="G$1" pin="1"/>
 <wire x1="274.32" y1="93.98" x2="274.32" y2="101.6" width="0.1524" layer="91"/>
-<pinref part="R13" gate="G$1" pin="2"/>
+<pinref part="RCOMP" gate="G$1" pin="2"/>
 <wire x1="274.32" y1="101.6" x2="284.48" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="284.48" y1="101.6" x2="299.72" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="299.72" y1="101.6" x2="299.72" y2="96.52" width="0.1524" layer="91"/>
@@ -16524,8 +16524,8 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 </net>
 <net name="N$12" class="0">
 <segment>
-<pinref part="R13" gate="G$1" pin="1"/>
-<pinref part="C6" gate="G$1" pin="1"/>
+<pinref part="RCOMP" gate="G$1" pin="1"/>
+<pinref part="CCOMP" gate="G$1" pin="1"/>
 <wire x1="284.48" y1="91.44" x2="284.48" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -16590,7 +16590,7 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <wire x1="259.08" y1="66.04" x2="208.28" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="208.28" y1="66.04" x2="208.28" y2="48.26" width="0.1524" layer="91"/>
 <junction x="208.28" y="48.26"/>
-<pinref part="C8" gate="G$1" pin="1"/>
+<pinref part="CIN" gate="G$1" pin="1"/>
 <wire x1="266.7" y1="101.6" x2="266.7" y2="111.76" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="VIN"/>
 <wire x1="266.7" y1="111.76" x2="302.26" y2="111.76" width="0.1524" layer="91"/>
@@ -16601,6 +16601,12 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <wire x1="228.6" y1="43.18" x2="223.52" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="43.18" x2="223.52" y2="48.26" width="0.1524" layer="91"/>
 <junction x="223.52" y="48.26"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="U$5" gate="G$1" pin="EN"/>
+<wire x1="302.26" y1="104.14" x2="299.72" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
