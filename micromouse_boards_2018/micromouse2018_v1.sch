@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.3.2">
+<eagle version="8.7.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -9,6 +9,20 @@
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
@@ -15199,35 +15213,65 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 </package>
 </packages>
 <packages3d>
+<package3d name="3,6-PAD-SQUARE" urn="urn:adsk.eagle:package:14294/1" type="box" library_version="1">
+<description>MOUNTING PAD 3.6 mm, square</description>
+<packageinstances>
+<packageinstance name="3,6-PAD-SQUARE"/>
+</packageinstances>
+</package3d>
 <package3d name="2,8-PAD-SQUARE" urn="urn:adsk.eagle:package:14300/1" type="box" library_version="1">
 <description>MOUNTING PAD 2.8 mm, square</description>
+<packageinstances>
+<packageinstance name="2,8-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="3,0-PAD-SQUARE" urn="urn:adsk.eagle:package:14290/1" type="box" library_version="1">
 <description>MOUNTING PAD 3.0 mm, square</description>
+<packageinstances>
+<packageinstance name="3,0-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="3,2-PAD-SQUARE" urn="urn:adsk.eagle:package:14292/1" type="box" library_version="1">
 <description>MOUNTING PAD 3.2 mm, square</description>
+<packageinstances>
+<packageinstance name="3,2-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="3,3-PAD-SQUARE" urn="urn:adsk.eagle:package:14293/1" type="box" library_version="1">
 <description>MOUNTING PAD 3.3 mm, square</description>
-</package3d>
-<package3d name="3,6-PAD-SQUARE" urn="urn:adsk.eagle:package:14294/1" type="box" library_version="1">
-<description>MOUNTING PAD 3.6 mm, square</description>
+<packageinstances>
+<packageinstance name="3,3-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="4,1-PAD-SQUARE" urn="urn:adsk.eagle:package:14296/1" type="box" library_version="1">
 <description>MOUNTING PAD 4.1 mm, square</description>
+<packageinstances>
+<packageinstance name="4,1-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="4,3-PAD-SQUARE" urn="urn:adsk.eagle:package:14297/1" type="box" library_version="1">
 <description>MOUNTING PAD 4.3 mm, square</description>
+<packageinstances>
+<packageinstance name="4,3-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="4,5-PAD-SQUARE" urn="urn:adsk.eagle:package:14295/1" type="box" library_version="1">
 <description>MOUNTING PAD 4.5 mm, square</description>
+<packageinstances>
+<packageinstance name="4,5-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="5,0-PAD-SQUARE" urn="urn:adsk.eagle:package:14298/1" type="box" library_version="1">
 <description>MOUNTING PAD 5.0 mm, square</description>
+<packageinstances>
+<packageinstance name="5,0-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 <package3d name="5,5-PAD-SQUARE" urn="urn:adsk.eagle:package:14299/1" type="box" library_version="1">
 <description>MOUNTING PAD 5.5 mm, square</description>
+<packageinstances>
+<packageinstance name="5,5-PAD-SQUARE"/>
+</packageinstances>
 </package3d>
 </packages3d>
 <symbols>
@@ -15469,8 +15513,8 @@ Source: &lt;a href="http://www.ti.com/lit/ds/symlink/tps562210.pdf"&gt; Datashee
 <part name="SUPPLY25" library="SparkFun-PowerSymbols" deviceset="5V" device=""/>
 <part name="GND19" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
 <part name="U$16" library="Scraps" deviceset="CMS06" device=""/>
-<part name="H1" library="holes" library_urn="urn:adsk.eagle:library:237" deviceset="MOUNT-PAD-SQUARE" device="3.6" package3d_urn="urn:adsk.eagle:package:14294/1"/>
-<part name="H2" library="holes" library_urn="urn:adsk.eagle:library:237" deviceset="MOUNT-PAD-SQUARE" device="3.6" package3d_urn="urn:adsk.eagle:package:14294/1"/>
+<part name="H1" library="holes" library_urn="urn:adsk.eagle:library:237" deviceset="MOUNT-PAD-SQUARE" device="2.8" package3d_urn="urn:adsk.eagle:package:14300/1" value="MOUNT-PAD-SQUARE2.8"/>
+<part name="H2" library="holes" library_urn="urn:adsk.eagle:library:237" deviceset="MOUNT-PAD-SQUARE" device="2.8" package3d_urn="urn:adsk.eagle:package:14300/1" value="MOUNT-PAD-SQUARE2.8"/>
 <part name="U$6" library="raParts" deviceset="ULTRASONIC" device=""/>
 <part name="SUPPLY23" library="SparkFun-PowerSymbols" deviceset="5V" device=""/>
 <part name="GND17" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
