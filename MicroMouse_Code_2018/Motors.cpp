@@ -1,4 +1,4 @@
-#include "Motor.h"
+#include "Motors.h"
 
 //Initializing external function so ISR can work properly
 static void motorISR();
@@ -18,7 +18,7 @@ Motors::Motors( ) {
 
 }
 
-Motors::init( ) {
+void Motors::init( ) {
   	pinMode( EN1, OUTPUT);
   	pinMode( EN2, OUTPUT);
   	pinMode( STEP1, OUTPUT);
@@ -35,19 +35,40 @@ Motors::init( ) {
 	digitalWrite( DIR2, LOW );
 }
 
-Motors::go( ) {
+//Enables the motor so they can move
+void Motors::go( ) {
 	digitalWrite( EN1, LOW );
 	digitalWrite( EN2, LOW );
 }
 
-Motors::moveForward( ) {
+//Stops the motors from moving
+void Motors::stop ( ) {
+  	digitalWrite( EN1, HIGH );
+  	digitalWrite( EN2, HIGH );
+}
+
+//Continuosly move forward
+void Motors::moveForward( ) {
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, LOW );
 }
 
-Motors::moveForward(
+//Move forward only a certain amount of steps
+void Motors::moveForward( uint32_t steps ) {
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, LOW );
+	go();
+	for( uint32_t i = 0; i < steps*2; i++ ) {
+		digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+		digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+	}
+	stop();
+	interrupts();
+}
 
-Motors::takeAStep() {
+void Motors::takeAStep() {
 	//Write a square wave to the two step pins to move
 	//motors forward
 	digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
