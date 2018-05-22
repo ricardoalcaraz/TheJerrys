@@ -98,7 +98,7 @@ void Motors::moveForward( uint32_t steps ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			delayMicroseconds(speed);
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
-			if( (i)%15 == 0 && tempSpeed < speed ) {
+			if( (i) % 15 == 0 && tempSpeed < speed ) {
 				tempSpeed++;
 				setSpeed( tempSpeed );
 			}
