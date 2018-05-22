@@ -6,7 +6,8 @@ Motors motors;
 
 void setup() {
 	//sensors.init( 100000 );
-	motors.init( );
+	motors.init();
+    sensors.init(50000);
   	Serial.begin( 57600 );
 	while( !Serial );
 	Serial.println( "Initializing" );
@@ -46,5 +47,9 @@ void loop() {
         }
         motors.stop();
     }
+
+    Serial.print( "Right Distance: " ); Serial.println( sensors.getRightDistance() );
+    Serial.print( "Left Distance: " ); Serial.println( sensors.getLeftDistance() );
+    Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
     delay(100);
 }

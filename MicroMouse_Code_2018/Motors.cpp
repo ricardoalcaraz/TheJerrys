@@ -58,6 +58,7 @@ void Motors::moveForward( ) {
 	digitalWrite( DIR2, HIGH );
 }
 
+//Turn left
 void Motors::turnLeft( ) {
 	stop();
 	digitalWrite( DIR1, HIGH );
@@ -70,6 +71,7 @@ void Motors::turnLeft( ) {
 	stop();
 }
 
+//Turn right 
 void Motors::turnRight( ) {
 	stop();
 	digitalWrite( DIR1, HIGH );
@@ -90,16 +92,18 @@ void Motors::moveForward( uint32_t steps ) {
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
-		uint8_t tempSpeed = 30;
-		uint32_t tempSteps = steps;
+		uint8_t temp = this->speed;
+		uint8_t tempSpeed = 30; 
 		for( int i = 0; i < steps; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
-			delayMicroseconds(tempSpeed);
+			delayMicroseconds(speed);
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
-			if( (i / 10)%10 == 0 && tempSpeed < speed ) {
+			if( (i)%15 == 0 && tempSpeed < speed ) {
 				tempSpeed++;
+				setSpeed( tempSpeed );
 			}
 		}
+		setSpeed( temp );
 	} else {
 		for( uint32_t i = 0; i < steps*2; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
