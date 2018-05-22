@@ -30,7 +30,7 @@ void Motors::init( ) {
 	//Set the default direction to forward 
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
-	motorTimer.begin( motorISR, speed );
+	//motorTimer.begin( motorISR, speed );
 	motorTimer.priority( 128 );
 }
 
@@ -40,9 +40,12 @@ void Motors::go( ) {
 	digitalWrite( EN2, LOW );
 }
 
+//set the speed to an arbitrary value from
 void Motors::setSpeed( uint8_t speed ){
-	this->speed = speed;
+	constrain( speed, 10,255 );
+	this->speed = map(speed,1,255,255,1);
 }
+
 //Stops the motors from moving
 void Motors::stop ( ) {
   	digitalWrite( EN1, HIGH );
@@ -55,6 +58,30 @@ void Motors::moveForward( ) {
 	digitalWrite( DIR2, HIGH );
 }
 
+void Motors::turnLeft( ) {
+	stop();
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, HIGH );
+	go();
+	for( int i = 0; i < 12000; i++ ) {
+		digitalWrite( STEP1, digitalRead( STEP1 ) ^1 );
+		delayMicroseconds( 220 );
+	}
+	stop();
+}
+
+void Motors::turnRight( ) {
+	stop();
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, HIGH );
+	go();
+	for( int i = 0; i < 12000; i++ ) {
+		digitalWrite( STEP2, digitalRead( STEP2 ) ^1 );
+		delayMicroseconds( 220 );
+	}
+	stop();
+}
+
 //Move forward only a certain amount of steps
 void Motors::moveForward( uint32_t steps ) {
 	noInterrupts();
@@ -62,11 +89,24 @@ void Motors::moveForward( uint32_t steps ) {
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
-	for( uint32_t i = 0; i < steps*2; i++ ) {
-		digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
-		delayMicroseconds(speed);
-		digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
-	}
+	if( speed > 30 ) {
+		uint8_t tempSpeed = 30;
+		uint32_t tempSteps = steps;
+		for( int i = 0; i < steps; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(tempSpeed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			if( (i / 10)%10 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+			}
+		}
+	} else {
+		for( uint32_t i = 0; i < steps*2; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+		}
+	}	
 	stop();
 	interrupts();
 }

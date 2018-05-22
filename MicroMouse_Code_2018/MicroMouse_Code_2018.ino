@@ -10,12 +10,41 @@ void setup() {
   	Serial.begin( 57600 );
 	while( !Serial );
 	Serial.println( "Initializing" );
-	motors.go();
+	motors.stop();
 }
 
 void loop() {
-	for(int i = 255; i > 0; i-=10){
-		motors.moveForward( 4000 );
-		motors.setSpeed((uint8_t)i);
-	}
+    static uint8_t speed = 100;
+    if( Serial.available() > 0 ){
+        char incomingChar = Serial.read();
+        switch (incomingChar) {
+            case 'a':
+                motors.turnLeft();
+                Serial.println( "Turning left");
+                break;
+            case 'd':
+                motors.turnRight();
+                Serial.println( "Turning right");
+                break;
+            case 'x':
+                motors.stop();
+                break;
+            case 'w':
+                motors.moveForward(8000);
+                Serial.println( "Moving forward ");
+                break;
+            case '+':
+                speed+=10;
+                motors.setSpeed(speed);
+                Serial.print( "Current speed is now: "); Serial.println( speed );
+                break;
+            case '-':
+                speed-=10;
+                motors.setSpeed(speed);
+                Serial.print( "Current speed is now: "); Serial.println( speed );
+                break;
+        }
+        motors.stop();
+    }
+    delay(100);
 }
