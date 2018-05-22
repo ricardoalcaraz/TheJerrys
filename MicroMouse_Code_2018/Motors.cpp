@@ -11,7 +11,7 @@ const uint8_t STEP2 = 5;
 const uint8_t DIR1 = 6;
 const uint8_t DIR2 = 7;
 
-uint8_t Motors::speed = 100;
+uint32_t Motors::speed = 100;
 uint16_t stepsPerRevolution = 250;
 
 Motors::Motors( ) {
@@ -28,11 +28,10 @@ void Motors::init( ) {
   	digitalWrite( EN1, HIGH );
   	digitalWrite( EN2, HIGH );
 	//Set the default direction to forward 
-	/*Since the motors are mirrored, the direction value has
-	 *to be opposite of each other to move in the same 
-	 *direction*/
 	digitalWrite( DIR1, HIGH );
-	digitalWrite( DIR2, LOW );
+	digitalWrite( DIR2, HIGH );
+	motorTimer.begin( motorISR, speed );
+	motorTimer.priority( 128 );
 }
 
 //Enables the motor so they can move
@@ -41,6 +40,9 @@ void Motors::go( ) {
 	digitalWrite( EN2, LOW );
 }
 
+void Motors::setSpeed( uint8_t speed ){
+	this->speed = speed;
+}
 //Stops the motors from moving
 void Motors::stop ( ) {
   	digitalWrite( EN1, HIGH );
@@ -50,7 +52,7 @@ void Motors::stop ( ) {
 //Continuosly move forward
 void Motors::moveForward( ) {
 	digitalWrite( DIR1, HIGH );
-	digitalWrite( DIR2, LOW );
+	digitalWrite( DIR2, HIGH );
 }
 
 //Move forward only a certain amount of steps
@@ -58,10 +60,11 @@ void Motors::moveForward( uint32_t steps ) {
 	noInterrupts();
 	stop();
 	digitalWrite( DIR1, HIGH );
-	digitalWrite( DIR2, LOW );
+	digitalWrite( DIR2, HIGH );
 	go();
 	for( uint32_t i = 0; i < steps*2; i++ ) {
 		digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+		delayMicroseconds(speed);
 		digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
 	}
 	stop();

@@ -37,6 +37,7 @@ void Sensors::init( uint32_t interval ) {
   	pinMode( TRIG3 ,OUTPUT );
 	this->interval = interval;
 	sensorTimer.begin( sensorISR, this->interval );	
+	sensorTimer.priority( 50 );
 }
 
 void Sensors::setTimeout( uint32_t timeout ) {

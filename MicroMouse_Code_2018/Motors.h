@@ -30,7 +30,7 @@ class Motors {
 		void turnAround( );
 		void setStepsPerRevolution( uint16_t steps );
 		static uint16_t stepsPerRevolution;
-		static uint8_t speed;
+		static uint32_t speed;
 		void takeAStep();
 	private:
 		IntervalTimer motorTimer;
