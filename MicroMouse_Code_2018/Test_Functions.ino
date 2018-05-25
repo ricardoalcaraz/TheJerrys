@@ -1,5 +1,5 @@
 void test(){
-      static uint8_t speed = 70;
+     static uint8_t speed = 70;
     if( Serial.available() > 0 ){
         char incomingChar = Serial.read();
         switch (incomingChar) {
@@ -54,5 +54,16 @@ void test(){
     Serial.print( "Right Distance: " ); Serial.println( sensors.getRightDistance() );
     Serial.print( "Left Distance: " ); Serial.println( sensors.getLeftDistance() );
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
+}
+
+//Input: None
+//Output: Intersection decision
+char getIntersection(){
+    String room = (String(sensors.getLeftDistance() < 5) +  String(sensors.getMiddleDistance() < 5) +  String(sensors.getRightDistance() < 5));
+    if      (room == "100") return  'S';
+    else if (room == "101") return NULL;
+    else if (room == "110") return  'R';
+    else if (room == "111") return  'U';
+    else                    return  'L';
 }
 
