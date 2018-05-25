@@ -81,11 +81,22 @@ uint16_t Sensors::getMiddleDistance( ) {
 //and input them into the running average array
 void Sensors::updateDistances() {
 	static volatile uint8_t index = 0;
-	runningAvgLeft[index] = pingLeft();
-	runningAvgRight[index] = pingRight();
-	runningAvgMiddle[index] = pingMiddle();
+	static volatile uint8_t sensorCount = 0;
+	switch( sensorCount ) {
+		case 0:
+			runningAvgLeft[index] = pingLeft();
+			break;
+		case 1:
+			runningAvgRight[index] = pingRight();
+			break;
+		case 2:
+			runningAvgMiddle[index] = pingMiddle();
+			break;
+	}
 	index++;
-	if( index > 3 ) index = 0;
+	sensorCount++;
+	if( index > 4 ) index = 0;
+	if( sensorCount > 3 ) sensorCount = 0;
 }
 
 //Return a single instance of the right sensor
@@ -134,7 +145,7 @@ volatile uint16_t Sensors::pingMiddle() {
   	int duration = pulseIn(ECHO1, HIGH, timeout);
 
   	//Calculate distance
-  	float distance = (float) duration*0.034/2;
+  	float distance = (float) (duration/2)/29.1;
 
   	return distance;	
 }
