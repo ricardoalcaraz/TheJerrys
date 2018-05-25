@@ -67,3 +67,14 @@ char getIntersection(){
     else                    return  'L';
 }
 
+
+//Input: None
+//Output: Boolean representing if there is an intersection
+bool isIntersection(){
+    if ( (sensors.getLeftDistance() < 5)   &&  
+         (sensors.getMiddleDistance() > 5) && 
+         (sensors.getRightDistance() < 5)  
+        ) return false;
+    else  return true;
+}
+
