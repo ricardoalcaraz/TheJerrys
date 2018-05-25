@@ -210,6 +210,38 @@ void Motors::moveForward( uint32_t steps ) {
 	interrupts();
 }
 
+//Move Backward
+/*Move backward a certain amount of steps*/
+void Motors::moveBackward( uint32_t steps ) {
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, LOW );
+	go();
+	if( speed > 30 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 30; 
+		for( int i = 0; i < steps; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			if( (i) % 15 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < steps*2; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+		}
+	}	
+	stop();
+	interrupts();
+}
+
 //Specially tuned function that will turn
 //the robot 360 degrees
 void Motors::turnAround( ) {

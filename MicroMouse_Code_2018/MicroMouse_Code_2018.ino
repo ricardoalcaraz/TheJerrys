@@ -18,4 +18,8 @@ void loop() {
 	delay(100);	
 }
 
-
+void UTurn() {
+	while( sensors.getLeftDistance() < 5 && sensors.getRightDistance() < 5 ) {
+		motors.moveBackward(50);
+	}
+}
