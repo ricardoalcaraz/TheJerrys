@@ -18,6 +18,7 @@ Motors::Motors( ) {
 
 }
 
+//Initialize all the motor functions
 void Motors::init( ) {
   	pinMode( EN1, OUTPUT);
   	pinMode( EN2, OUTPUT);
@@ -61,7 +62,6 @@ void Motors::moveForward( ) {
 //Turn left
 void Motors::turnLeft( ) {
 	noInterrupts();
-	const uint16_t leftTurnStepAmount = 480;
 	stop();
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
@@ -90,7 +90,6 @@ void Motors::turnLeft( ) {
 //Turn left
 void Motors::tankTurnLeft( ) {
 	noInterrupts();
-	const int leftTurnStepAmount = 290;
 	stop();
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, LOW );
@@ -98,7 +97,7 @@ void Motors::tankTurnLeft( ) {
 	if( speed > 30 ) {
 		uint32_t temp = this->speed;
 		uint8_t tempSpeed = 30; 
-		for( int i = 0; i < leftTurnStepAmount; i++ ) {
+		for( int i = 0; i < leftTankTurnStepAmount; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
 			delayMicroseconds(speed);
@@ -109,7 +108,7 @@ void Motors::tankTurnLeft( ) {
 		}
 		setSpeed( temp );
 	} else {
-		for( uint32_t i = 0; i < leftTurnStepAmount; i++ ) {
+		for( uint32_t i = 0; i < leftTankTurnStepAmount; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
 			delayMicroseconds(speed);
@@ -122,7 +121,6 @@ void Motors::tankTurnLeft( ) {
 
 //Turn right tank style 
 void Motors::tankTurnRight( ) {
-	int rightTurnStepAmount = 310;
 	noInterrupts();
 	stop();
 	digitalWrite( DIR1, LOW );
@@ -131,7 +129,7 @@ void Motors::tankTurnRight( ) {
 	if( speed > 30 ) {
 		uint32_t temp = this->speed;
 		uint8_t tempSpeed = 30; 
-		for( int i = 0; i < rightTurnStepAmount; i++ ) {
+		for( int i = 0; i < rightTankTurnStepAmount; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			delayMicroseconds(speed);
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
@@ -142,7 +140,7 @@ void Motors::tankTurnRight( ) {
 		}
 		this->speed = temp;
 	} else {
-		for( uint32_t i = 0; i < rightTurnStepAmount; i++ ) {
+		for( uint32_t i = 0; i < rightTankTurnStepAmount; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			delayMicroseconds(speed);
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
@@ -156,7 +154,6 @@ void Motors::tankTurnRight( ) {
 //Turn right 
 void Motors::turnRight( ) {
 	noInterrupts();
-	const uint16_t rightTurnStepAmount = 480;
 	stop();
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
@@ -204,6 +201,38 @@ void Motors::moveForward( uint32_t steps ) {
 		this->speed = temp;
 	} else {
 		for( uint32_t i = 0; i < steps*2; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+		}
+	}	
+	stop();
+	interrupts();
+}
+
+//Specially tuned function that will turn
+//the robot 360 degrees
+void Motors::turnAround( ) {
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, LOW );
+	go();
+	if( speed > 30 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 30; 
+		for( int i = 0; i < turnAroundSteps; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			if( (i) % 15 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < turnAroundSteps; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			delayMicroseconds(speed);
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );

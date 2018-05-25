@@ -15,7 +15,7 @@ void setup() {
 }
 
 void loop() {
-    static uint8_t speed = 100;
+    static uint8_t speed = 70;
     if( Serial.available() > 0 ){
         char incomingChar = Serial.read();
         switch (incomingChar) {
@@ -52,6 +52,17 @@ void loop() {
                 motors.setSpeed(speed);
                 Serial.print( "Current speed is now: "); Serial.println( speed );
                 break;
+			case 't':
+				while( sensors.getLeftDistance() < 5 ) {
+					motors.moveForward(100);
+				} 
+				motors.moveForward(175);
+				motors.turnLeft();
+				break;
+			case 'u':
+				motors.turnAround();
+				Serial.println("Turning around");
+				break;
         }
         motors.stop();
     }
@@ -61,3 +72,5 @@ void loop() {
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
 	delay(100);	
 }
+
+
