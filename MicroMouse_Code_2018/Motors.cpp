@@ -31,8 +31,7 @@ void Motors::init( ) {
 	//Set the default direction to forward 
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
-	//motorTimer.begin( motorISR, speed );
-	motorTimer.priority( 128 );
+	motorTimer.priority( 10 );
 }
 
 //Enables the motor so they can move
@@ -45,12 +44,14 @@ void Motors::go( ) {
 void Motors::setSpeed( uint8_t speed ){
 	speed = constrain( speed, 1,255 );
 	this->speed = map(speed,1,255,3500,1000);
+	motorTimer.update(speed*30);
 }
 
 //Stops the motors from moving
 void Motors::stop ( ) {
   	digitalWrite( EN1, HIGH );
   	digitalWrite( EN2, HIGH );
+	motorTimer.end();
 }
 
 //Continuosly move forward
@@ -158,7 +159,7 @@ void Motors::turnRight( ) {
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
-	if( speed > 40 ) {
+	if( speed > 30 ) {
 		uint32_t temp = this->speed;
 		uint8_t tempSpeed = 40; 
 		for( int i = 0; i < rightTurnStepAmount; i++ ) {
@@ -173,6 +174,64 @@ void Motors::turnRight( ) {
 	} else {
 		for( uint32_t i = 0; i < rightTurnStepAmount; i++ ) {
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );	
+		}
+	}
+	stop();
+	interrupts();
+}
+
+//Turn back right
+/*Turn right on a backwards pivot*/
+void Motors::turnBackRight() {
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, LOW );
+	go();
+	if( speed > 30 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 40; 
+		for( int i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			delayMicroseconds(speed);
+			if( (i) % 5 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );	
+		}
+	}
+	stop();
+	interrupts();
+}
+
+//Turn back left
+/*Turn the motors on a backwards pivot*/
+void Motors::turnBackLeft() {
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, LOW );
+	go();
+	if( speed > 40 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 40; 
+		for( int i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			if( (i) % 5 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );	
 		}
 	}
 	stop();
@@ -208,6 +267,16 @@ void Motors::moveForward( uint32_t steps ) {
 	}	
 	stop();
 	interrupts();
+}
+
+//Move Backward
+/*Move backward continously through an interrupt service routine*/
+void Motors::moveBackward( ) {
+	stop();
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, LOW );
+	motorTimer.begin( motorISR, speed*30 );
+	go();
 }
 
 //Move Backward
