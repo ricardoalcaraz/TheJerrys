@@ -42,8 +42,8 @@ void Motors::go( ) {
 
 //set the speed to an arbitrary value from
 void Motors::setSpeed( uint8_t speed ){
-	constrain( speed, 10,255 );
-	this->speed = map(speed,1,255,255,1);
+	speed = constrain( speed, 1,255 );
+	this->speed = map(speed,1,255,3500,1000);
 }
 
 //Stops the motors from moving
@@ -60,28 +60,126 @@ void Motors::moveForward( ) {
 
 //Turn left
 void Motors::turnLeft( ) {
+	noInterrupts();
+	const uint16_t leftTurnStepAmount = 480;
 	stop();
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
-	for( int i = 0; i < 12000; i++ ) {
-		digitalWrite( STEP1, digitalRead( STEP1 ) ^1 );
-		delayMicroseconds( 220 );
+	if( speed > 40 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 40; 
+		for( int i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			if( (i) % 5 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );	
+		}
 	}
 	stop();
+	interrupts();
+}
+
+//Turn left
+void Motors::tankTurnLeft( ) {
+	noInterrupts();
+	const int leftTurnStepAmount = 290;
+	stop();
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, LOW );
+	go();
+	if( speed > 30 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 30; 
+		for( int i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			delayMicroseconds(speed);
+			if( (i) % 15 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		setSpeed( temp );
+	} else {
+		for( uint32_t i = 0; i < leftTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			delayMicroseconds(speed);
+
+		}
+	}
+	stop();
+	interrupts();
+}
+
+//Turn right tank style 
+void Motors::tankTurnRight( ) {
+	int rightTurnStepAmount = 310;
+	noInterrupts();
+	stop();
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, HIGH );
+	go();
+	if( speed > 30 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 30; 
+		for( int i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			if( (i) % 15 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+			delayMicroseconds(speed);
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+		}
+	}	
+	stop();
+	interrupts();
+	
 }
 
 //Turn right 
 void Motors::turnRight( ) {
+	noInterrupts();
+	const uint16_t rightTurnStepAmount = 480;
 	stop();
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
-	for( int i = 0; i < 12000; i++ ) {
-		digitalWrite( STEP2, digitalRead( STEP2 ) ^1 );
-		delayMicroseconds( 220 );
+	if( speed > 40 ) {
+		uint32_t temp = this->speed;
+		uint8_t tempSpeed = 40; 
+		for( int i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+			delayMicroseconds(speed);
+			if( (i) % 5 == 0 && tempSpeed < speed ) {
+				tempSpeed++;
+				setSpeed( tempSpeed );
+			}
+		}
+		this->speed = temp;
+	} else {
+		for( uint32_t i = 0; i < rightTurnStepAmount; i++ ) {
+			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );	
+		}
 	}
 	stop();
+	interrupts();
 }
 
 //Move forward only a certain amount of steps
@@ -92,7 +190,7 @@ void Motors::moveForward( uint32_t steps ) {
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
-		uint8_t temp = this->speed;
+		uint32_t temp = this->speed;
 		uint8_t tempSpeed = 30; 
 		for( int i = 0; i < steps; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
@@ -103,7 +201,7 @@ void Motors::moveForward( uint32_t steps ) {
 				setSpeed( tempSpeed );
 			}
 		}
-		setSpeed( temp );
+		this->speed = temp;
 	} else {
 		for( uint32_t i = 0; i < steps*2; i++ ) {
 			digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );

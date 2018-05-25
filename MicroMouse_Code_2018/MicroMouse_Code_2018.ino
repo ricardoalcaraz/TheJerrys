@@ -31,9 +31,17 @@ void loop() {
                 motors.stop();
                 break;
             case 'w':
-                motors.moveForward(8000);
+                motors.moveForward(200);
                 Serial.println( "Moving forward ");
                 break;
+			case 'c':
+				motors.tankTurnLeft( );
+				Serial.println("Turning left tank style");
+				break;
+			case 'q':
+				motors.tankTurnRight( );
+				Serial.println("Turning right tank style");
+				break;
             case '+':
                 speed+=10;
                 motors.setSpeed(speed);
@@ -51,5 +59,5 @@ void loop() {
     Serial.print( "Right Distance: " ); Serial.println( sensors.getRightDistance() );
     Serial.print( "Left Distance: " ); Serial.println( sensors.getLeftDistance() );
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
-    delay(100);
+	delay(100);	
 }

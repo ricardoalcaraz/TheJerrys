@@ -24,9 +24,11 @@ class Motors {
 		void stop( );
 		void go( );
 		void turnLeft( );
+		void tankTurnLeft( );
 		void turnLeft( uint32_t steps );
 		void turnRight( );
 		void turnRight( uint32_t steps );
+		void tankTurnRight( );
 		void turnAround( );
 		void setStepsPerRevolution( uint16_t steps );
 		static uint16_t stepsPerRevolution;
