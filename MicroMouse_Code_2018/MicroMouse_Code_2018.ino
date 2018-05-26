@@ -3,20 +3,20 @@
 
 Sensors sensors;
 Motors motors;
+String directions;
 
 void setup() {
-	//sensors.init( 100000 );
-	motors.init();
-    sensors.init(30000);
-	motors.stop();
-	Serial.begin( 57600 );
-	motors.setSpeed(70);
-	while( !Serial );
-	UTurn();
+    motors.init();
+    sensors.init(50000);
+    Serial.begin( 57600 );
+    while( !Serial );
+    Serial.println( "Initializing" );
+    motors.stop();
 }
 
 void loop() {
-	delay(1000);	
+    delay(2000);	
+	motors.turnRight();
 }
 
 void UTurn() {
@@ -27,3 +27,11 @@ void UTurn() {
 	Serial.println("Done");
 	motors.stop();
 }
+
+void turnAroundRightCorner() {
+	motors.setSpeed(50);
+	motors.moveForward(100);
+	motors.turnRight();
+}
+
+

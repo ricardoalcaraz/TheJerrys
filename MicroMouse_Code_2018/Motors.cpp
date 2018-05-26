@@ -156,7 +156,7 @@ void Motors::tankTurnRight( ) {
 void Motors::turnRight( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
@@ -176,6 +176,11 @@ void Motors::turnRight( ) {
 			digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );	
 		}
 	}
+	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR2, LOW );
+	delay(1);
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, HIGH );
 	stop();
 	interrupts();
 }

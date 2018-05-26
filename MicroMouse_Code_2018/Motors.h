@@ -90,7 +90,7 @@ class Motors {
 		//Constant numbers that signify amount of steps until
 		//robot turns
 		const int turnAroundSteps = 450;
-		const uint16_t rightTurnStepAmount = 435;
+		const uint16_t rightTurnStepAmount = 425;
 		const uint16_t leftTurnStepAmount = 450;
 		const int rightTankTurnStepAmount = 290;
 		const int leftTankTurnStepAmount = 270;

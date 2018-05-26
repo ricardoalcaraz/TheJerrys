@@ -66,3 +66,25 @@ void test(){
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
 }
 
+//Input: None
+//Output: Intersection decision
+char getIntersection(){
+    String room = (String(sensors.getLeftDistance() < 5) +  String(sensors.getMiddleDistance() < 5) +  String(sensors.getRightDistance() < 5));
+    if      (room == "100") return  'S';
+    else if (room == "101") return NULL;
+    else if (room == "110") return  'R';
+    else if (room == "111") return  'U';
+    else                    return  'L';
+}
+
+
+//Input: None
+//Output: Boolean representing if there is an intersection
+bool isIntersection(){
+    if ( (sensors.getLeftDistance() < 5)   &&  
+         (sensors.getMiddleDistance() > 5) && 
+         (sensors.getRightDistance() < 5)  
+        ) return false;
+    else  return true;
+}
+
