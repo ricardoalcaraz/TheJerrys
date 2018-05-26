@@ -44,7 +44,10 @@ void loop() {
 		motors.moveForward();
 		while(sensors.getRightDistance() > 5 || sensors.getLeftDistance() > 5);
 		motors.stop();
-	}else if( sensors.getRightDistance() > 5 ) turnAroundRightCorner();
+	}
+	else if( sensors.getRightDistance() > 5 ) {
+		turnAroundRightCorner();
+	}
 	motors.stop();
 	delay(100);
 	motors.moveForward(50);
