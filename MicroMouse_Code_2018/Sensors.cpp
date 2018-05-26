@@ -10,14 +10,14 @@ const uint8_t ECHO3 = 10;
 const uint8_t TRIG1 = 9;
 const uint8_t TRIG2 = 3;
 const uint8_t TRIG3 = 11;
-volatile uint16_t Sensors::runningAvgLeft[4]={};
-volatile uint16_t Sensors::runningAvgRight[4]={};
-volatile uint16_t Sensors::runningAvgMiddle[4]={};
+volatile uint16_t Sensors::runningAvgLeft[arraySize]={};
+volatile uint16_t Sensors::runningAvgRight[arraySize]={};
+volatile uint16_t Sensors::runningAvgMiddle[arraySize]={};
 
 //Constructor
 Sensors::Sensors( ) {
 	//Set all the running average arrays to zero
-	for( int i = 0; i < 4; i++ ) {
+	for( int i = 0; i < arraySize; i++ ) {
 		runningAvgLeft[i] = 0;
 		runningAvgRight[i] = 0;
 		runningAvgMiddle[i] = 0;
@@ -47,10 +47,10 @@ void Sensors::setTimeout( uint32_t timeout ) {
 //Return the averaged out right distance
 uint16_t Sensors::getRightDistance( ) {
 	uint16_t sum = 0;
-	for( int i = 0; i < 4; i++ ) {
+	for( int i = 0; i < arraySize; i++ ) {
 		sum += runningAvgRight[i];
 	}
-	float avg = (float)sum/4.0;
+	float avg = (float)sum/(float)arraySize;
 	return avg;
 }
 
@@ -58,10 +58,10 @@ uint16_t Sensors::getRightDistance( ) {
 uint16_t Sensors::getLeftDistance( ) {
 	noInterrupts();
 	uint16_t sum = 0;
-	for( int i = 0; i < 4; i++ ) {
+	for( int i = 0; i < arraySize; i++ ) {
 		sum += runningAvgLeft[i];
 	}
-	float avg = (float)sum/4.0;
+	float avg = (float)sum/(float)arraySize;
 	interrupts();
 	return avg;
 }
@@ -70,11 +70,11 @@ uint16_t Sensors::getLeftDistance( ) {
 uint16_t Sensors::getMiddleDistance( ) {
 	noInterrupts();
 	uint16_t sum = 0;
-	for( int i = 0; i < 4; i++ ) {
+	for( int i = 0; i < arraySize; i++ ) {
 		sum += runningAvgMiddle[i];
 	}
 	interrupts();
-	return sum/4.0;
+	return sum/(float)arraySize;
 }
 
 //Update all the distances of the sensors
@@ -95,7 +95,7 @@ void Sensors::updateDistances() {
 	}
 	index++;
 	sensorCount++;
-	if( index > 4 ) index = 0;
+	if( index > arraySize ) index = 0;
 	if( sensorCount > 3 ) sensorCount = 0;
 }
 

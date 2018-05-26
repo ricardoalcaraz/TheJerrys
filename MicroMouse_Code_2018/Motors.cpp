@@ -3,6 +3,10 @@
 //Initializing external function so ISR can work properly
 static void motorISR();
 
+static void leftMotorISR();
+
+static void rightMotorISR();
+
 //Pinout for the stepper motors
 const uint8_t EN1 = 20;
 const uint8_t EN2 = 21;
@@ -13,6 +17,8 @@ const uint8_t DIR2 = 7;
 
 uint32_t Motors::speed = 100;
 uint16_t stepsPerRevolution = 250;
+uint32_t Motors::leftSpeed = 100;
+uint32_t Motors::rightSpeed = 100;
 
 Motors::Motors( ) {
 
@@ -32,6 +38,11 @@ void Motors::init( ) {
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	motorTimer.priority( 10 );
+	rightMotorTimer.priority( 10 );
+	leftMotorTimer.priority( 10 );
+	setSpeed(100);
+	setRightSpeed(52);
+	setLeftSpeed(50);
 }
 
 //Enables the motor so they can move
@@ -44,7 +55,19 @@ void Motors::go( ) {
 void Motors::setSpeed( uint8_t speed ){
 	speed = constrain( speed, 1,255 );
 	this->speed = map(speed,1,255,3500,1000);
-	motorTimer.update(speed*30);
+	motorTimer.update(speed);
+}
+
+void Motors::setRightSpeed( uint8_t speed ) {
+	speed = constrain( speed, 1,255 );
+	this->rightSpeed = map(speed,1,255,3500,1000);
+	rightMotorTimer.update(speed);
+}
+
+void Motors::setLeftSpeed( uint8_t speed ) {
+	speed = constrain( speed, 1,255 );
+	this->leftSpeed = map(speed,1,255,3500,1000);
+	leftMotorTimer.update(speed);
 }
 
 //Stops the motors from moving
@@ -52,12 +75,17 @@ void Motors::stop ( ) {
   	digitalWrite( EN1, HIGH );
   	digitalWrite( EN2, HIGH );
 	motorTimer.end();
+	leftMotorTimer.end();
+	rightMotorTimer.end();
 }
 
 //Continuosly move forward
 void Motors::moveForward( ) {
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
+	leftMotorTimer.begin( leftMotorISR, leftSpeed );
+	rightMotorTimer.begin( rightMotorISR, rightSpeed);
+	go();
 }
 
 //Turn left
@@ -156,7 +184,7 @@ void Motors::tankTurnRight( ) {
 void Motors::turnRight( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
@@ -168,6 +196,9 @@ void Motors::turnRight( ) {
 			if( (i) % 5 == 0 && tempSpeed < speed ) {
 				tempSpeed++;
 				setSpeed( tempSpeed );
+			}
+			if( i%3==0 ) {
+				digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
 			}
 		}
 		this->speed = temp;
@@ -181,6 +212,50 @@ void Motors::turnRight( ) {
 	delay(1);
 	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
+	stop();
+	interrupts();
+}
+
+//Turn right
+/*Overloaded functions with options to turn right on a
+ * pivot with only wheel*/
+void Motors::turnRight( int32_t steps ) {
+	noInterrupts(); //Disable interrupts for smooth operation
+
+	/*If steps are negative then move the left wheel backward instead of forward*/
+	if( steps < 0 ) {
+		digitalWrite(DIR2, LOW);
+	}else {
+		digitalWrite(DIR2, HIGH);
+	}
+	go();	
+	/*Take the aforementioned amount of steps*/
+	for( int32_t i = 0; i < abs( steps) ; i++ ) {
+		takeLeftStep();
+		delayMicroseconds(speed);
+	}
+	stop();
+	interrupts();
+}
+
+//Turn left
+/*Overloaded functions with options to turn left on a
+ * pivot with only wheel*/
+void Motors::turnLeft( int32_t steps ) {
+	noInterrupts(); //Disable interrupts for smooth operation
+
+	/*If steps are negative then move the left wheel backward instead of forward*/
+	if( steps < 0 ) {
+		digitalWrite(DIR1, LOW);
+	}else {
+		digitalWrite(DIR1, HIGH);
+	}
+	go();
+	/*Take the aforementioned amount of steps*/
+	for( int32_t i = 0; i < abs( steps ); i++ ) {
+		takeRightStep();
+		delayMicroseconds(speed);
+	}
 	stop();
 	interrupts();
 }
@@ -280,7 +355,8 @@ void Motors::moveBackward( ) {
 	stop();
 	digitalWrite( DIR1, LOW );
 	digitalWrite( DIR2, LOW );
-	motorTimer.begin( motorISR, speed*30 );
+	leftMotorTimer.begin( leftMotorISR, speed );
+	rightMotorTimer.begin( rightMotorISR, speed);
 	go();
 }
 
@@ -351,12 +427,27 @@ void Motors::turnAround( ) {
 void Motors::takeAStep() {
 	//Write a square wave to the two step pins to move
 	//motors forward
-	digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
-	digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+	digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );//right motor
+	digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );//left motor
 }
 
+void Motors::takeRightStep() {
+	digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
+}
+
+void Motors::takeLeftStep() {
+	digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+}
 Motors motorInterrupt;
 
 static void motorISR() {
 	motorInterrupt.takeAStep();
+}
+
+static void leftMotorISR() {
+	motorInterrupt.takeLeftStep();
+}
+
+static void rightMotorISR() {
+	motorInterrupt.takeRightStep();
 }

@@ -58,7 +58,7 @@ class Motors {
 		void tankTurnLeft( );
 
 		//Turn left a certain amount of steps
-		void turnLeft( uint32_t steps );
+		void turnLeft( int32_t steps );
 
 		//Turn right
 		/*Turn the motors to a perfect 90 degree angle*/
@@ -74,7 +74,7 @@ class Motors {
 
 		//Turn Right
 		/*Turn right a specific number of steps*/
-		void turnRight( uint32_t steps );
+		void turnRight( int32_t steps );
 
 		//Turn right tank style
 		/*Turn right with both wheels moving opposite directions*/
@@ -90,13 +90,22 @@ class Motors {
 		//Constant numbers that signify amount of steps until
 		//robot turns
 		const int turnAroundSteps = 450;
-		const uint16_t rightTurnStepAmount = 425;
-		const uint16_t leftTurnStepAmount = 450;
+		const uint16_t rightTurnStepAmount = 435;
+		const uint16_t leftTurnStepAmount = 420;
 		const int rightTankTurnStepAmount = 290;
 		const int leftTankTurnStepAmount = 270;
+		void setLeftSpeed( uint8_t speed );
+		void setRightSpeed( uint8_t speed );
+		void takeRightStep();
+		void takeLeftStep();
+
 	private:
 		IntervalTimer motorTimer;
+		IntervalTimer rightMotorTimer;
+		IntervalTimer leftMotorTimer;
 		uint32_t interval;
+		static uint32_t leftSpeed;
+		static uint32_t rightSpeed;
 };
 
 #endif 
