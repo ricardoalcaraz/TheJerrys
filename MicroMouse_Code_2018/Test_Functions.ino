@@ -78,3 +78,24 @@ bool isIntersection(){
     else  return true;
 }
 
+//Input: directions
+//Output: None
+void optimize(String &directions) {
+    String longer[10]  = {"LUR","LUS","LUL","RUL","SUL","SUS"};
+    String shorter[10] = { "U" , "R" , "S" , "U" , "R" , "U" };
+    for (int count = 0; count <= sizeof(longer); count++){
+      if (directions.endsWith(longer[count])){
+        directions.replace(longer[count],shorter[count]);
+      }
+    }
+}
+
+//Input: directions and motor step count
+//Output: Boolean indicating if goal is found
+bool isGoal(String &directions, int &stepCount){
+  if ( directions.endsWith("RRR") & (stepCount <= 150) ){
+    Serial.println("Found Goal");
+    return true;
+  }
+  return false;
+}
