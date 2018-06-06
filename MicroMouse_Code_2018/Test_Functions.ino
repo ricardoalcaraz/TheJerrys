@@ -84,18 +84,32 @@ void optimize(String &directions) {
     String longer[10]  = {"LUR","LUS","LUL","RUL","SUL","SUS"};
     String shorter[10] = { "U" , "R" , "S" , "U" , "R" , "U" };
     for (int count = 0; count <= sizeof(longer); count++){
-      if (directions.endsWith(longer[count])){
-        directions.replace(longer[count],shorter[count]);
-      }
+        if (directions.endsWith(longer[count])){
+            directions.replace(longer[count],shorter[count]);
+        }
     }
 }
 
 //Input: directions and motor step count
 //Output: Boolean indicating if goal is found
 bool isGoal(String &directions, int &stepCount){
-  if ( directions.endsWith("RRR") & (stepCount <= 150) ){
-    Serial.println("Found Goal");
-    return true;
-  }
-  return false;
+    if ( directions.endsWith("RRR") & (stepCount <= 150) ){
+        Serial.println("Found Goal");
+        return true;
+    }
+    return false;
+}
+
+//Input: a turn
+//Output: None
+void makeTurn(String turn){
+    //Add turn to direction history and optimize every time
+    directions.concat(turn);
+    optimize(directions);
+
+    //Reset step count 
+    stepCounter+=50;
+    if ( ! directions.endsWith("R")){
+        stepCounter = 0;
+    }
 }
