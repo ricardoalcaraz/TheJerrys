@@ -4,6 +4,7 @@
 Sensors sensors;
 Motors motors;
 String directions;
+int stepCounter;
 
 void setup() {
     //sensors.init( 100000 );

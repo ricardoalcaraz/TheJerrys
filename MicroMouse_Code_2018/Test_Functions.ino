@@ -58,13 +58,13 @@ void test(){
 
 //Input: None
 //Output: Intersection decision
-char getIntersection(){
+String getIntersection(){
     String room = (String(sensors.getLeftDistance() < 5) +  String(sensors.getMiddleDistance() < 5) +  String(sensors.getRightDistance() < 5));
-    if      (room == "100") return  'S';
+    if      (room == "100") return  "S";
     else if (room == "101") return NULL;
-    else if (room == "110") return  'R';
-    else if (room == "111") return  'U';
-    else                    return  'L';
+    else if (room == "110") return  "R";
+    else if (room == "111") return  "U";
+    else                    return  "L";
 }
 
 
@@ -100,10 +100,11 @@ bool isGoal(String &directions, int &stepCount){
     return false;
 }
 
-//Input: a turn
+//Input: A turn
 //Output: None
 void makeTurn(String turn){
     //Add turn to direction history and optimize every time
+    //FIXME: Add lower leel turn
     directions.concat(turn);
     optimize(directions);
 
@@ -113,3 +114,26 @@ void makeTurn(String turn){
         stepCounter = 0;
     }
 }
+
+//Input: None
+//Output: None
+void solveMaze(){
+    while (!isGoal){
+        makeTurn(getIntersection());
+    }
+}
+
+//Input: Directions
+//Output: None
+void solveOptimized(String &directions){
+    int directionsCounter;
+    if (isIntersection()){
+        //case/if-else decision to make a lower level turn
+        directionsCounter++;
+    }
+    else{
+        //FIXME: Just moveforward
+    }
+    
+}
+
