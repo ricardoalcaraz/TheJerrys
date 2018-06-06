@@ -19,8 +19,11 @@ void setup() {
 
 void loop() {
 	motors.moveForward();
+  motors.go();
+  delay(10000);
+  /*
 	//Keep moving unless there is an intersection or dead end
-	while( sensors.getRightDistance() < 5 && sensors.getLeftDistance() < 5 && sensors.getMiddleDistance() > 2 ); 
+	while( sensors.getRightDistance() < 5 && sensors.getLeftDistance() < 5 && sensors.getMiddleDistance() > 2 );
 	motors.stop();
 
 	//Dead end scenario
@@ -29,7 +32,7 @@ void loop() {
 		while( sensors.getLeftDistance() < 5 && sensors.getRightDistance() < 5 );
 		motors.stop();
 		if( sensors.getRightDistance() > 5 ){
-			rightBackTurn();	
+			rightBackTurn();
 		} else if( sensors.getLeftDistance() > 5 ) {
 			leftBackTurn();
 		}
@@ -51,6 +54,7 @@ void loop() {
 	motors.stop();
 	delay(100);
 	motors.moveForward(50);
+  */
 /*
 	Serial.print( "Right Distance: " ); Serial.println( sensors.getRightDistance() );
     Serial.print( "Left Distance: " ); Serial.println( sensors.getLeftDistance() );
@@ -81,5 +85,3 @@ void turnAroundLeftCorner() {
 	motors.moveForward(70);
 	motors.turnLeft();
 }
-
-
