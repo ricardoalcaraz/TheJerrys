@@ -34,15 +34,50 @@ class Motors {
 		//Move Forward
 		/*Move forward only a certain amount of steps*/
 		void moveForward( uint32_t steps );
+		
+		//Move backward
+		/*Move the motors backward continously through an interrupt service routine*/
 		void moveBackward( );
+
+		//Move backward
+		/*Move backward a certain amount of steps not through an interrupt service routine*/
 		void moveBackward( uint32_t steps );
+
+		//Stop all motor functions
 		void stop( );
+
+		//Continue all motor functions
 		void go( );
+
+		//Turn Left
+		/*Turn the motors left on a pivot*/
 		void turnLeft( );
+
+		//Turn left style
+		/*Turn the motors left on a tank style turn where the wheels reverse*/
 		void tankTurnLeft( );
-		void turnLeft( uint32_t steps );
+
+		//Turn left a certain amount of steps
+		void turnLeft( int32_t steps );
+
+		//Turn right
+		/*Turn the motors to a perfect 90 degree angle*/
 		void turnRight( );
-		void turnRight( uint32_t steps );
+
+		//Turn back right
+		/*Turn right on a backwards pivot*/
+		void turnBackRight( );
+
+		//Turn back left
+		/*Turn the motors on a backwards pivot*/
+		void turnBackLeft( );
+
+		//Turn Right
+		/*Turn right a specific number of steps*/
+		void turnRight( int32_t steps );
+
+		//Turn right tank style
+		/*Turn right with both wheels moving opposite directions*/
 		void tankTurnRight( );
 		void turnAround( );
 		void setStepsPerRevolution( uint16_t steps );
@@ -55,13 +90,22 @@ class Motors {
 		//Constant numbers that signify amount of steps until
 		//robot turns
 		const int turnAroundSteps = 450;
-		const uint16_t rightTurnStepAmount = 480;
-		const uint16_t leftTurnStepAmount = 480;
-		const int rightTankTurnStepAmount = 310;
-		const int leftTankTurnStepAmount = 290;
+		const uint16_t rightTurnStepAmount = 435;
+		const uint16_t leftTurnStepAmount = 420;
+		const int rightTankTurnStepAmount = 290;
+		const int leftTankTurnStepAmount = 270;
+		void setLeftSpeed( uint8_t speed );
+		void setRightSpeed( uint8_t speed );
+		void takeRightStep();
+		void takeLeftStep();
+
 	private:
 		IntervalTimer motorTimer;
+		IntervalTimer rightMotorTimer;
+		IntervalTimer leftMotorTimer;
 		uint32_t interval;
+		static uint32_t leftSpeed;
+		static uint32_t rightSpeed;
 };
 
 #endif 

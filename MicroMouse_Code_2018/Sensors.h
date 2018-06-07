@@ -48,14 +48,17 @@ class Sensors {
 		//Update all the distances
 		void updateDistances();
 
+		//Value that signifies how large running average array is
+		static const uint8_t arraySize = 3;
+
 		//Holds 4 most recent values for right sensor
-		static volatile uint16_t runningAvgRight[4];
+		static volatile uint16_t runningAvgRight[arraySize];
 
 		//Holds 4 most recent values for left sensor
-		static volatile uint16_t runningAvgLeft[4];
+		static volatile uint16_t runningAvgLeft[arraySize];
 
 		//Holds 4 most recent values for middle sensor
-		static volatile uint16_t runningAvgMiddle[4];
+		static volatile uint16_t runningAvgMiddle[arraySize];
 
 	private:
 		
