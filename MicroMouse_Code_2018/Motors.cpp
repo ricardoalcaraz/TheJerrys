@@ -15,10 +15,10 @@ const uint8_t STEP2 = 5;
 const uint8_t DIR1 = 6;
 const uint8_t DIR2 = 7;
 
-uint32_t Motors::speed = 100;
+uint32_t Motors::speed = 50;
 uint16_t stepsPerRevolution = 250;
-uint32_t Motors::leftSpeed = 100;
-uint32_t Motors::rightSpeed = 100;
+uint32_t Motors::leftSpeed = 50;
+uint32_t Motors::rightSpeed = 50;
 
 Motors::Motors( ) {
 
@@ -35,7 +35,7 @@ void Motors::init( ) {
   	digitalWrite( EN1, HIGH );
   	digitalWrite( EN2, HIGH );
 	//Set the default direction to forward 
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	motorTimer.priority( 10 );
 	rightMotorTimer.priority( 10 );
@@ -81,7 +81,7 @@ void Motors::stop ( ) {
 
 //Continuosly move forward
 void Motors::moveForward( ) {
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	leftMotorTimer.begin( leftMotorISR, leftSpeed );
 	rightMotorTimer.begin( rightMotorISR, rightSpeed);
@@ -92,7 +92,7 @@ void Motors::moveForward( ) {
 void Motors::turnLeft( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 40 ) {
@@ -120,7 +120,7 @@ void Motors::turnLeft( ) {
 void Motors::tankTurnLeft( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, LOW );
 	go();
 	if( speed > 30 ) {
@@ -152,7 +152,7 @@ void Motors::tankTurnLeft( ) {
 void Motors::tankTurnRight( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, LOW );
+	digitalWrite( DIR1, HIGH );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
@@ -184,7 +184,7 @@ void Motors::tankTurnRight( ) {
 void Motors::turnRight( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
@@ -210,7 +210,7 @@ void Motors::turnRight( ) {
 	digitalWrite( DIR1, LOW );
 	digitalWrite( DIR2, LOW );
 	delay(1);
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	stop();
 	interrupts();
@@ -248,7 +248,7 @@ void Motors::turnLeft( int32_t steps ) {
 	if( steps < 0 ) {
 		digitalWrite(DIR1, LOW);
 	}else {
-		digitalWrite(DIR1, HIGH);
+		digitalWrite(DIR1, LOW );
 	}
 	go();
 	/*Take the aforementioned amount of steps*/
@@ -322,7 +322,7 @@ void Motors::turnBackLeft() {
 void Motors::moveForward( uint32_t steps ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, HIGH );
 	go();
 	if( speed > 30 ) {
@@ -365,8 +365,8 @@ void Motors::moveBackward( ) {
 void Motors::moveBackward( uint32_t steps ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, LOW );
-	digitalWrite( DIR2, LOW );
+	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR2, LOW  );
 	go();
 	if( speed > 30 ) {
 		uint32_t temp = this->speed;
@@ -397,7 +397,7 @@ void Motors::moveBackward( uint32_t steps ) {
 void Motors::turnAround( ) {
 	noInterrupts();
 	stop();
-	digitalWrite( DIR1, HIGH );
+	digitalWrite( DIR1, LOW  );
 	digitalWrite( DIR2, LOW );
 	go();
 	if( speed > 30 ) {
@@ -438,6 +438,18 @@ void Motors::takeRightStep() {
 void Motors::takeLeftStep() {
 	digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
 }
+
+void Motors::test() {
+    digitalWrite(STEP1,HIGH); // Enables the motor to move in a particular direction
+    for(int x = 0; x < 200; x++) {
+        digitalWrite(STEP1,HIGH); 
+        delayMicroseconds(500); 
+        digitalWrite(STEP1,LOW); 
+        delayMicroseconds(500); 
+    }      
+    //digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );
+}
+
 Motors motorInterrupt;
 
 static void motorISR() {

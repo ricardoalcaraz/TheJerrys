@@ -98,6 +98,7 @@ class Motors {
 		void setRightSpeed( uint8_t speed );
 		void takeRightStep();
 		void takeLeftStep();
+        void test();
 
 	private:
 		IntervalTimer motorTimer;
