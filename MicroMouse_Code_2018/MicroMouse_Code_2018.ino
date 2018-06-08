@@ -15,13 +15,14 @@ void setup() {
 	motors.setSpeed(20);
 	motors.setLeftSpeed(20);
 	motors.setRightSpeed(20);
-	delay(5000);
+	delay(500);
 }
 
 void loop() {
-	motors.moveForward();
-  motors.go();
-  delay(10000);
+    directions+=getIntersection();
+    Serial.println(directions);
+    delay(400);
+}
   /*
 	//Keep moving unless there is an intersection or dead end
 	while( sensors.getRightDistance() < 5 && sensors.getLeftDistance() < 5 && sensors.getMiddleDistance() > 2 );
@@ -62,7 +63,6 @@ void loop() {
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
 	delay(500);
 */
-}
 
 void leftBackTurn() {
 	//motors.moveBackward();

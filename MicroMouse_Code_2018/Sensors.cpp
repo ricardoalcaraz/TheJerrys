@@ -101,19 +101,19 @@ void Sensors::updateDistances() {
 
 //Return a single instance of the right sensor
 volatile uint16_t Sensors::pingRight() {
+      digitalWrite(TRIG2, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TRIG2, HIGH);
+    delayMicroseconds(10);
     digitalWrite(TRIG2, LOW);
-  	delayMicroseconds(2);
-  	digitalWrite(TRIG2, HIGH);
-  	delayMicroseconds(10);
-  	digitalWrite(TRIG2, LOW);
 
-  	//Read the echo pin
-  	int duration = pulseIn(ECHO2, HIGH, timeout);
+    //Read the echo pin
+    int duration = pulseIn(ECHO2, HIGH, timeout);
 
-  	//Calculate distance
-  	float distance = (float) duration*0.034/2;
+    //Calculate distance
+    float distance = (float) (duration/2)/29.1;
 
-  	return distance;	
+    return distance;    
 }
 
 //Return a single instance of the middle sensor

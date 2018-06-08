@@ -68,19 +68,23 @@ void test(){
 
 //Input: None
 //Output: Intersection decision
-String getIntersection(){
-    String room = (String(sensors.getLeftDistance() < 5) +  String(sensors.getMiddleDistance() < 5) +  String(sensors.getRightDistance() < 5));
-    if      (room == "100") return  "S";
+char getIntersection(){
+    unsigned int wallDistance = 3;
+    String room = (String(sensors.getLeftDistance()   < wallDistance) + 
+                   String(sensors.getMiddleDistance() < wallDistance) + 
+                   String(sensors.getRightDistance()  < wallDistance));
+    if      (room == "100") return  'S';
     else if (room == "101") return NULL;
-    else if (room == "110") return  "R";
-    else if (room == "111") return  "U";
-    else                    return  "L";
+    else if (room == "110") return  'R';
+    else if (room == "111") return  'U';
+    else                    return  'L';
 }
 
 
 //Input: None
 //Output: Boolean representing if there is an intersection
 bool isIntersection(){
+    int wallThreshold = 3;
     if ( (sensors.getLeftDistance() < 5)   &&  
          (sensors.getMiddleDistance() > 5) && 
          (sensors.getRightDistance() < 5)  
