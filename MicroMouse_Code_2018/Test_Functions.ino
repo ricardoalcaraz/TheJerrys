@@ -1,4 +1,4 @@
-void test(){
+/*void test(){
 	static uint8_t speed = 40;
 	motors.setSpeed(speed);
     if( Serial.available() > 0 ){
@@ -149,5 +149,4 @@ void solveOptimized(String &directions){
         //FIXME: Just moveforward
     }
     
-}
-
+}*/
