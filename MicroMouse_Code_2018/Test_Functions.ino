@@ -1,4 +1,5 @@
-/*void test(){
+/*
+void test(){
 	static uint8_t speed = 40;
 	motors.setSpeed(speed);
     if( Serial.available() > 0 ){
@@ -65,32 +66,7 @@
     Serial.print( "Left Distance: " ); Serial.println( sensors.getLeftDistance() );
     Serial.print( "Middle Distance: " ); Serial.println( sensors.getMiddleDistance() );
 }
-
-//Input: None
-//Output: Intersection decision
-char getIntersection(){
-    unsigned int wallDistance = 3;
-    String room = (String(sensors.getLeftDistance()   < wallDistance) + 
-                   String(sensors.getMiddleDistance() < wallDistance) + 
-                   String(sensors.getRightDistance()  < wallDistance));
-    if      (room == "100") return  'S';
-    else if (room == "101") return NULL;
-    else if (room == "110") return  'R';
-    else if (room == "111") return  'U';
-    else                    return  'L';
-}
-
-
-//Input: None
-//Output: Boolean representing if there is an intersection
-bool isIntersection(){
-    int wallThreshold = 3;
-    if ( (sensors.getLeftDistance() < 5)   &&  
-         (sensors.getMiddleDistance() > 5) && 
-         (sensors.getRightDistance() < 5)  
-        ) return false;
-    else  return true;
-}
+*/
 
 //Input: directions
 //Output: None
@@ -116,10 +92,12 @@ bool isGoal(String &directions, int &stepCount){
 
 //Input: A turn
 //Output: None
-void makeTurn(String turn){
+void makeTurn(char turn){
     //Add turn to direction history and optimize every time
-    //FIXME: Add lower leel turn
-    directions.concat(turn);
+
+    
+    
+    directions += turn;
     optimize(directions);
 
     //Reset step count 
@@ -133,7 +111,7 @@ void makeTurn(String turn){
 //Output: None
 void solveMaze(){
     while (!isGoal){
-        makeTurn(getIntersection());
+        makeTurn(getTurn());
     }
 }
 
@@ -149,4 +127,4 @@ void solveOptimized(String &directions){
         //FIXME: Just moveforward
     }
     
-}*/
+}

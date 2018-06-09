@@ -15,8 +15,8 @@ class Motors {
         /* Inputs: steps
         * Outputs: none
         * Moves robot FORWARD "steps" steps.*/
-        void forward(uint16_t steps);
-        
+        void leftForward(uint16_t steps, uint16_t speed);
+        void rightForward(uint16_t steps, uint16_t speed);
         // backward
         /* Inputs: steps
         * Outputs: none
@@ -39,6 +39,8 @@ class Motors {
 
         void turnOn();
         void turnOff();
+
+//        void s
 };
 
 #endif

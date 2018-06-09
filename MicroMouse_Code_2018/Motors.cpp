@@ -1,6 +1,5 @@
 #include "Motors.h"
 
-
 // Right Motor
 const uint8_t STEP1 = 4; 
 const uint8_t DIR1 = 6;
@@ -25,14 +24,21 @@ void Motors::init(){
     turnOff();
 }
 
-void Motors::forward(uint16_t steps){
+void Motors::leftForward(uint16_t steps, uint16_t speed){
     turnOn();
     digitalWrite(DIR1 , LOW);
-    digitalWrite(DIR2 , HIGH);
     for (int i=0; i<steps; i++){
-        digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );          
+        digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );             
+        delay(speed);
+    }
+    turnOff();
+}
+void Motors::rightForward(uint16_t steps, uint16_t speed){
+    turnOn();
+    digitalWrite(DIR2 , HIGH);
+    for (int i=0; i<steps; i++){  
         digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );   
-        delay(5);
+        delay(speed);
     }
     turnOff();
 }
