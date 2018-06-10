@@ -24,7 +24,7 @@ void Motors::init(){
     turnOff();
 }
 
-void Motors::leftForward(uint16_t steps, uint16_t speed){
+void Motors::leftForward(uint16_t steps, double speed){
     turnOn();
     digitalWrite(DIR1 , LOW);
     for (int i=0; i<steps; i++){
@@ -33,7 +33,7 @@ void Motors::leftForward(uint16_t steps, uint16_t speed){
     }
     turnOff();
 }
-void Motors::rightForward(uint16_t steps, uint16_t speed){
+void Motors::rightForward(uint16_t steps, double speed){
     turnOn();
     digitalWrite(DIR2 , HIGH);
     for (int i=0; i<steps; i++){  
