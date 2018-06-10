@@ -11,15 +11,15 @@ int incomingByte = 0;
 const uint16_t FORWARD = 4000;     // Clears block and some extra to be safe
 const uint16_t TANKLEFT = 200;    // 90 degree turn left
 const uint16_t TANKRIGHT = 200;   // 90 degree turn right
-const uint16_t UTURN = 430;       // 180 degree turn
+const uint16_t UTURN = 400;       // 180 degree turn
 double SETPOINT = 4;
 
 //pid settings and gains
-#define OUTPUT_MIN 0
-#define OUTPUT_MAX 4
-#define KP 1.5
-#define KI .0002
-#define KD 1.5
+#define OUTPUT_MIN 0.5  // Suggested: 0
+#define OUTPUT_MAX 1.5  // Suggested: 4
+#define KP 2.0          // Suggested: 1.5
+#define KI 0.0002            // Suggested: .0002
+#define KD 1.5            // Suggested: 1.5
 
 double leftDistance, rightDistance, rightDrive, leftDrive;
 
@@ -63,8 +63,11 @@ void loop() {
 //        }
 //    }
 //    delay(5);
-            autoForward(FORWARD);
-            delay(100);
+        if (sensors.getMiddleDistance() < 10){
+            motors.uTurn(UTURN);
+        }
+            autoForward(100);
+//            delay(100);
 }
 
 
