@@ -102,11 +102,11 @@ bool isIntersection(){
 
 
 void autoForward(int STEPS){
-    double speed = 1;
+    double speed = 500;
     
     //int left, right; //Initialize here if pinging less often
     
-    for (int i = 0; i < STEPS; i += 5){ //larger multiples than 1 since I tried stepping additional steps below
+    for (int i = 0; i < STEPS; i += 7){ //larger multiples than 1 since I tried stepping additional steps below
         leftDistance = sensors.getLeftDistance();
         rightDistance = sensors.getRightDistance(); 
 
@@ -115,8 +115,8 @@ void autoForward(int STEPS){
         rightDistancePID.run();
         
         Serial.print(leftDistance); Serial.print("      ");Serial.print(leftDrive); Serial.print("     "); Serial.print(rightDistance); Serial.print("     ");Serial.println(rightDrive);
-        motors.leftForward(5, speed + leftDrive);
-        motors.rightForward(5, speed + rightDrive);
+        motors.leftForward(7, speed + leftDrive*500);
+        motors.rightForward(7, speed + rightDrive*500);
 
     }
 }  

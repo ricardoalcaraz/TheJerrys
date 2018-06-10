@@ -1,4 +1,5 @@
 #include "Motors.h"
+#include "Arduino.h"
 
 // Right Motor
 const uint8_t STEP1 = 4; 
@@ -29,7 +30,7 @@ void Motors::leftForward(uint16_t steps, double speed){
     digitalWrite(DIR1 , LOW);
     for (int i=0; i<steps; i++){
         digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );             
-        delay(speed);
+        delayMicroseconds(speed);
     }
     turnOff();
 }
@@ -38,7 +39,7 @@ void Motors::rightForward(uint16_t steps, double speed){
     digitalWrite(DIR2 , HIGH);
     for (int i=0; i<steps; i++){  
         digitalWrite( STEP2, digitalRead(STEP2) ^ 1 );   
-        delay(speed);
+        delayMicroseconds(speed);
     }
     turnOff();
 }
