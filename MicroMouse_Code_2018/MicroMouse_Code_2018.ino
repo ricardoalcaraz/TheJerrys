@@ -12,6 +12,8 @@ const uint16_t FORWARD = 4000;     // Clears block and some extra to be safe
 const uint16_t TANKLEFT = 200;    // 90 degree turn left
 const uint16_t TANKRIGHT = 200;   // 90 degree turn right
 const uint16_t UTURN = 400;       // 180 degree turn
+const uint16_t CLEARANCE = 200;       // 180 degree turn
+
 double SETPOINT = 4;
 
 //pid settings and gains

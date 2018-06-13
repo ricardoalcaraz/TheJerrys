@@ -95,7 +95,21 @@ bool isGoal(String &directions, int &stepCount){
 void makeTurn(char turn){
     //Add turn to direction history and optimize every time
 
-    
+    if (turn == 'L'){
+        motors.tankLeft(TANKLEFT);
+    }
+    else if (turn == 'S'){
+        autoForward(FORWARD);
+    }
+    else if (turn == 'R'){
+        motors.tankRight(TANKRIGHT);
+    }
+    else if (turn == 'U'){
+        motors.uTurn(UTURN);
+    }
+    else{
+        autoForward(10);
+    }
     
     directions += turn;
     optimize(directions);
