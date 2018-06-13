@@ -65,11 +65,16 @@ void loop() {
 //        }
 //    }
 //    delay(5);
-        if (sensors.getMiddleDistance() < 10){
-            motors.uTurn(UTURN);
-        }
-            autoForward(100);
-//            delay(100);
+
+    /*
+    char turn = getTurn();
+    if (turn == 'L') motors.tankLeft(TANKLEFT);
+    else if (turn == 'S') autoForward(600);
+    else if (turn == 'R') motors.tankRight(TANKRIGHT);
+    else if (turn == 'U') motors.uTurn(UTURN);
+    else autoForward(100);
+    */
+      
 }
 
 
@@ -79,18 +84,32 @@ void loop() {
 //Input: None
 //Output: Intersection turn decision
 char getTurn(){
+    String debounce;
     //Get room
     //wall threshold based on distance to middle of next room
     unsigned int wallDistance = 15;
-    String room = (String(sensors.getLeftDistance()   < wallDistance) + 
-                   String(sensors.getMiddleDistance() < wallDistance) + 
-                   String(sensors.getRightDistance()  < wallDistance));
-   //Decide turn based on left hand rule
-    if      (room == "100") return  'S';
-    else if (room == "101") return NULL;
-    else if (room == "110") return  'R';
-    else if (room == "111") return  'U';
-    else                    return  'L';
+
+    for (int i = 0; i < 20; i++){
+    
+        String room = (String(sensors.getLeftDistance()   < wallDistance) + 
+                       String(sensors.getMiddleDistance() < wallDistance) + 
+                       String(sensors.getRightDistance()  < wallDistance));
+       //Decide turn based on left hand rule
+        if      (room == "100") debounce+=  'S';
+        else if (room == "101") debounce+= NULL;
+        else if (room == "110") debounce+=  'R';
+        else if (room == "111") debounce+=  'U';
+        else                    debounce+=  'L';
+        //delay(25); //FIXME: Helps to debounce and space signals out, but may stall PID forward
+    }
+
+    //Signal debouncing
+    if      (debounce.indexOf("SSSSSSSSSS") > 0) return 'S';
+    else if (debounce.indexOf("RRRRRRRRRR") > 0) return 'R';
+    else if (debounce.indexOf("UUUUUUUUUU") > 0) return 'U';
+    else if (debounce.indexOf("LLLLLLLLLL") > 0) return 'L';
+    else return NULL;
+    
 }
 
 
