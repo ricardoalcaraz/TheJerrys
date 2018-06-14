@@ -99,7 +99,7 @@ void makeTurn(char turn){
         motors.tankLeft(TANKLEFT);
     }
     else if (turn == 'S'){
-        autoForward(FORWARD);
+        autoForward(CELL);
     }
     else if (turn == 'R'){
         motors.tankRight(TANKRIGHT);
