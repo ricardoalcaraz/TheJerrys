@@ -9,6 +9,7 @@ String directions;
 int stepCounter;
 int incomingByte = 0;
 const uint16_t CELL = 350;     // Clears block and some extra to be safe
+const uint16_t CELLRESET = 200;   //Centers the robot 
 const uint16_t TANKLEFT = 200;    // 90 degree turn left
 const uint16_t TANKRIGHT = 200;   // 90 degree turn right
 const uint16_t UTURN = 400;       // 180 degree turn
@@ -34,14 +35,14 @@ void setup() {
   Serial.begin( 57600 );
   motors.init();
   sensors.init();
-  delay(500);
+  delay(1000);
 
   leftDistancePID.setTimeStep(1);
   rightDistancePID.setTimeStep(1);
 }
 
 void loop() {
-    /*if (Serial.available() > 0) {
+    if (Serial.available() > 0) {
       // read the incoming byte:
       incomingByte = Serial.read();
       if (incomingByte == 'w') {
@@ -59,10 +60,11 @@ void loop() {
           motors.turnOff();
       }
       else if (incomingByte == 'q'){
-          autoForward(200);
+          autoForward(CELL);
       }
     }
-    delay(5);*/
+    delay(5);
+/*
   char turn = getTurnt();
   if (turn > 0) {
     Serial.println(turn);
@@ -86,7 +88,7 @@ void loop() {
   else autoForward(390);
 
   delay(5); // increase this to go cell by cell
-
+*/
 }
 
 
@@ -156,11 +158,15 @@ bool isIntersection() {
 
 
 void autoForward(int STEPS) {
-  double speed = 500;
-
-  //int left, right; //Initialize here if pinging less often
-
-  for (int i = 0; i < STEPS; i += 7) { //larger multiples than 1 since I tried stepping additional steps below
+    double speed = 500;
+    bool rst = (  (sensors.getLeftDistance() > 15) || (sensors.getRightDistance() > 15)  ) ? true : false;
+    //Initialize if we started in an intersection
+    //If entering a cell with a possible intersection, we want to callibrate it to go to the middle
+    //If leaving a cell with a possible itnersection, just use the hardcoded full cell traversal
+    bool leftIntersection = (  (sensors.getLeftDistance() > 15)  );
+    bool rightIntersection = (  ( sensors.getRightDistance() > 15)  );
+  
+  for (int i = STEPS; i > 0; i -= 7) { //larger multiples than 1 since I tried stepping additional steps below
     leftDistance = sensors.getLeftDistance();
     rightDistance = sensors.getRightDistance();
 
@@ -171,16 +177,28 @@ void autoForward(int STEPS) {
 
     if (leftDistance < 15) {
       motors.rightForward(7, speed + rightDrive * 500);
+      Serial.println("Took this path");
     }
     else {
       motors.rightForward(7, speed + 300);
+       if (rst == false){ //Must have a one time trigger since distances are constantly returned
+        rst = true;
+        i = CELLRESET;
+        Serial.println("No, Took this path");
+      }
     }
 
-    if (rightDistance < 15) {
+    if (rightDistance < 15){
       motors.leftForward(7, speed + leftDrive * 500);
+      Serial.println("fuck ya motha");
     }
     else {
       motors.leftForward(7, speed + 300);
+      if (rst == false){ //Must have a one time trigger since distances are constantly returned
+        rst = true;
+        i = CELLRESET;
+        Serial.println("shut up");
+      }
     }
     /* rightDistancePID.run();
       leftDistancePID.run();
