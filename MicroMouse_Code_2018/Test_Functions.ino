@@ -41,7 +41,7 @@ void test(){
       		case 't':
         		while( sensors.getLeftDistance() < 5 ) {
           		motors.moveForward(100);
-        		} 
+        		}
         		motors.moveForward(175);
         		motors.turnLeft();
         		break;
@@ -99,7 +99,7 @@ void makeTurn(char turn){
         motors.tankLeft(TANKLEFT);
     }
     else if (turn == 'S'){
-        autoForward(CELL);
+      //  autoForward(CELL);
     }
     else if (turn == 'R'){
         motors.tankRight(TANKRIGHT);
@@ -108,13 +108,13 @@ void makeTurn(char turn){
         motors.uTurn(UTURN);
     }
     else{
-        autoForward(10);
+      //  autoForward(10);
     }
-    
+
     directions += turn;
     optimize(directions);
 
-    //Reset step count 
+    //Reset step count
     stepCounter+=50;
     if ( ! directions.endsWith("R")){
         stepCounter = 0;
@@ -140,5 +140,5 @@ void solveOptimized(String &directions){
     else{
         //FIXME: Just moveforward
     }
-    
+
 }
