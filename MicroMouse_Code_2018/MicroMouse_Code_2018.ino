@@ -62,6 +62,7 @@ void loop() {
   leftDistance = sensors.getLeftDistance();
   middleDistance = sensors.getMiddleDistance();
   autoForward(200, leftDistance, rightDistance, middleDistance);
+  if(isIntersection)
   delayMicroseconds(5000);
   //autoForward(200, rightDistance, leftDistance, middleDistance);
   /*
@@ -171,11 +172,11 @@ char getTurnt() {
 //Output: Boolean representing if there is an intersection
 bool isIntersection() {
   int wallThreshold = 15;
-  if ( (sensors.getLeftDistance()   < wallThreshold) &&
-       (sensors.getMiddleDistance() > wallThreshold) &&
-       (sensors.getRightDistance()  < wallThreshold)
+  if ( (leftDistance   < wallThreshold) &&
+       (middleDistance > wallThreshold) &&
+       (rightDistance  < wallThreshold)
      ) return false;
-  else  return true;
+  else return true;
 }
 
 
