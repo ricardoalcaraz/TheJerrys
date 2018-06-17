@@ -79,7 +79,7 @@ void Motors::tankRight(uint16_t steps){
 
 void Motors::uTurn(uint16_t steps){
     turnOn();
-    digitalWrite(DIR1, LOW);
+    digitalWrite(DIR1, HIGH);
     digitalWrite(DIR2, LOW);
     for (int i=0; i<steps; i++){
         digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
