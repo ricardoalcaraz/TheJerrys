@@ -28,13 +28,13 @@ const uint16_t TANKRIGHT = 200;   // 90 degree turn right
 const uint16_t UTURN = 400;       // 180 degree turn
 const uint16_t CLEARANCE = 200;       // 180 degree turn
 
-double SETPOINT = 4;
+double SETPOINT = 2.33;
 
 //pid settings and gains
 #define OUTPUT_MIN 0.0  // Suggested: 0.5
-#define OUTPUT_MAX 10.0  // Suggested: 1.5
-#define KP 1.0         // Suggested: 2.0
-#define KI 0.000       // Suggested: .0002
+#define OUTPUT_MAX 2.0  // Suggested: 1.5
+#define KP 1.25         // Suggested: 2.0
+#define KI 0       // Suggested: .0002
 #define KD 0          // Suggested: 1.5
 
 double leftDistance, middleDistance, rightDistance, rightDrive, leftDrive;
@@ -47,27 +47,21 @@ AutoPID rightDistancePID(&rightDistance, &SETPOINT, &leftDrive, OUTPUT_MIN, OUTP
 void setup() {
   Serial.begin( 57600 );
   //motors.init();
-  sensors.init();
+  sensors.init( 50000 );
   delay(1000);
   leftStepper.begin(10, 4);
   rightStepper.begin(10, 4);
   leftDistancePID.setTimeStep(1);
   rightDistancePID.setTimeStep(1);
-  rightStepper.disable();
-  leftStepper.disable();
+//  rightStepper.disable();
+//  leftStepper.disable();
 }
 
 void loop() {
-  int rightDistance = sensors.getRightDistance();
-  int leftDistance = sensors.getLeftDistance();
-  int middleDistance = sensors.getMiddleDistance();
-  leftDistancePID.run();
-  rightDistancePID.run();
-  Serial.print("LeftDistance: "); Serial.println(leftDistance);
-  Serial.print("RightDistance: "); Serial.println(rightDistance);
-  Serial.print("MiddleDistance: "); Serial.println(middleDistance);
-  Serial.print( "Left Drive: "); Serial.println(leftDrive);
-  Serial.print("Right Drive: "); Serial.println( rightDrive );
+  rightDistance = sensors.getRightDistance();
+  leftDistance = sensors.getLeftDistance();
+  middleDistance = sensors.getMiddleDistance();
+  autoForward(200, leftDistance, rightDistance, middleDistance);
   delayMicroseconds(5000);
   //autoForward(200, rightDistance, leftDistance, middleDistance);
   /*
@@ -186,6 +180,7 @@ bool isIntersection() {
 
 
 void autoForward(int STEPS, int rightDistance, int leftDistance, int middleDistance) {
+    noInterrupts();
     bool rst = (  (leftDistance > 15) || (rightDistance > 15)  ) ? true : false;
     //Initialize if we started in an intersection
     //If entering a cell with a possible intersection, we want to callibrate it to go to the middle
@@ -198,13 +193,10 @@ void autoForward(int STEPS, int rightDistance, int leftDistance, int middleDista
     leftDistancePID.run();
     rightDistancePID.run();
     for(int i = 0; i < 2; i++){
-      rightStepper.rotate(1+(int)rightDrive);
-      leftStepper.rotate(1+(int)leftDrive);
+      rightStepper.rotate(1.0+leftDrive);
+      leftStepper.rotate(1.0+rightDrive);
     }
-    for(int i = 0; i < 18; i++){
-      rightStepper.rotate(1);
-      leftStepper.rotate(1);
-    }
+    interrupts();
 
     /* rightDistancePID.run();
       leftDistancePID.run();
