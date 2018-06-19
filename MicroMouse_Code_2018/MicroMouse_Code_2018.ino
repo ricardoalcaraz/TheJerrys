@@ -25,17 +25,17 @@ const uint16_t CELL = 350;     // Clears block and some extra to be safe
 const uint16_t CELLRESET = 200;   //Centers the robot
 const uint16_t TANKLEFT = 200;    // 90 degree turn left
 const uint16_t TANKRIGHT = 200;   // 90 degree turn right
-const uint16_t UTURN = 420;       // 180 degree turn
+const uint16_t UTURN = 450;       // 180 degree turn
 const uint16_t CLEARANCE = 200;       // 180 degree turn
 
 double SETPOINT = 2.33;
 
 //pid settings and gains
 #define OUTPUT_MIN 0.0  // Suggested: 0.0
-#define OUTPUT_MAX 3.0  // Suggested: 3.0
+#define OUTPUT_MAX 2.0  // Suggested: 2.0
 #define KP 1.25         // Suggested: 1.25
-#define KI 0       // Suggested: .0002
-#define KD 0          // Suggested: 1.5
+#define KI 0.001       // Suggested: .001
+#define KD 2.0          // Suggested: 2.0
 #define ROTATE 0.75 // Suggested 0.75
 
 double leftDistance, middleDistance, rightDistance, rightDrive, leftDrive;
@@ -64,7 +64,7 @@ void loop() {
       rightDistance = sensors.getRightDistance();
       leftDistance = sensors.getLeftDistance();
       middleDistance = sensors.getMiddleDistance();
-      if (middleDistance < 5){
+      if (middleDistance < 3){
         motors.uTurn(UTURN);
       }
       else{
