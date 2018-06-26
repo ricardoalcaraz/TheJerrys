@@ -54,8 +54,6 @@ void setup() {
   rightStepper.begin(10, 4);
   leftDistancePID.setTimeStep(1);
   rightDistancePID.setTimeStep(1);
-//  rightStepper.disable();
-//  leftStepper.disable();
 }
 
 void loop() {
@@ -71,13 +69,7 @@ void loop() {
         autoForward(200, leftDistance, rightDistance, middleDistance);
       }
   }
-  /*
-  //Save delaymicro
-  if(isIntersection)
-  delayMicroseconds(5000);
-   */
-  //autoForward(200, rightDistance, leftDistance, middleDistance);
-  /*
+    /*
     if (Serial.available() > 0) {
       // read the incoming byte:
       incomingByte = Serial.read();
@@ -86,84 +78,15 @@ void loop() {
       else if (incomingByte == 's'){
           motors.uTurn(UTURN);
       }
-      else if (incomingByte == 'a'){
-          motors.tankLeft(TANKLEFT);
-      }
-      else if (incomingByte == 'd'){
-          motors.tankRight(TANKRIGHT);
-      }
-      else if (incomingByte == 'x'){
-          motors.turnOff();
-      }
-      else if (incomingByte == 'q'){
-          autoForward(CELL);
-      }
     }
-/*
-  char turn = getTurnt();
-  if (turn > 0) {
-    Serial.println(turn);
-  }
-
-  if (turn == 'L') {
-    autoForward(300); // makes the robot ram into the wall for consistentcy -- Making a left turn into a path with no wall in front of it is currently impossible (big problem)
-    motors.tankLeft(TANKLEFT);
-  }
-  else if (turn == 'S') {
-    autoForward(380);
-  }
-  else if (turn == 'R') {
-    autoForward(300); // makes the robot ram into the wall for consistentcy -- never need to turn right with no wall in front except during optimized path (small problem)
-    motors.tankRight(TANKRIGHT);
-  }
-  else if (turn == 'U') {
-    autoForward(300); // makes the robot ram into the wall for consistentcy -- there will always be a wall to crash into (no problem)
-    motors.uTurn(UTURN);
-  }
-  else autoForward(390);
-
-  delay(5); // increase this to go cell by cell
-*/
+    */
 }
 
 
-
-char getTurn() {
-  String debounce;
-  //Get room
-  //wall threshold based on distance to middle of next room
-  unsigned int wallDistance = 15;
-
-  for (int i = 0; i < 20; i++) {
-    leftDistance = sensors.getLeftDistance();
-    rightDistance = sensors.getRightDistance();
-    middleDistance = sensors.getMiddleDistance();
-
-    Serial.print(leftDistance); Serial.print("      "); Serial.print(middleDistance); Serial.print("       "); Serial.print("     "); Serial.println(rightDistance);
-
-    String room = (String(leftDistance   < wallDistance) +
-                   String(middleDistance < wallDistance) +
-                   String(rightDistance  < wallDistance));
-    //Decide turn based on left hand rule
-    if      (room == "100") debounce +=  'S';
-    else if (room == "101") debounce += NULL;
-    else if (room == "110") debounce +=  'R';
-    else if (room == "111") debounce +=  'U';
-    else                    debounce +=  'L';
-    delay(25); //FIXME: Helps to debounce and space signals out, but may stall PID forward
-  }
-
-  //Signal debouncing
-  if      (debounce.indexOf("SSSSSSSSSSS") > 0) return 'S';
-  else if (debounce.indexOf("RRRRRRRRRRR") > 0) return 'R';
-  else if (debounce.indexOf("UUUUUUUUUUU") > 0) return 'U';
-  else if (debounce.indexOf("LLLLLLLLLLL") > 0) return 'L';
-  else return NULL;
-}
 
 //Input: None
 //Output: Intersection turn decision
-char getTurnt() {
+char getTurn() {
   int wallDistance = 15;
   leftDistance = sensors.getLeftDistance();
   rightDistance = sensors.getRightDistance();
@@ -211,13 +134,4 @@ void autoForward(int STEPS, int rightDistance, int leftDistance, int middleDista
       leftStepper.rotate(ROTATE+rightDrive);
     }
     interrupts();
-
-    /* rightDistancePID.run();
-      leftDistancePID.run();
-
-      motors.rightForward(7, speed + rightDrive*500);
-      motors.leftForward(7, speed + leftDrive*500);*/
-
-
 }
-//Serial.print(leftDistance); Serial.print("      ");Serial.print(leftDrive); Serial.print("     "); Serial.print(rightDistance); Serial.print("     ");Serial.println(rightDrive);
