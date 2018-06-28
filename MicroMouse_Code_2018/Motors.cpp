@@ -56,7 +56,7 @@ void Motors::backward(uint16_t steps){
 }
 void Motors::tankLeft(uint16_t steps){
     turnOn();
-    digitalWrite(DIR1, LOW);
+    digitalWrite(DIR1, HIGH);
     digitalWrite(DIR2, LOW);
     for (int i=0; i<steps; i++){
         digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );
@@ -67,7 +67,7 @@ void Motors::tankLeft(uint16_t steps){
 }
 void Motors::tankRight(uint16_t steps){
     turnOn();
-    digitalWrite(DIR1, HIGH);
+    digitalWrite(DIR1, LOW);
     digitalWrite(DIR2, HIGH);
     for (int i=0; i<steps; i++){
         digitalWrite( STEP1, digitalRead(STEP1) ^ 1 );

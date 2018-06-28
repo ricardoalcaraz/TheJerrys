@@ -21,12 +21,12 @@ String directions;
 int stepCounter;
 int incomingByte = 0;
 
-const uint16_t CELL = 350;     // Clears block and some extra to be safe
+const uint16_t CELL = 47;     // Suggested: 40 Clears block and some extra to be safe
 const uint16_t CELLRESET = 200;   //Centers the robot
-const uint16_t TANKLEFT = 200;    // 90 degree turn left
-const uint16_t TANKRIGHT = 200;   // 90 degree turn right
+const uint16_t TANKLEFT = 230;    // 90 degree turn left
+const uint16_t TANKRIGHT = 230;   // 90 degree turn right
 const uint16_t UTURN = 450;       // 180 degree turn
-const uint16_t CLEARANCE = 200;       // 180 degree turn
+const uint16_t CALLIBRATE = 25; //Steps to get to center of cell upon detecting an opening Suggested: 20
 
 double SETPOINT = 2.33;
 
@@ -49,37 +49,48 @@ void setup() {
   Serial.begin( 57600 );
   //motors.init();
   sensors.init( 50000 );
-  delay(1000);
+  delay(1500);
   leftStepper.begin(10, 4);
   rightStepper.begin(10, 4);
   leftDistancePID.setTimeStep(1);
   rightDistancePID.setTimeStep(1);
+
+  //single test
+    autoForward(CELL);
+    
+    autoForward(10);
+    motors.tankLeft(TANKLEFT);
+    autoForward(CELL);
+
+    autoForward(CELL);
+    
+    autoForward(10);
+    motors.tankLeft(TANKLEFT);
+    autoForward(CELL);
+    
+    autoForward(CELL);
 }
 
 void loop() {
-  for (int i = 0; i < 999; i++){
-    
-      rightDistance = sensors.getRightDistance();
-      leftDistance = sensors.getLeftDistance();
-      middleDistance = sensors.getMiddleDistance();
-      if (middleDistance < 3){
-        motors.uTurn(UTURN);
-      }
-      else{
-        autoForward(200, leftDistance, rightDistance, middleDistance);
-      }
-  }
-    /*
     if (Serial.available() > 0) {
       // read the incoming byte:
       incomingByte = Serial.read();
       if (incomingByte == 'w') {
+          autoForward(CELL);
+
       }
-      else if (incomingByte == 's'){
-          motors.uTurn(UTURN);
+      else if (incomingByte == 'a'){
+          autoForward(10);
+          motors.tankLeft(TANKLEFT);
+          autoForward(CELL);
+      }
+      else if (incomingByte == 'd'){
+          autoForward(10);
+          motors.tankRight(TANKRIGHT);
+          autoForward(CELL);
       }
     }
-    */
+
 }
 
 
@@ -114,24 +125,80 @@ bool isIntersection() {
   else return true;
 }
 
-
-void autoForward(int STEPS, int rightDistance, int leftDistance, int middleDistance) {
+/*
+void autoForward(int steps) {
+    int leftDistance = sensors.getLeftDistance();
+    int rightDistance = sensors.getRightDistance();
+    int middleDistance = sensors.getMiddleDistance();
+    
     motors.turnOn();
-    noInterrupts();
-    bool rst = (  (leftDistance > 15) || (rightDistance > 15)  ) ? true : false;
-    //Initialize if we started in an intersection
-    //If entering a cell with a possible intersection, we want to callibrate it to go to the middle
-    //If leaving a cell with a possible itnersection, just use the hardcoded full cell traversal
+//    noInterrupts();
+    bool rstOnce = false; //Prevents repeated if/else flow
+    if (  (leftDistance > 15) || (rightDistance > 15)  ) {
+        //rstOnce = true : rstOnce = false;
+        rstOnce = true;
+        Serial.println("Stared at an intersection");
+    }
+    //If leaving/starting at a cell with a possible intersection, use normal hardcoded cell traversal and prevent multiple resets
+       
+    //FIXME: Prevent pid from acting if missing wall and moving forward
     bool leftIntersection = (  leftDistance > 15 );
     bool rightIntersection = (  rightDistance > 15 );
 
-    //call PID calculations every loop
-    // If-else statements are attempting to prevent robot swerving left/right when reaching an intersection
-    leftDistancePID.run();
-    rightDistancePID.run();
-    for(int i = 0; i < 2; i++){
-      rightStepper.rotate(ROTATE+leftDrive);
-      leftStepper.rotate(ROTATE+rightDrive);
+    for (int i = steps; i > 0; i --){
+        leftDistance = sensors.getLeftDistance();
+        rightDistance = sensors.getRightDistance();
+        middleDistance = sensors.getMiddleDistance();
+        if (   (  (leftDistance > 15) || (rightDistance > 15)  ) && rstOnce == false   ){
+            Serial.println("Entering intersection");
+            //Constantly check if entering a cell with a possible intersection and callibrate it to go to the middle
+            steps = CLEARANCE; 
+            rstOnce = true;
+        }
+        
+        //call PID calculations every loop
+        // If-else statements are attempting to prevent robot swerving left/right when reaching an intersection
+        leftDistancePID.run();
+        rightDistancePID.run();
+        for(int i = 0; i < 2; i++){
+          rightStepper.rotate(ROTATE+leftDrive);
+          leftStepper.rotate(ROTATE+rightDrive);
+        }
+    }
+//    interrupts();
+}
+*/
+
+void autoForward(int STEPS) {
+    motors.turnOn();
+    noInterrupts();
+
+    int WALLTHRESHOLD = 12;
+
+    rightDistance = sensors.getRightDistance();
+    leftDistance = sensors.getLeftDistance();
+
+    bool callibrateStepsOnce = (  (rightDistance > WALLTHRESHOLD) || (leftDistance > WALLTHRESHOLD)  ); //Prevents repeated if/else flow. Cannot use isIntersection since isIntersection uses middle wall
+    
+    for (int i = STEPS; i > 0; i--){
+
+        rightDistance = sensors.getRightDistance();
+        leftDistance = sensors.getLeftDistance(); 
+
+        if ( ( (rightDistance > WALLTHRESHOLD) || (leftDistance > WALLTHRESHOLD) ) && !callibrateStepsOnce  ){
+            //If an intersection is reached, and has not alreayd been recallibrated, recallibrate steps
+            callibrateStepsOnce = true;
+            i = CALLIBRATE;
+        }
+    
+        //call PID calculations every loop
+        // FIXME: If-else statements are attempting to prevent robot swerving left/right when reaching an intersection
+        leftDistancePID.run();
+        rightDistancePID.run();
+        for(int i = 0; i < 2; i++){
+          rightStepper.rotate(ROTATE+leftDrive);
+          leftStepper.rotate(ROTATE+rightDrive);
+        }
     }
     interrupts();
 }
