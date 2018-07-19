@@ -1,3 +1,3 @@
 all:
-	g++ -g -o mazeprinter mazeprinter.cpp
-	./mazeprinter
+	g++ -g -o main main.cpp
+	./main

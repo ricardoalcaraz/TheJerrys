@@ -1,20 +1,27 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <stdint.h>
+#include <string>
+#include <iostream>
+#include <array>
+#include <vector>
 
+#include "testMaze.cpp"
 #include "maze.h"
 
-//Maze dimensions
-#define X 16
-#define Y 16
+#define NORTH 1
+#define EAST 2
+#define SOUTH 4
+#define WEST 8
 
-maze cell[Y][X];
+// cell[Y][X]
+maze cell[16][16];
 
 uint8_t calcDist(uint8_t xpos, uint8_t ypos, uint8_t xtarget, uint8_t ytarget){
     uint8_t dist = (uint8_t) abs(ytarget-ypos)+abs(xtarget-xpos);
     return dist;
 }
-int calcCenter(uint8_t xpos, uint8_t ypos, uint8_t)
+int calcCenter(uint8_t xpos, uint8_t ypos)
 {
     uint8_t dist = 0;
 
@@ -41,8 +48,61 @@ int calcCenter(uint8_t xpos, uint8_t ypos, uint8_t)
     return dist;
 }
 
+void initDistances(){
+    for (int i = 0; i < 16; i++) {
+        for(int j = 0; j <16; j++){
+            cell[i][j].distance = calcCenter(i, j);
+        }
+    }
+
+}
+
+void printMaze(maze distances[16][16])
+{
+    std::vector<std::string> rows;
+    std::vector<std::string> columns;
+
+    //First row (always the same)
+    for(int i = 0; i < 16; i++){
+        std::cout << "o---";
+    }
+    std::cout << 'o' << std::endl;
+
+    int cellNumber = 0;
+    for(int i = 0; i < 16; i++){
+        // Print columns
+        for(int j = 0; j < 16; j++){
+            cellNumber = (15-i) + 16*j;
+            if(testMaze[cellNumber] & WEST){
+                //std::cout << "|   ";
+                printf("|%02d ", cell[i][j].distance);
+            }
+            else{
+                //std::cout << "    ";
+                printf(" %02d ", cell[i][j].distance);
+            }
+        }
+        std::cout << '|' << std::endl;
+
+        // Print rows
+        for(int j = 0; j < 16; j++){
+            cellNumber = (15-i) + 16*j;
+            if(testMaze[cellNumber] & SOUTH){
+                //std::cout << "o---";
+                printf("o---");
+            }
+            else{
+                //std::cout << "o   ";
+                printf("o   ");
+            }
+        }
+        std::cout << 'o' << std::endl;
+    }
+}
+
 int main()
 {
-    printf("hello\n");
+    initDistances();
+    printMaze(cell);
     return 0;
 }

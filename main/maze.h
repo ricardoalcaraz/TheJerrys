@@ -8,8 +8,14 @@
  * S: south, 1 for wall 0 for no wall
  * W: west, 1 for wall 0 for no wall
  */
+#ifndef maze_h
+#define maze_h
+#include <stdint.h>
+
 struct maze
 {
     uint8_t distance;
     uint8_t walls;
 };
+
+#endif
