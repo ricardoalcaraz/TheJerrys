@@ -3,11 +3,15 @@
 #include <iostream>
 #include <array>
 #include <vector>
-#include "maze.cpp"
+#include "testMaze.cpp"
 #define NORTH 1
 #define EAST 2
 #define SOUTH 4
 #define WEST 8
+
+
+/* This code is really dumb because I didn't want to waste time formatting the maze files into a two dimensional array*/
+/* It works and was time efficient. Don't bully.*/
 
 int main()
 {
@@ -25,7 +29,7 @@ int main()
         // Print columns
         for(int j = 0; j < 16; j++){
             cell = (i-1) + 16*j;
-            if(testmaze[cell] & WEST){
+            if(testMaze[cell] & WEST){
                 //std::cout << "|   ";
                 printf("|   ");
             }
@@ -39,7 +43,7 @@ int main()
         // Print rows
         for(int j = 0; j < 16; j++){
             cell = (i-1) + 16*j;
-            if(testmaze[cell] & SOUTH){
+            if(testMaze[cell] & SOUTH){
                 //std::cout << "o---";
                 printf("o---");
             }
@@ -52,7 +56,7 @@ int main()
     }
     for(int j = 0; j < 16; j++){
         cell = 16*j;
-        if(testmaze[cell] & WEST){
+        if(testMaze[cell] & WEST){
             printf("|   ");
         }
         else{
