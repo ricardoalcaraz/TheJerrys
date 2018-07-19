@@ -1,3 +1,0 @@
-Miscellaneous notes:
-Battery voltage should be higher than 13.6V
-Stepper motors can't go at full speed if it's faster than a certain speed. An acceleration function has to be built 
