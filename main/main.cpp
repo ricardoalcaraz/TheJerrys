@@ -5,6 +5,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <stack>
 
 #include "testMaze.cpp"
 #include "maze.h"
@@ -16,6 +17,9 @@
 
 // cell[Y][X]
 maze cell[16][16];
+
+// Global stack for memory reasons once implemented on embedded system
+std::stack<uint16_t> theStack;
 
 uint8_t calcDist(uint8_t xpos, uint8_t ypos, uint8_t xtarget, uint8_t ytarget){
     uint8_t dist = (uint8_t) abs(ytarget-ypos)+abs(xtarget-xpos);
@@ -54,55 +58,110 @@ void initDistances(){
             cell[i][j].distance = calcCenter(i, j);
         }
     }
+}
+
+// Combine with above function?
+void initWalls(){
+    for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++ ){
+            if(i == 0){
+                // Cell is along top edge of maze
+                cell[i][j].walls = NORTH;
+            }
+            if(j == 0){
+                // Cell is along left edge of maze
+                cell[i][j].walls = WEST;
+            }
+            if(i == 15){
+                // Cell is along south edge of maze
+                cell[i][j].walls = SOUTH;
+            }
+            if(j == 15){
+                // Cell is along east edge of maze
+                cell[i][j].walls = EAST;
+            }
+        }
+    }
+    cell[0][0].walls = NORTH|WEST;
+    cell[15][0].walls = WEST|SOUTH;
+    cell[0][15].walls = NORTH|EAST;
+    cell[15][15].walls = EAST|SOUTH;
+}
+
+void printMaze(){
+    for(int i = 0; i < 16; i++){
+
+        // Print north walls
+        for(int j = 0; j < 16; j++){
+            if(cell[i][j].walls & NORTH){
+                printf("o---o");
+            }
+            else{
+                printf("o   o");
+            }
+        }
+        printf("\n");
+
+        // Print columns and distance values
+        for(int j = 0; j < 16; j++){
+            if(cell[i][j].walls & WEST & EAST){
+                printf("|%02d |", cell[i][j].distance);
+            }
+            else if(cell[i][j].walls & WEST){
+                printf("|%02d  ", cell[i][j].distance);
+            }
+            else if(cell[i][j].walls & EAST){
+                printf(" %02d |", cell[i][j].distance);
+            }
+            else{
+                printf(" %02d  ", cell[i][j].distance);
+            }
+        }
+        printf("\n");
+
+        // Print south walls
+        for(int j = 0; j < 16; j++){
+            if(cell[i][j].walls & SOUTH){
+                printf("o---o");
+            }
+            else{
+                printf("o   o");
+            }
+        }
+        printf("\n");
+    }
+}
+
+void checkWalls(){
+    /* Read from testMaze for simulation*/
 
 }
 
-void printMaze(maze distances[16][16])
-{
-    std::vector<std::string> rows;
-    std::vector<std::string> columns;
+void updateDistances(){
+    if(!theStack.empty()){
+        /*Push the current cell (the one the robot is standing on) onto the stack
 
-    //First row (always the same)
-    for(int i = 0; i < 16; i++){
-        std::cout << "o---";
+          Repeat the following set of instructions until the stack is empty:
+
+          {
+          Pull a cell from the stack
+          Is the distance value of this cell = 1 + the minimum value of its open neighbors?
+
+          No -> Change the cell to 1 + the minimum value of its open neighbors and
+          push all of the cell’s open neighbors onto the stack to be checked
+              Yes -> Do nothing
+              }
+        */
     }
-    std::cout << 'o' << std::endl;
-
-    int cellNumber = 0;
-    for(int i = 0; i < 16; i++){
-        // Print columns
-        for(int j = 0; j < 16; j++){
-            cellNumber = (15-i) + 16*j;
-            if(testMaze[cellNumber] & WEST){
-                //std::cout << "|   ";
-                printf("|%02d ", cell[i][j].distance);
-            }
-            else{
-                //std::cout << "    ";
-                printf(" %02d ", cell[i][j].distance);
-            }
-        }
-        std::cout << '|' << std::endl;
-
-        // Print rows
-        for(int j = 0; j < 16; j++){
-            cellNumber = (15-i) + 16*j;
-            if(testMaze[cellNumber] & SOUTH){
-                //std::cout << "o---";
-                printf("o---");
-            }
-            else{
-                //std::cout << "o   ";
-                printf("o   ");
-            }
-        }
-        std::cout << 'o' << std::endl;
+    else{
+        std::cout << "Stack not empty upon initializing";
     }
 }
 
 int main()
 {
     initDistances();
-    printMaze(cell);
-    return 0;
-}
+    initWalls();
+    printMaze();
+    //return 0;
+    }
