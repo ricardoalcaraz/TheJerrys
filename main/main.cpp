@@ -22,8 +22,13 @@ maze cell[16][16];
 // Global stack for memory reasons once implemented on embedded system
 std::stack<uint16_t> theStack;
 
-coord globalMousePos = {0, 3};
+// Tracking mouse coordinate
+coord globalMousePos = {0, 0};
 
+// Useful array for loops that test each direction
+uint8_t bearings[] = {NORTH, EAST, SOUTH, WEST};
+// Useful array for complementary walls, changing direction etc.
+uint8_t reverseBearings[] = {SOUTH, WEST, NORTH, EAST};
 /*
  * Altered: none
  * Description: Calculate shortest distance between two coordinates.
@@ -169,6 +174,48 @@ uint8_t getWalls(){
 
     return walls;
 }
+/* INPUT: Any coordinate
+ * OUTPUT: boolean
+ * Altered: none
+ * Description: Used to determine if a coordinate is a valid maze cell.
+ */
+bool isOutOfBounds(coord targetCoord){
+    if((targetCoord._x < 0) || (targetCoord._y < 0) || (targetCoord._x > 15) || (targetCoord._y > 15)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/* INPUT: Reference coordinate, direction to move (NORTH, EAST...)
+ * OUTPUT: New coordinate
+ * Altered: none
+ * Description: outputs coordinates of cell to the north, east,
+ *  south, west of other cell.
+ */
+coord neighbourCoord(coord targetCoord, uint8_t bearing){
+    coord newCoord = {0,0};
+    switch (bearing){
+    case NORTH:
+        newCoord._x = targetCoord._x;
+        newCoord._y = targetCoord._y-1;
+        break;
+    case EAST:
+        newCoord._x = targetCoord._x+1;
+        newCoord._y = targetCoord._y;
+        break;
+    case SOUTH:
+        newCoord._x = targetCoord._x;
+        newCoord._y = targetCoord._y+1;
+        break;
+    case WEST:
+        newCoord._x = targetCoord._x-1;
+        newCoord._y = targetCoord._y;
+        break;
+    }
+    return newCoord;
+}
 
 /*
  * INPUT: Walls adjacent to cell, coordinate of cell
@@ -177,7 +224,16 @@ uint8_t getWalls(){
  * Description: Update walls for cell and neighboring cells in cell[][].
  */
 void updateWalls(uint8_t walls, coord currentCoord){
+    for(int i = 0; i < sizeof(bearings); i++){
+        if(walls & bearings[i]){
+            cell[currentCoord._y][currentCoord._x].walls |= bearings[i];
 
+            coord neighbourCell = neighbourCoord(currentCoord, bearings[i]);
+            if(!isOutOfBounds(neighbourCell)){
+                cell[neighbourCell._y][neighbourCell._x].walls |= reverseBearings[i];
+            }
+        }
+    }
 }
 
 /*
@@ -227,10 +283,13 @@ void floodFill(){
 int main()
 {
     /* This goes in setup */
-    //initDistances();
-    //initWalls();
+    initDistances();
+    initWalls();
     /* End Setup */
 
-    //printMaze();
+    uint8_t testWalls = 15;
+    globalMousePos = {3,3};
+    updateWalls(testWalls, globalMousePos);
+    printMaze();
     return 0;
 }
