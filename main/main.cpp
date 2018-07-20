@@ -226,10 +226,12 @@ coord neighbourCoord(coord targetCoord, uint8_t bearing){
 void updateWalls(uint8_t walls, coord currentCoord){
     for(int i = 0; i < sizeof(bearings); i++){
         if(walls & bearings[i]){
+            // add wall bits
             cell[currentCoord._y][currentCoord._x].walls |= bearings[i];
 
             coord neighbourCell = neighbourCoord(currentCoord, bearings[i]);
             if(!isOutOfBounds(neighbourCell)){
+                // add wall bits for neighbouring cell
                 cell[neighbourCell._y][neighbourCell._x].walls |= reverseBearings[i];
             }
         }
@@ -244,8 +246,19 @@ void updateWalls(uint8_t walls, coord currentCoord){
  *  minimum distance value.
  */
 uint8_t checkMinVals(coord currentCoord){
-    uint8_t minVal = 0;
+    uint8_t minVal = cell[currentCoord._y][currentCoord._x].distance;
+    for(int i = 0; i < sizeof(bearings); i++){
+        coord neighbourCell = neighbourCoord(currentCoord, bearings[i]);
 
+        if(!isOutOfBounds(neighbourCell)){
+            // If direction does not collide with wall (neighbour is accessible)
+            if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
+                if(cell[neighbourCell._y][neighbourCell._x].distance < cell[currentCoord._y][currentCoord._x].distance){
+                    minVal =cell[neighbourCell._y][neighbourCell._x].distance;
+                }
+            }
+        }
+    }
     return minVal;
 }
 
@@ -276,10 +289,6 @@ void updateDistances(coord currentCoord){
     }
 }
 
-void floodFill(){
-
-}
-
 int main()
 {
     /* This goes in setup */
@@ -290,6 +299,12 @@ int main()
     uint8_t testWalls = 15;
     globalMousePos = {3,3};
     updateWalls(testWalls, globalMousePos);
+    cell[4][2].distance = 9;
     printMaze();
+
+
+    globalMousePos = {3,0};
+    printf("%d\n", cell[3][2].walls);
+    printf("%d\n", checkMinVals(globalMousePos));
     return 0;
 }
