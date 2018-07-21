@@ -7,11 +7,11 @@
  * V
  *   y
  */
-#ifndef coord_h
-#define coord_h
+#ifndef COORD_H
+#define COORD_H
 #include <stdint.h>
 
-struct coord
+struct Coord
 {
     uint8_t _y;
     uint8_t _x;

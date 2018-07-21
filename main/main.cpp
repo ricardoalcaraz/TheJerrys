@@ -7,7 +7,6 @@
 #include <vector>
 #include <stack>
 
-#include "testMaze.cpp"
 #include "maze.h"
 #include "coord.h"
 
@@ -17,13 +16,13 @@
 #define WEST 8
 
 // cell[Y][X]
-maze cell[16][16];
+Maze cell[16][16];
 
 // Global stack for memory reasons once implemented on embedded system
-std::stack<coord> theStack;
+std::stack<Coord> theStack;
 
 // Tracking mouse coordinate {y, x}
-coord globalMousePos = {15, 0};
+Coord globalMousePos = {15, 0};
 
 // Useful array for loops that test each direction
 uint8_t bearings[] = {NORTH, EAST, SOUTH, WEST};
@@ -180,8 +179,8 @@ uint8_t getWalls(){
  * Altered: none
  * Description: Used to determine if a coordinate is a valid maze cell.
  */
-bool isOutOfBounds(coord targetCoord){
-    if((targetCoord._x < 0) || (targetCoord._y < 0) || (targetCoord._x > 15) || (targetCoord._y > 15)){
+bool isOutOfBounds(Coord coord){
+    if((coord._x < 0) || (coord._y < 0) || (coord._x > 15) || (coord._y > 15)){
         return true;
     }
     else{
@@ -195,24 +194,24 @@ bool isOutOfBounds(coord targetCoord){
  * Description: outputs coordinates of cell to the north, east,
  *  south, west of other cell.
  */
-coord neighbourCoord(coord targetCoord, uint8_t bearing){
-    coord newCoord = {0,0};
+Coord findNeighbor(Coord coord, uint8_t bearing){
+    Coord newCoord = {0,0};
     switch (bearing){
     case NORTH:
-        newCoord._x = targetCoord._x;
-        newCoord._y = targetCoord._y-1;
+        newCoord._x = coord._x;
+        newCoord._y = coord._y-1;
         break;
     case EAST:
-        newCoord._x = targetCoord._x+1;
-        newCoord._y = targetCoord._y;
+        newCoord._x = coord._x+1;
+        newCoord._y = coord._y;
         break;
     case SOUTH:
-        newCoord._x = targetCoord._x;
-        newCoord._y = targetCoord._y+1;
+        newCoord._x = coord._x;
+        newCoord._y = coord._y+1;
         break;
     case WEST:
-        newCoord._x = targetCoord._x-1;
-        newCoord._y = targetCoord._y;
+        newCoord._x = coord._x-1;
+        newCoord._y = coord._y;
         break;
     }
     return newCoord;
@@ -225,16 +224,16 @@ coord neighbourCoord(coord targetCoord, uint8_t bearing){
  * Altered: cell[][]
  * Description: Update walls for cell and neighboring cells in cell[][].
  */
-void updateWalls(uint8_t walls, coord currentCoord){
+void updateWalls(uint8_t walls, Coord coord){
     for(int i = 0; i < sizeof(bearings); i++){
         if(walls & bearings[i]){
             // add wall bits
-            cell[currentCoord._y][currentCoord._x].walls |= bearings[i];
+            cell[coord._y][coord._x].walls |= bearings[i];
 
-            coord neighbourCell = neighbourCoord(currentCoord, bearings[i]);
-            if(!isOutOfBounds(neighbourCell)){
+            Coord neighborCoord = findNeighbor(coord, bearings[i]);
+            if(!isOutOfBounds(neighborCoord)){
                 // add wall bits for neighbouring cell
-                cell[neighbourCell._y][neighbourCell._x].walls |= reverseBearings[i];
+                cell[neighborCoord._y][neighborCoord._x].walls |= reverseBearings[i];
             }
         }
     }
@@ -247,16 +246,16 @@ void updateWalls(uint8_t walls, coord currentCoord){
  * Description: Check neighboring open cells and return
  *  minimum distance value.
  */
-uint8_t checkMinVals(coord currentCoord){
-    uint8_t minVal = cell[currentCoord._y][currentCoord._x].distance;
+uint8_t findMinVals(Coord coord){
+    uint8_t minVal = cell[coord._y][coord._x].distance;
     for(int i = 0; i < sizeof(bearings); i++){
-        coord neighbourCell = neighbourCoord(currentCoord, bearings[i]);
+        Coord neighborCoord = findNeighbor(coord, bearings[i]);
 
-        if(!isOutOfBounds(neighbourCell)){
+        if(!isOutOfBounds(neighborCoord)){
             // If direction does not collide with wall (neighbour is accessible)
-            if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
-                if(cell[neighbourCell._y][neighbourCell._x].distance < cell[currentCoord._y][currentCoord._x].distance){
-                    minVal =cell[neighbourCell._y][neighbourCell._x].distance;
+            if(!(bearings[i] & cell[coord._y][coord._x].walls)){
+                if(cell[neighborCoord._y][neighborCoord._x].distance < cell[coord._y][coord._x].distance){
+                    minVal =cell[neighborCoord._y][neighborCoord._x].distance;
                 }
             }
         }
@@ -270,38 +269,38 @@ uint8_t checkMinVals(coord currentCoord){
  * Altered: cell[][];
  * Description: Updates distances in cell[][] based on new walls found.
  */
-void updateDistances(coord currentCoord){
+void updateDistances(Coord coord){
     if(theStack .empty()){
-        theStack.push(currentCoord);
+        theStack.push(coord);
 
         // Push coordinates of open neighbours onto stack
         for (int i = 0; i < sizeof(bearings); i++){
-            coord tempCoord = neighbourCoord(currentCoord, bearings[i]);
+            Coord neighborCoord = findNeighbor(coord, bearings[i]);
 
-            if(!isOutOfBounds(tempCoord)){
+            if(!isOutOfBounds(neighborCoord)){
                 // If direction does not collide with wall (neighbour is accessible)
-                if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
-                    theStack.push(tempCoord);
+                if(!(bearings[i] & cell[coord._y][coord._x].walls)){
+                    theStack.push(neighborCoord);
                 }
             }
         }
 
         while(!theStack.empty()){
-            coord tempCoord = theStack.top();
+            Coord currentCoord = theStack.top();
             theStack.pop();
 
-            uint8_t minVal = checkMinVals(tempCoord);
+            uint8_t minVal = findMinVals(currentCoord);
 
-            if(cell[tempCoord._y][tempCoord._x].distance != minVal + 1){
-                cell[tempCoord._y][tempCoord._x].distance = minVal + 1;
+            if(cell[currentCoord._y][currentCoord._x].distance != minVal + 1){
+                cell[currentCoord._y][currentCoord._x].distance = minVal + 1;
 
                 // Push coordinates of open neighbours onto stack
                 for (int i = 0; i < sizeof(bearings); i++){
-                    coord nextCoord = neighbourCoord(tempCoord, bearings[i]);
+                    Coord nextCoord = findNeighbor(currentCoord, bearings[i]);
 
                     if(!isOutOfBounds(nextCoord)){
                         // If direction does not collide with wall (neighbour is accessible)
-                        if(!(bearings[i] & cell[tempCoord._y][tempCoord._x].walls)){
+                        if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
                             theStack.push(nextCoord);
                         }
                     }
