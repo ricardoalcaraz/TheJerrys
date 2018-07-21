@@ -12,6 +12,7 @@
 #define maze_h
 #include <stdint.h>
 
+
 struct maze
 {
     uint8_t distance;

@@ -218,6 +218,7 @@ coord neighbourCoord(coord targetCoord, uint8_t bearing){
     return newCoord;
 }
 
+
 /*
  * INPUT: Walls adjacent to cell, coordinate of cell
  * OUTPUT: none
@@ -296,12 +297,12 @@ void updateDistances(coord currentCoord){
 
                 // Push coordinates of open neighbours onto stack
                 for (int i = 0; i < sizeof(bearings); i++){
-                    coord tempCoord = neighbourCoord(currentCoord, bearings[i]);
+                    coord nextCoord = neighbourCoord(tempCoord, bearings[i]);
 
-                    if(!isOutOfBounds(tempCoord)){
+                    if(!isOutOfBounds(nextCoord)){
                         // If direction does not collide with wall (neighbour is accessible)
-                        if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
-                            theStack.push(tempCoord);
+                        if(!(bearings[i] & cell[tempCoord._y][tempCoord._x].walls)){
+                            theStack.push(nextCoord);
                         }
                     }
                 }
@@ -319,19 +320,33 @@ int main()
     initDistances();
     initWalls();
     /* End Setup */
-    printMaze();
 
+    /* For quick testing */
+    printMaze();
     while(1){
         do{
             std::cout << '\n' << "Press enter to continue";
-    } while (std::cin.get() != '\n');
+        } while (std::cin.get() != '\n');
 
-    // Pretending  read some walls
-    updateWalls(EAST|WEST, globalMousePos);
-    updateDistances(globalMousePos);
-    printMaze();
+        // Pretending  read some walls
+        updateWalls(EAST|WEST, globalMousePos);
+        updateDistances(globalMousePos);
+        printMaze();
 
-    globalMousePos._y -= 1;
+        globalMousePos._y -= 1;
     }
+
+    /* For debugging */
+    /*for(int i=0; i < 13; i++){
+      updateWalls(EAST|WEST, globalMousePos);
+        globalMousePos._y -= 1;
+    }
+
+    globalMousePos = {7, 0};
+
+    updateDistances(globalMousePos);
+
+    printMaze();*/
+
     return 0;
 }
