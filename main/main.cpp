@@ -20,15 +20,16 @@
 maze cell[16][16];
 
 // Global stack for memory reasons once implemented on embedded system
-std::stack<uint16_t> theStack;
+std::stack<coord> theStack;
 
-// Tracking mouse coordinate
-coord globalMousePos = {0, 0};
+// Tracking mouse coordinate {y, x}
+coord globalMousePos = {15, 0};
 
 // Useful array for loops that test each direction
 uint8_t bearings[] = {NORTH, EAST, SOUTH, WEST};
 // Useful array for complementary walls, changing direction etc.
 uint8_t reverseBearings[] = {SOUTH, WEST, NORTH, EAST};
+
 /*
  * Altered: none
  * Description: Calculate shortest distance between two coordinates.
@@ -170,7 +171,7 @@ void printMaze(){
  * Description: Reads IR sensors to determine walls.
  */
 uint8_t getWalls(){
-    uint8_t walls = 0;
+    uint8_t walls = EAST|WEST;
 
     return walls;
 }
@@ -269,20 +270,43 @@ uint8_t checkMinVals(coord currentCoord){
  * Description: Updates distances in cell[][] based on new walls found.
  */
 void updateDistances(coord currentCoord){
-    if(!theStack.empty()){
-        /*Push the current cell (the one the robot is standing on) onto the stack
+    if(theStack .empty()){
+        theStack.push(currentCoord);
 
-          Repeat the following set of instructions until the stack is empty:
+        // Push coordinates of open neighbours onto stack
+        for (int i = 0; i < sizeof(bearings); i++){
+            coord tempCoord = neighbourCoord(currentCoord, bearings[i]);
 
-          {
-          Pop a cell from the stack
-          Is the distance value of this cell == 1 + the minimum value of its open neighbors?
+            if(!isOutOfBounds(tempCoord)){
+                // If direction does not collide with wall (neighbour is accessible)
+                if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
+                    theStack.push(tempCoord);
+                }
+            }
+        }
 
-          No -> Change the cell to 1 + the minimum value of its open neighbors and
-          push all of the cell’s open neighbors onto the stack to be checked
-              Yes -> Do nothing
-              }
-        */
+        while(!theStack.empty()){
+            coord tempCoord = theStack.top();
+            theStack.pop();
+
+            uint8_t minVal = checkMinVals(tempCoord);
+
+            if(cell[tempCoord._y][tempCoord._x].distance != minVal + 1){
+                cell[tempCoord._y][tempCoord._x].distance = minVal + 1;
+
+                // Push coordinates of open neighbours onto stack
+                for (int i = 0; i < sizeof(bearings); i++){
+                    coord tempCoord = neighbourCoord(currentCoord, bearings[i]);
+
+                    if(!isOutOfBounds(tempCoord)){
+                        // If direction does not collide with wall (neighbour is accessible)
+                        if(!(bearings[i] & cell[currentCoord._y][currentCoord._x].walls)){
+                            theStack.push(tempCoord);
+                        }
+                    }
+                }
+            }
+        }
     }
     else{
         std::cout << "Stack not empty upon initializing.";
@@ -295,16 +319,19 @@ int main()
     initDistances();
     initWalls();
     /* End Setup */
-
-    uint8_t testWalls = 15;
-    globalMousePos = {3,3};
-    updateWalls(testWalls, globalMousePos);
-    cell[4][2].distance = 9;
     printMaze();
 
+    while(1){
+        do{
+            std::cout << '\n' << "Press enter to continue";
+    } while (std::cin.get() != '\n');
 
-    globalMousePos = {3,0};
-    printf("%d\n", cell[3][2].walls);
-    printf("%d\n", checkMinVals(globalMousePos));
+    // Pretending  read some walls
+    updateWalls(EAST|WEST, globalMousePos);
+    updateDistances(globalMousePos);
+    printMaze();
+
+    globalMousePos._y -= 1;
+    }
     return 0;
 }
