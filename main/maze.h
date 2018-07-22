@@ -1,22 +1,36 @@
-/* Distance: number of cells to center as an integer
- *
- * Bit order for walls:
- * 0b000VWSEN
- * V: visted, 1 for visited, 0 for unvisited
- * N: north, 1 for wall 0 for no wall
- * E: east, 1 for wall 0 for no wall
- * S: south, 1 for wall 0 for no wall
- * W: west, 1 for wall 0 for no wall
- */
 #ifndef MAZE_H
 #define MAZE_H
 #include <stdint.h>
+#include <cstdlib>
+#include <array>
+#include "globals.h"
 
-
-struct Maze
+/*
+ * maze.h
+ *
+ * Basic maze operations
+ */
+class Maze
 {
-    uint8_t distance;
-    uint8_t walls;
+private:
+    // For looping through direction
+    std::array<uint8_t,4> bearings = {NORTH, EAST, SOUTH, WEST};
+    // For complementary walls, changing direction etc.
+    std::array<uint8_t,4> reverseBearings = {SOUTH, WEST, NORTH, EAST};
+public:
+    uint8_t calcDist(uint8_t xpos, uint8_t ypos, uint8_t xtarget, uint8_t ytarget);
+
+    uint8_t calcCenter(uint8_t xpos, uint8_t ypos);
+
+    void initWalls();
+
+    void initDistances();
+
+    bool isOutOfBounds(Coord coord);
+
+    Coord findNeighbor(Coord coord, uint8_t bearing);
+
+    void updateWalls(uint8_t walls, Coord coord);
 };
 
 #endif
