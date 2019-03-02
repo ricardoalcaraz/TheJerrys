@@ -22606,7 +22606,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <plain>
 <text x="86.36" y="195.58" size="5.08" layer="97">IR Emitter System</text>
 <text x="86.36" y="101.6" size="5.08" layer="97">IR Receiver System</text>
-<text x="-5.08" y="48.26" size="1.778" layer="97" font="fixed">IO0/IO2 pulled up/down correctly by default. 
+<text x="-5.08" y="48.26" size="1.778" layer="97" font="vector">IO0/IO2 pulled up/down correctly by default. 
 Resistor pad included just in case.</text>
 <text x="-76.2" y="193.04" size="5.08" layer="97">ESP32 MCU Module</text>
 <wire x1="81.28" y1="203.2" x2="81.28" y2="114.3" width="0.4064" layer="97" style="longdash"/>
